@@ -1,0 +1,106 @@
+@extends('adminlte::page')
+
+@section('title', 'pquetes de nominas')
+
+@section('content_header')
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        {{ __('Paquetes de Nóminas') }}
+    </h2>
+@stop
+
+@section('content')
+<div class="py-12">
+    @if (session('success'))
+        <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+    @endif
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
+            
+            <form action="{{ route('nomina.crearPaquete') }}" method="POST" class="max-w-sm mx-auto space-y-4 mb-8">
+                @csrf
+
+                <div>
+                    <label for="mes" class="block text-gray-100 text-sm font-bold mb-2">Mes</label>
+                    <input type="number" name="mes" min="1" max="12" class="bg-gray-800 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                </div>
+                
+                <div>
+                    <label for="año" class="block text-gray-100 text-sm font-bold mb-2">Año</label>
+                    <input type="number" name="año" class="bg-gray-800 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                </div>
+                
+                <button type="submit" class="w-full inline-flex justify-center items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    Crear Paquete de Nóminas
+                </button>
+            </form>
+
+            <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-200 uppercase bg-gray-700">
+                        <tr>
+                            <th scope="col" class="py-3 px-6">#</th>
+                            <th scope="col" class="py-3 px-6">Mes</th>
+                            <th scope="col" class="py-3 px-6">Año</th>
+                            <th scope="col" class="py-3 px-6">ver nominas</th>
+                            <th scope="col" class="py-3 px-6">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($paquetes as $index => $paquete)
+                            <tr class="bg-white border-b hover:bg-gray-50">
+                                <td class="py-4 px-4 bg-slate-600 text-white">{{ $index + 1 }}</td>
+                                <td class="py-4 px-4">{{ $paquete->mes }}</td>
+                                <td class="py-4 px-4">{{ $paquete->año }}</td>
+                                <td class="py-4 px-4">
+                                    <a href="{{ route('nomina.show', $paquete->id) }}" class="font-medium text-blue-600 hover:underline mr-5">Ver Nóminas</a>
+                                </td>
+                                <td class="py-4 px-6">
+                                    <form action="{{ route('paquete_nominas.destroy', $paquete->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este paquete?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-500 hover:text-red-800">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-12 px-20">
+    <a href="{{ route('gestion-humana') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-3 rounded">volver</a>
+</div>
+@stop
+
+@section('css')
+    {{-- Add here extra stylesheets --}}
+    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <style>
+        td, th {
+            font-size: 15px;
+            font-family: "Roboto Condensed", sans-serif;
+        }
+    </style>
+@stop
+
+@section('js')
+<script>
+    setTimeout(function() {
+        var successMessage = document.getElementById('success-message');
+        if (successMessage) {
+            successMessage.style.display = 'none';
+        }
+    }, 5000);
+</script>
+@stop
