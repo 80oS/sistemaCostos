@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\codigoMPD;
 
 class MateriaPrimaDirecta extends Model
 {
     use HasFactory;
+    use codigoMPD;
 
     protected $fillable = [
+        'codigo',
         'descripcion',
         'proveedor',
         'numero_factura',
@@ -23,10 +26,5 @@ class MateriaPrimaDirecta extends Model
         return $this->belongsToMany(costosProduccion::class, 'materia_prima_directas_costos')
                     ->withPivot('cantidad')
                     ->withTimestamps();
-    }
-
-    public function sdp()
-    {
-        return $this->belongsTo(Sdp::class, 'sdp_id', 'numero_sdp');
     }
 }

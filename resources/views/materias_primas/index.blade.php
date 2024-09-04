@@ -22,7 +22,7 @@
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
             <div class="flex flex-row items-center justify-center gap-5">
                 <div class="mb-4">
-                    <a href="{{ route('materias_primas.create') }}" class="btn btn-info">crear materia primas directas</a>
+                    <a href="{{ route('materiasPrimasDirectas.create') }}" class="btn btn-info">crear materia primas directas</a>
                 </div>
                 <div class="mb-4">
                     <a href="{{ route('materias_primas.create') }}" class="btn btn-info">crear materia primas indirectas</a>

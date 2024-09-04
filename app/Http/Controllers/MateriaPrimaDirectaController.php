@@ -13,9 +13,6 @@ class MateriaPrimaDirectaController extends Controller
         return view('materiasPrimasDirectas.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -24,8 +21,6 @@ class MateriaPrimaDirectaController extends Controller
             'numero_factura' => 'required|string',
             'numero_orden_compra' => 'required|string',
             'precio_unit' => 'required|numeric',
-            'cantidad' => 'required|numeric',
-            'valor' => 'required|numeric'
         ]);
 
         $materia_Prima_directa = new MateriaPrimaDirecta([
@@ -34,12 +29,11 @@ class MateriaPrimaDirectaController extends Controller
             'numero_factura' => $request->input('numero_factura'),
             'numero_orden_compra' => $request->input('numero_orden_compra'),
             'precio_unit' => $request->input('precio_unit'),
-            'cantidad' => $request->input('cantidad'),
-            'valor' => $request->input('valor')
+            'valor' => 0
         ]);
         $materia_Prima_directa->save();
 
-        return redirect()->route('materias_primas.index')->with('success', 'la materia prima se ha creado exitosamente');
+        return redirect()->route('materias_primas.index')->with('success', 'la materia prima directa se ha creada exitosamente');
     }
 
 

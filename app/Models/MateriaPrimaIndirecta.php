@@ -25,9 +25,4 @@ class MateriaPrimaIndirecta extends Model
                     ->withPivot('cantidad')
                     ->withTimestamps();
     }
-
-    public function sdp()
-    {
-        return $this->belongsTo(Sdp::class, 'sdp_id', 'numero_sdp');
-    }
 }

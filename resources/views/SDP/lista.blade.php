@@ -21,7 +21,7 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="dark:bg-gray-700 shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900 rounded">
-                <div class="overflow-y-auto">
+                <div class="container">
                     <table class="min-w-full">
                         <thead>
                             <tr class="bg-gray-600 text-gray-200">
@@ -69,6 +69,10 @@
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <style>
+        .container {
+            overflow-y: auto;
+            max-height: 500px;
+        }
         table thead th.acciones {
             text-align: center
         }

@@ -20,15 +20,30 @@ class MateriaPrimaIndirectaController extends Controller
      */
     public function create()
     {
-        //
+        return view('materiasPrimasDirectas.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'descripcion' => 'required|string',
+            'proveedor' => 'required|string',
+            'numero_factura' => 'required|string',
+            'numero_orden_compra' => 'required|string',
+            'precio_unit' => 'required|numeric',
+        ]);
+
+        $materia_Prima_indirecta = new MateriaPrimaIndirecta([
+            'descripcion' => $request->input('descripcion'),
+            'proveedor' => $request->input('proveedor'),
+            'numero_factura' => $request->input('numero_factura'),
+            'numero_orden_compra' => $request->input('numero_orden_compra'),
+            'precio_unit' => $request->input('precio_unit'),
+            'valor' => 0
+        ]);
+        $materia_Prima_indirecta->save();
+
+        return redirect()->route('materias_primas.index')->with('success', 'la materia prima indirecta se ha creada exitosamente');
     }
 
     /**

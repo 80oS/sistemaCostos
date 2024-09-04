@@ -49,14 +49,4 @@ class SDP extends Model
     {
         return $this->hasMany(CostosProduccion::class, 'sdp_id');
     }
-
-    public function materiasPrimasDirectas()
-    {
-        return $this->hasMany(MateriaPrimaDirecta::class, 'sdp_id', 'numero_sdp');
-    }
-
-    public function materiasPrimasIndirectas()
-    {
-        return $this->hasMany(MateriaPrimaIndirecta::class, 'sdp_id', 'numero_sdp');
-    }
 }

@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\ADD_Clientes_servicios_Controller;
+use App\Http\Controllers\AdministraciónInventarioController;
 use App\Http\Controllers\AlmacenController;
 use App\Http\Controllers\ArticuloController;
 use App\Http\Controllers\CategoryController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\horasController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\MateriaPrimaDirectaController;
 use App\Http\Controllers\MateriaPrimasController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\NominaController;
@@ -140,8 +142,10 @@ Route::resource('servicios', ServicioController::class);
 // almacen
 Route::get('/almacen', [AlmacenController::class, 'index'])->name('almacen');
 
-// productos
+// MATERIAS PRIMAS
 Route::resource('materias_primas', MateriaPrimasController::class);
+Route::get('materiasPrimasDirectas/create', [MateriaPrimaDirectaController::class, 'create'])->name('materiasPrimasDirectas.create');
+Route::post('materiasPrimasDirectas', [MateriaPrimaDirectaController::class, 'store'])->name('materiasPrimasDirectas.store');
 
 // proveedor
 Route::resource('proveedor', ProveedorController::class);
@@ -184,4 +188,9 @@ Route::get('/assign-permission', [PermissionController::class, 'asignar'])
     Route::get('/admin/roles-permissions', [RolePermissionController::class, 'index'])->name('admin.roles-permissions');
     Route::post('/admin/roles-permissions', [RolePermissionController::class, 'update'])->name('admin.roles.permissions.update');
     Route::get('/admin/users', [UsersController::class, 'index'])->name('admin.users');
+
+// Administración de Inventario
+
+Route::get('AdministraciónInventario', [AdministraciónInventarioController::class, 'index'])->name('AdministraciónInventario');
+
 
