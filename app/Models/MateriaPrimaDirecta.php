@@ -21,6 +21,12 @@ class MateriaPrimaDirecta extends Model
         'valor'
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+        self::bootCodigoMPD();
+    }
+
     public function costosProduccion()
     {
         return $this->belongsToMany(costosProduccion::class, 'materia_prima_directas_costos')

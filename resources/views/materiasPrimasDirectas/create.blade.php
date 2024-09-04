@@ -4,7 +4,7 @@
 
 @section('content_header')
 <h2 class="font-semibold text-xl text-gray-300 leading-tight">
-    {{ __('Formulario del nueva materia prima directa') }}
+    {{ __('Formulario de la nueva materia prima directa') }}
 </h2>
 @stop
 

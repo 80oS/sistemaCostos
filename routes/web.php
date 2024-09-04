@@ -3,6 +3,7 @@ use App\Http\Controllers\ADD_Clientes_servicios_Controller;
 use App\Http\Controllers\AdministraciónInventarioController;
 use App\Http\Controllers\AlmacenController;
 use App\Http\Controllers\ArticuloController;
+use App\Http\Controllers\CargarMateriaPrimaController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CifController;
 use App\Http\Controllers\ClienteController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\horasController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MateriaPrimaDirectaController;
+use App\Http\Controllers\MateriaPrimaIndirectaController;
 use App\Http\Controllers\MateriaPrimasController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\NominaController;
@@ -144,8 +146,18 @@ Route::get('/almacen', [AlmacenController::class, 'index'])->name('almacen');
 
 // MATERIAS PRIMAS
 Route::resource('materias_primas', MateriaPrimasController::class);
+
+// materias primas directas
 Route::get('materiasPrimasDirectas/create', [MateriaPrimaDirectaController::class, 'create'])->name('materiasPrimasDirectas.create');
 Route::post('materiasPrimasDirectas', [MateriaPrimaDirectaController::class, 'store'])->name('materiasPrimasDirectas.store');
+
+// materias primas indirectas
+Route::get('materiasPrimasIndirectas/create', [MateriaPrimaIndirectaController::class, 'create'])->name('materiasPrimasIndirectas.create');
+Route::post('materiasPrimasIndirectas', [MateriaPrimaIndirectaController::class, 'store'])->name('materiasPrimasIndirectas.store');
+
+// cargar materia prima
+Route::get('/cargar-materia-prima', [CargarMateriaPrimaController::class, 'cargarMateriaPrimas'])->name('cargarMateriaPrima');
+Route::post('/materia-prima/cargar/{numero_sdp}', [CargarMateriaPrimaController::class, 'cargarMateriaPrima'])->name('materia_prima.cargar');
 
 // proveedor
 Route::resource('proveedor', ProveedorController::class);

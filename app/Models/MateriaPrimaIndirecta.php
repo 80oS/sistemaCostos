@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\codigoMPI;
 
 class MateriaPrimaIndirecta extends Model
 {
     use HasFactory;
+    use codigoMPI;
 
     protected $fillable = [
+        'codigo',
         'descripcion',
         'proveedor',
         'numero_factura',
@@ -18,6 +21,12 @@ class MateriaPrimaIndirecta extends Model
         'valor',
         'sdp_id'
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+        self::bootCodigoMPI();
+    }
 
     public function costosProduccion()
     {

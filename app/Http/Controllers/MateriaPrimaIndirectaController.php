@@ -20,7 +20,7 @@ class MateriaPrimaIndirectaController extends Controller
      */
     public function create()
     {
-        return view('materiasPrimasDirectas.create');
+        return view('materiasPrimasIndirectas.create');
     }
 
     public function store(Request $request)
