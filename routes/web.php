@@ -156,8 +156,11 @@ Route::get('materiasPrimasIndirectas/create', [MateriaPrimaIndirectaController::
 Route::post('materiasPrimasIndirectas', [MateriaPrimaIndirectaController::class, 'store'])->name('materiasPrimasIndirectas.store');
 
 // cargar materia prima
-Route::get('/cargar-materia-prima', [CargarMateriaPrimaController::class, 'cargarMateriaPrimas'])->name('cargarMateriaPrima');
-Route::post('/materia-prima/cargar/{numero_sdp}', [CargarMateriaPrimaController::class, 'cargarMateriaPrima'])->name('materia_prima.cargar');
+Route::get('lista-spd-cargar', [cargarMateriaPrimaController::class, 'lista'])->name('lista.sdp.cargar');
+Route::get('cargar-materias/{numero_sdp}', [CargarMateriaPrimaController::class, 'create'])->name('cargar.materias.form');
+Route::post('cargar-materias/{numero_sdp}', [CargarMateriaPrimaController::class, 'store'])->name('materias.store');
+Route::get('/api/buscar-materias', [CargarMateriaPrimaController::class, 'buscarMaterias']);
+Route::get('/ver-materias-primas-cragada/{numero_sdp}', [CargarMateriaPrimaController::class, 'verMateriasPrimas'])->name('verMateriasPrimas');
 
 // proveedor
 Route::resource('proveedor', ProveedorController::class);

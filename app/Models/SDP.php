@@ -47,6 +47,6 @@ class SDP extends Model
 
     public function costosProduccion()
     {
-        return $this->hasMany(CostosProduccion::class, 'sdp_id');
+        return $this->hasMany(CostosProduccion::class, 'sdp_id', 'numero_sdp');
     }
 }

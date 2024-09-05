@@ -87,11 +87,22 @@ class Costos_produccionController extends Controller
 
         $margen_bruto = ($utilidad_bruta/$total)*100;
 
+        $costoProduccion = $sdp->costosProduccion()->first();
+
+        $materiasPrimasDirectas = $costoProduccion->materiasPrimasDirectas()
+            ->withPivot('cantidad', 'materia_prima_directa_id', 'costos_produccion_id',)
+            ->get();
+
+        $materiasPrimasIndirectas = $costoProduccion->materiasPrimasIndirectas()
+            ->withPivot('cantidad', 'materia_prima_indirecta_id', 'costos_produccion_id',)
+            ->get();
+
         return view('costos_produccion.show', compact('sdp', 
                                                     'total', 'idimcols', 'costosProduccion', 
                                                     'cifs', 'costosProduccionPorOperario', 'totalMOI', 
                                                     'totalGOI', 'totalOCI', 'totalHorasOperarios',
-                                                    'totalManoObra', 'totalGeneral', 'cif', 'utilidad_bruta', 'margen_bruto'));
+                                                    'totalManoObra', 'totalGeneral', 'cif', 'utilidad_bruta', 
+                                                    'margen_bruto', 'materiasPrimasDirectas', 'materiasPrimasIndirectas'));
     }
 
     private function listarManoObraDirectaPorOperario($sdpId)

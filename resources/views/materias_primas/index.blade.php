@@ -16,7 +16,7 @@
         </div>
     @endif
     <div class="flex items-end justify-end p-10">
-        <a href="{{ route('almacen') }}" class="bg-yellow-600 hover:bg-yellow-400 px-3 py-2 rounded">volver</a>
+        <a href="{{ route('AdministraciónInventario') }}" class="bg-yellow-600 hover:bg-yellow-400 px-3 py-2 rounded">volver</a>
     </div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
@@ -31,7 +31,7 @@
                     <a href="{{ route('materias_primas.create') }}" class="btn btn-info">servicios externos</a>
                 </div>
                 <div class="mb-4">
-                    <a href="{{ route('cargarMateriaPrima') }}" class="btn btn-info">carge de materias primas</a>
+                    <a href="{{ route('lista.sdp.cargar') }}" class="btn btn-info">Carga de Materias Primas</a>
                 </div>
             </div>
             <div class="card">

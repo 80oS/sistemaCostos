@@ -22,7 +22,7 @@ class CostosProduccion extends Model
 
     public function sdp()
     {
-        return $this->belongsTo(SDP::class);
+        return $this->belongsTo(SDP::class, 'sdp_id', 'numero_sdp');
     }
 
     public function cif()
@@ -38,13 +38,13 @@ class CostosProduccion extends Model
     public function materiasPrimasDirectas()
     {
         return $this->belongsToMany(MateriaPrimaDirecta::class, 'materia_prima_directas_costos')
-                    ->withPivot('cantidad')
+                    ->withPivot('cantidad', 'materia_prima_directa_id', 'costos_produccion_id',)
                     ->withTimestamps();
     }
     public function materiasPrimasIndirectas()
     {
         return $this->belongsToMany(MateriaPrimaIndirecta::class, 'materia_prima_indirectas_costos')
-                    ->withPivot('cantidad')
+                    ->withPivot('cantidad', 'materia_prima_indirecta_id', 'costos_produccion_id',)
                     ->withTimestamps();
     }
 

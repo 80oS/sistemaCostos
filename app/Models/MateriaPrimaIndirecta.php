@@ -11,6 +11,8 @@ class MateriaPrimaIndirecta extends Model
     use HasFactory;
     use codigoMPI;
 
+    protected $table = 'materia_prima_indirectas';
+
     protected $fillable = [
         'codigo',
         'descripcion',
@@ -19,7 +21,6 @@ class MateriaPrimaIndirecta extends Model
         'numero_orden_compra',
         'precio_unit',
         'valor',
-        'sdp_id'
     ];
 
     public static function boot()
@@ -30,8 +31,8 @@ class MateriaPrimaIndirecta extends Model
 
     public function costosProduccion()
     {
-        return $this->belongsToMany(costosProduccion::class, 'materia_prima_indirectas_costos')
-                    ->withPivot('cantidad')
+        return $this->belongsToMany(CostosProduccion::class, 'materia_prima_indirectas_costos')
+                    ->withPivot('cantidad', 'materia_prima_indirecta_id', 'costos_produccion_id',)
                     ->withTimestamps();
     }
 }

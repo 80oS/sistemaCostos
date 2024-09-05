@@ -11,6 +11,8 @@ class MateriaPrimaDirecta extends Model
     use HasFactory;
     use codigoMPD;
 
+    protected $table = 'materia_prima_directas';
+
     protected $fillable = [
         'codigo',
         'descripcion',
@@ -29,8 +31,8 @@ class MateriaPrimaDirecta extends Model
 
     public function costosProduccion()
     {
-        return $this->belongsToMany(costosProduccion::class, 'materia_prima_directas_costos')
-                    ->withPivot('cantidad')
+        return $this->belongsToMany(CostosProduccion::class, 'materia_prima_directas_costos')
+                    ->withPivot('cantidad', 'materia_prima_directa_id', 'costos_produccion_id',)
                     ->withTimestamps();
     }
 }

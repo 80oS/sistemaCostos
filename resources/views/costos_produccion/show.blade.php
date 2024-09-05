@@ -108,7 +108,7 @@
                 <table class="w-full mb-6 border border-black rounded">
                     <thead>
                         <tr class="bg-gray-400 border border-black">
-                            <th class="border p-1" colspan="4">ANALISIS DE COSTOS</th>
+                            <th class="border p-1" colspan="5">ANALISIS DE COSTOS</th>
                         </tr>
                     </thead>
                     <thead>
@@ -116,6 +116,7 @@
                             <th class="border p-1"> VALOR DE VENTA</th>
                             <th class="border p-1"> MANO DE OBRA DIRECTA</th>
                             <th class="border p-1"> MATERIAS PRIMAS DIRECTAS</th>
+                            <th class="border p-1"> MATERIAS PRIMAS INDIRECTAS</th>
                             <th class="border p-1"> COSTOS INDIRECTOS DE FABRICA</th>
                         </tr>
                     </thead>
@@ -128,6 +129,11 @@
                             </td>
                             <td class="border p-1">
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mano_obra">
+                                    Detalles
+                                </button>
+                            </td>
+                            <td class="border p-1">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materias_primas">
                                     Detalles
                                 </button>
                             </td>
@@ -255,11 +261,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                        @foreach ($materiasPrimasDirectas as $materiaDirecta)
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        @endforeach
                     </tbody>
                     <tfoot>
                         <tr>

@@ -170,6 +170,10 @@
             color: #6b6a6a;
         }
 
+        input {
+            color: #fff;
+        }
+
         .suggestions-list {
             list-style-type: none; /* Elimina las viñetas de la lista */
             padding: 0;
