@@ -12,7 +12,8 @@
 @stop
 
 @section('content')
-<div class="flex items-end justify-end mb-4">
+<div class="flex items-end justify-end mb-4 gap-5">
+    <a href="{{ route('resumen.costos', $sdp->numero_sdp) }}" class="btn btn-success">ver resumen</a>
     <a href="{{ route('costos_produccion.index') }}" class="btn btn-warning">volver</a>
 </div>
 <div class="p-12">
@@ -138,7 +139,7 @@
                                 </button>
                             </td>
                             <td class="border p-1">
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materias_primas">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materias_primas_indirectas">
                                     Detalles
                                 </button>
                             </td>
@@ -255,24 +256,67 @@
                 <table class="table">
                     <thead>
                         <tr>
+                            <th>codigo</th>
                             <th>descripcion</th>
                             <th>cantidad</th>
-                            <th>valor</th>
+                            <th>valor unitario</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($materiasPrimasDirectas as $materiaDirecta)
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>{{ $materiaDirecta->codigo }}</td>
+                                <td>{{ $materiaDirecta->descripcion }}</td>
+                                <td>{{ $materiaDirecta->pivot->cantidad }}</td>
+                                <td>{{ number_format($materiaDirecta->precio_unit, 2, ',', '.') }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="2">total</td>
-                            <td></td>
+                            <td colspan="3">total</td>
+                            <td>{{ number_format($totalDirectas, 2, ',', '.') }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="materias_primas_indirectas" tabindex="-1" aria-labelledby="materias_primas_indirectasLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="materias_primas_indirectasLabel">MATERIAS PRIMAS INDIRECTAS</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>codigo</th>
+                            <th>descripcion</th>
+                            <th>cantidad</th>
+                            <th>valor unitario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($materiasPrimasIndirectas as $materiaDirecta)
+                            <tr>
+                                <td>{{ $materiaDirecta->codigo }}</td>
+                                <td>{{ $materiaDirecta->descripcion }}</td>
+                                <td>{{ $materiaDirecta->pivot->cantidad }}</td>
+                                <td>{{ number_format($materiaDirecta->precio_unit, 2, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">total</td>
+                            <td>{{ number_format($totalIndirectas, 2, ',', '.') }}</td>
                         </tr>
                     </tfoot>
                 </table>

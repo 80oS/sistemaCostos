@@ -150,10 +150,16 @@ Route::resource('materias_primas', MateriaPrimasController::class);
 // materias primas directas
 Route::get('materiasPrimasDirectas/create', [MateriaPrimaDirectaController::class, 'create'])->name('materiasPrimasDirectas.create');
 Route::post('materiasPrimasDirectas', [MateriaPrimaDirectaController::class, 'store'])->name('materiasPrimasDirectas.store');
+Route::get('materiasPrimasDirectas/{id}/edit', [MateriaPrimaDirectaController::class, 'edit'])->name('materiasPrimasDirectas.edit');
+Route::put('materiasPrimasDirectas/{id}/update', [MateriaPrimaDirectaController::class, 'update'])->name('materiasPrimasDirectas.update');
+Route::delete('materiasPrimasDirectas/{id}/delete', [MateriaPrimaDirectaController::class, 'destroy'])->name('materiasPrimasDirectas.destroy');
 
 // materias primas indirectas
 Route::get('materiasPrimasIndirectas/create', [MateriaPrimaIndirectaController::class, 'create'])->name('materiasPrimasIndirectas.create');
 Route::post('materiasPrimasIndirectas', [MateriaPrimaIndirectaController::class, 'store'])->name('materiasPrimasIndirectas.store');
+Route::get('materiasPrimasIndirectas/{id}', [MateriaPrimaIndirectaController::class, 'edit'])->name('materiasPrimasIndirectas.edit');
+Route::put('materiasPrimasIndirectas/{id}/update', [MateriaPrimaIndirectaController::class, 'update'])->name('materiasPrimasIndirectas.update');
+Route::delete('materiasPrimasIndirectas/{id}/delete', [MateriaPrimaIndirectaController::class, 'destroy'])->name('materiasPrimasIndirectas.destroy');
 
 // cargar materia prima
 Route::get('lista-spd-cargar', [cargarMateriaPrimaController::class, 'lista'])->name('lista.sdp.cargar');
@@ -186,6 +192,7 @@ Route::get('/costos_produccion', [Costos_produccionController::class, 'index'])-
 Route::get('/costos_produccion/{id}', [Costos_produccionController::class, 'show'])->name('costos_produccion.show');
 Route::post('/recalcular-mano-obra-directa', [Costos_produccionController::class, 'recalcularManoObraDirecta'])
     ->name('recalcular.mano.obra.directa');
+Route::get('/costos_produccion/{id}/resumen', [costos_produccionController::class, 'resumen'])->name('resumen.costos');
 
 // Roles
 Route::resource('roles', RoleController::class);

@@ -36,28 +36,42 @@ class MateriaPrimaDirectaController extends Controller
         return redirect()->route('materias_primas.index')->with('success', 'la materia prima directa se ha creada exitosamente');
     }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(MateriaPrimaDirecta $materiaPrimaDirecta)
+    public function edit( $id)
     {
-        //
+        $materia_Prima_directa = MateriaPrimaDirecta::findOrFail($id);
+
+        return view('materiasPrimasDirectas.edit', compact('materia_Prima_directa'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, MateriaPrimaDirecta $materiaPrimaDirecta)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'descripcion' => 'required|string',
+            'proveedor' => 'required|string',
+            'numero_factura' => 'required|string',
+            'numero_orden_compra' => 'required|string',
+            'precio_unit' => 'required|numeric',
+        ]);
+
+        $materia_Prima_directa = MateriaPrimaDirecta::findOrFail($id);
+
+        $materia_Prima_directa->update([
+            'descripcion' => $request->input('descripcion'),
+            'proveedor' => $request->input('proveedor'),
+            'numero_factura' => $request->input('numero_factura'),
+            'numero_orden_compra' => $request->input('numero_orden_compra'),
+            'precio_unit' => $request->input('precio_unit'),
+            'valor' => 0
+        ]);
+
+        return redirect()->route('materias_primas.index')->with('success', 'la materia prima directa actualizada exitosamente');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(MateriaPrimaDirecta $materiaPrimaDirecta)
+    public function destroy($id)
     {
-        //
+        $materia_Prima_directa = MateriaPrimaDirecta::findOrFail($id);
+        $materia_Prima_directa->delete();
+
+        return redirect()->route('materias_primas.index')->with('success', 'la materia prima directa eliminada exitosamente');
     }
 }

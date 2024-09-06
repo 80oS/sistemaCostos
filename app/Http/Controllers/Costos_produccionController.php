@@ -82,27 +82,47 @@ class Costos_produccionController extends Controller
         $cif = ($totalMOI*$totalHorasOperarios)+($totalGOI*$totalHorasOperarios)+($totalOCI*$totalHorasOperarios);
         Log::info('CIF calculado:', ['cif' => $cif]);
 
-        $utilidad_bruta = $total-$totalManoObra-0-$cif;
-        Log::info('Utilidad bruta calculada:', ['utilidad_bruta' => $utilidad_bruta]);
-
-        $margen_bruto = ($utilidad_bruta/$total)*100;
-
         $costoProduccion = $sdp->costosProduccion()->first();
 
-        $materiasPrimasDirectas = $costoProduccion->materiasPrimasDirectas()
-            ->withPivot('cantidad', 'materia_prima_directa_id', 'costos_produccion_id',)
-            ->get();
+        if ($costoProduccion) {
+            // Obtener materias primas asociadas a los costos de producción
+            $materiasPrimasDirectas = $costoProduccion->materiasPrimasDirectas()
+                ->withPivot('cantidad', 'materia_prima_directa_id', 'costos_produccion_id')
+                ->get();
+    
+            $materiasPrimasIndirectas = $costoProduccion->materiasPrimasIndirectas()
+                ->withPivot('cantidad', 'materia_prima_indirecta_id', 'costos_produccion_id')
+                ->get();
 
-        $materiasPrimasIndirectas = $costoProduccion->materiasPrimasIndirectas()
-            ->withPivot('cantidad', 'materia_prima_indirecta_id', 'costos_produccion_id',)
-            ->get();
+            $totalDirectas = $materiasPrimasDirectas->sum(function ($materiaPrima) {
+                return $materiaPrima->pivot->cantidad * $materiaPrima->precio_unit;
+            });
+
+            $totalIndirectas = $materiasPrimasIndirectas->sum(function ($materiaPrima) {
+                return $materiaPrima->pivot->cantidad * $materiaPrima->precio_unit;
+            });
+
+            $utilidad_bruta = $total-$totalManoObra-$totalDirectas-$cif;
+            Log::info('Utilidad bruta calculada:', ['utilidad_bruta' => $utilidad_bruta]);
+
+            $margen_bruto = ($utilidad_bruta/$total)*100;
+        } else {
+            // Si no hay costos de producción, inicializar las colecciones vacías
+            $materiasPrimasDirectas = collect();
+            $materiasPrimasIndirectas = collect();
+            $totalDirectas = 0;
+            $totalIndirectas = 0;
+            $utilidad_bruta = $totalManoObra-$totalManoObra-0-$cif;
+            $margen_bruto = ($utilidad_bruta/$total)*100;
+        }
 
         return view('costos_produccion.show', compact('sdp', 
                                                     'total', 'idimcols', 'costosProduccion', 
                                                     'cifs', 'costosProduccionPorOperario', 'totalMOI', 
                                                     'totalGOI', 'totalOCI', 'totalHorasOperarios',
                                                     'totalManoObra', 'totalGeneral', 'cif', 'utilidad_bruta', 
-                                                    'margen_bruto', 'materiasPrimasDirectas', 'materiasPrimasIndirectas'));
+                                                    'margen_bruto', 'materiasPrimasDirectas', 'materiasPrimasIndirectas',
+                                                    'totalDirectas', 'totalIndirectas'));
     }
 
     private function listarManoObraDirectaPorOperario($sdpId)
@@ -216,5 +236,108 @@ class Costos_produccionController extends Controller
         }
 
         Log::info('Actualización de mano de obra directa completada para SDP:', ['sdp_id' => $sdpId]);
+    }
+
+    public function resumen($id)
+    {
+        // Obtener el SDP junto con las relaciones necesarias
+        $sdp = SDP::where('numero_sdp', $id)->firstOrFail();
+        Log::info('SDP obtenido:', ['sdp' => $sdp]);
+
+        // Inicializar el total
+        $total = 0;
+
+        // Calcular el subtotal de cada artículo y acumular al total
+        $articulosConSubtotales = $sdp->articulos->map(function ($articulo) use (&$total) {
+            // Calcular el subtotal del artículo
+            $subtotal = $articulo->pivot->cantidad * $articulo->precio;
+            // Acumular el subtotal al total general
+            $total += $subtotal;
+            // Agregar el subtotal al artículo
+            Log::info('Subtotal calculado para el artículo:', [
+                'articulo_id' => $articulo->id,
+                'cantidad' => $articulo->pivot->cantidad,
+                'precio' => $articulo->precio,
+                'subtotal' => $subtotal,
+                'total_acumulado' => $total
+            ]);
+            return $articulo->setAttribute('subtotal', $subtotal);
+        });
+
+        // Filtrar costos de producción específicos para el SDP
+        $costosProduccion = CostosProduccion::where('sdp_id', $sdp->numero_sdp)->get();
+        Log::info('Costos de producción obtenidos:', ['costosProduccion' => $costosProduccion]);
+        // Obtener información adicional (si es necesario)
+        $idimcols = idimcol::all();
+        $cifs = Cif::all();
+
+        $totalHorasOperarios = Tiempos_produccion::where('sdp_id', $sdp->numero_sdp)
+        ->sum('horas');
+        Log::info('Total horas operarios:', ['totalHorasOperarios' => $totalHorasOperarios]);
+
+        $totalManoObra = CostosProduccion::where('sdp_id', $sdp->numero_sdp)->sum('mano_obra_directa');
+        Log::info('Total mano de obra:', ['totalManoObra' => $totalManoObra]);
+
+        $totalMOI = $cifs->sum('MOI');
+        $totalGOI = $cifs->sum('GOI');
+        $totalOCI = $cifs->sum('OCI');
+        Log::info('Totales CIFs:', ['MOI' => $totalMOI, 'GOI' => $totalGOI, 'OCI' => $totalOCI]);
+
+        $costosProduccionPorOperario = $this->listarManoObraDirectaPorOperario($sdp->numero_sdp);
+
+        $subtotalesOperarios = collect($costosProduccionPorOperario)->map(function ($item) use ($totalMOI, $totalGOI, $totalOCI) {
+            $subtotal = $item['mano_obra_directa_total'] + $totalMOI + $totalGOI + $totalOCI;
+            return $subtotal;
+        });
+
+        $totalGeneral = $subtotalesOperarios->sum();
+        Log::info('Total general calculado:', ['totalGeneral' => $totalGeneral]);
+
+        $cif = ($totalMOI*$totalHorasOperarios)+($totalGOI*$totalHorasOperarios)+($totalOCI*$totalHorasOperarios);
+        Log::info('CIF calculado:', ['cif' => $cif]);
+
+
+        $costoProduccion = $sdp->costosProduccion()->first();
+
+        if ($costoProduccion) {
+            // Obtener materias primas asociadas a los costos de producción
+            $materiasPrimasDirectas = $costoProduccion->materiasPrimasDirectas()
+                ->withPivot('cantidad', 'materia_prima_directa_id', 'costos_produccion_id')
+                ->get();
+    
+            $materiasPrimasIndirectas = $costoProduccion->materiasPrimasIndirectas()
+                ->withPivot('cantidad', 'materia_prima_indirecta_id', 'costos_produccion_id')
+                ->get();
+
+            $totalDirectas = $materiasPrimasDirectas->sum(function ($materiaPrima) {
+                return $materiaPrima->pivot->cantidad * $materiaPrima->precio_unit;
+            });
+
+            $totalIndirectas = $materiasPrimasIndirectas->sum(function ($materiaPrima) {
+                return $materiaPrima->pivot->cantidad * $materiaPrima->precio_unit;
+            });
+
+            $utilidad_bruta = $total-$totalManoObra-$totalDirectas-$cif;
+            Log::info('Utilidad bruta calculada:', ['utilidad_bruta' => $utilidad_bruta]);
+
+            $margen_bruto = ($utilidad_bruta/$total)*100;
+
+        } else {
+            // Si no hay costos de producción, inicializar las colecciones vacías
+            $materiasPrimasDirectas = collect();
+            $materiasPrimasIndirectas = collect();
+            $totalDirectas = 0;
+            $totalIndirectas = 0;
+            $utilidad_bruta = $totalManoObra-$totalManoObra-0-$cif;
+            $margen_bruto = ($utilidad_bruta/$total)*100;
+        }
+
+        return view('costos_produccion.resumen', compact('sdp', 
+                                                    'total', 'idimcols', 'costosProduccion', 
+                                                    'cifs', 'costosProduccionPorOperario', 'totalMOI', 
+                                                    'totalGOI', 'totalOCI', 'totalHorasOperarios',
+                                                    'totalManoObra', 'totalGeneral', 'cif', 'utilidad_bruta', 
+                                                    'margen_bruto', 'materiasPrimasDirectas', 'materiasPrimasIndirectas',
+                                                    'totalDirectas', 'totalIndirectas'));
     }
 }

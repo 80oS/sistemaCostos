@@ -40,7 +40,7 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th colspan="6">MATERIAS PRIMAS DIRECTAS</th>
+                                    <th colspan="8">MATERIAS PRIMAS DIRECTAS</th>
                                 </tr>
                             </thead>
                             <thead>
@@ -51,6 +51,8 @@
                                     <th class="px-1">NUMERO DE FACTURA</th>
                                     <th class="px-1">NUMERO DE ORDEN DE COMPRA</th>
                                     <th class="px-1">PRECIO UNITARIO</th>
+                                    <th class="px-1">EDTAR</th>
+                                    <th class="px-1">ELIMINAR</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,6 +64,17 @@
                                         <td class="px-1">{{ $materiaPrimaDirecta->numero_factura }}</td>
                                         <td class="px-1">{{ $materiaPrimaDirecta->numero_orden_compra }}</td>
                                         <td class="px-1">{{ $materiaPrimaDirecta->precio_unit }}</td>
+                                        <td class="px-1">
+                                            <a href="{{ route('materiasPrimasDirectas.edit', $materiaPrimaDirecta->id) }}" class="text-yellow-600 hover:text-yellow-300">EDITAR</a>
+                                        </td>
+                                        <td class="px-1">
+                                            <form action="{{ route('materiasPrimasDirectas.destroy', $materiaPrimaDirecta->id ) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="submit" class="text-red-600 hover:text-red-400" onclick="return confirm('¿Estás seguro de que deseas eliminar esta materia prima directa?');">ELIMINAR</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -71,7 +84,7 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th colspan="6">MATERIAS PRIMAS INDIRECTAS</th>
+                                    <th colspan="8">MATERIAS PRIMAS INDIRECTAS</th>
                                 </tr>
                             </thead>
                             <thead>
@@ -82,6 +95,8 @@
                                     <th class="px-1">NUMERO DE FACTURA</th>
                                     <th class="px-1">NUMERO DE ORDEN DE COMPRA</th>
                                     <th class="px-1">PRECIO UNITARIO</th>
+                                    <th class="px-1">EDITAR</th>
+                                    <th class="px-1">ELIMINAR</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -93,6 +108,17 @@
                                         <td class="px-1">{{ $materiaPrimaIndirecta->numero_factura }}</td>
                                         <td class="px-1">{{ $materiaPrimaIndirecta->numero_orden_compra }}</td>
                                         <td class="px-1">{{ $materiaPrimaIndirecta->precio_unit }}</td>
+                                        <td class="px-1">
+                                            <a href="{{ route('materiasPrimasIndirectas.edit', $materiaPrimaIndirecta->id) }}" class="text-yellow-600 hover:text-yellow-400">EDITAR</a>
+                                        </td>
+                                        <td class="px-1">
+                                            <form action="{{ route('materiasPrimasIndirectas.destroy', $materiaPrimaIndirecta->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button class="text-red-600 hover:text-red-400" type="submit"  onclick="return confirm('¿Estás seguro de que deseas eliminar esta materia prima indirecta?');">ELIMINAR</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -106,6 +132,7 @@
 @stop
 
 @section('css')
+
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <style>
@@ -182,3 +209,5 @@
         }, 10000);
     </script>
 @stop
+
+
