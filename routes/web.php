@@ -35,6 +35,7 @@ use App\Http\Controllers\TiemposProduccionController;
 use App\Http\Controllers\TrabajadoresController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VendedorController;
+use App\Http\Controllers\servicioExternoController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -167,6 +168,9 @@ Route::get('cargar-materias/{numero_sdp}', [CargarMateriaPrimaController::class,
 Route::post('cargar-materias/{numero_sdp}', [CargarMateriaPrimaController::class, 'store'])->name('materias.store');
 Route::get('/api/buscar-materias', [CargarMateriaPrimaController::class, 'buscarMaterias']);
 Route::get('/ver-materias-primas-cragada/{numero_sdp}', [CargarMateriaPrimaController::class, 'verMateriasPrimas'])->name('verMateriasPrimas');
+Route::delete('/directas/{numero_sdp}/{id}/delete', [CargarMateriaPrimaController::class, 'destroyDirectas'])
+    ->name('destroyDirectas');
+Route::delete('/indirectas/{numero_sdp}/{id}/delete', [CargarMateriaPrimaController::class, 'destroyIndirectas'])->name('destroyIndirectas');
 
 // proveedor
 Route::resource('proveedor', ProveedorController::class);
@@ -215,4 +219,7 @@ Route::get('/assign-permission', [PermissionController::class, 'asignar'])
 
 Route::get('AdministraciónInventario', [AdministraciónInventarioController::class, 'index'])->name('AdministraciónInventario');
 
+// servocios Externos 
+
+Route::resource('serviciosExternos', servicioExternoController::class);
 

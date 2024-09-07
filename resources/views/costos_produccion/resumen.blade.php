@@ -11,7 +11,10 @@
 @section('content')
     <div class="p-12">
         <div class="flex items-end justify-end mb-4 gap-5">
-            <a href="{{ route('costos_produccion.show', $sdp->numero_sdp) }}" class="btn btn-warning">volver</a>
+            <button id="printButton" class="no-print bg-blue-700 hover:bg-blue-900 text-white  py-2 px-4 rounded">
+                <i class="fa-solid fa-print"></i>
+            </button>
+            <a href="{{ route('costos_produccion.show', $sdp->numero_sdp) }}" class="no-print btn btn-warning">volver</a>
         </div>
         <div class="container">
             <div class="card">
@@ -109,6 +112,8 @@
 @stop
 
 @section('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <style>
@@ -138,10 +143,34 @@
             border: #000 solid 1px;
             border-radius: 10px;
         }
+
+        @media print {
+            @page {
+                size: landscape !important; /* Establecer la orientación en CSS también */
+                margin: 0 !important;
+            }
+        }
     </style>
 @stop
 
 @section('js')
     <script src="https://cdn.tailwindcss.com"></script>
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+    <script>
+        document.getElementById('printButton').addEventListener('click', function () {
+            // Ocultar el botón de impresión antes de generar el PDF
+    
+            const SdpContent = document.querySelector(".sdp");
+    
+            const opt = {
+                margin:       0.5,
+                filename:     'costos_sdp.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+            };
+    
+            window.print();
+        });
+    </script>
 @stop

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'home')
+@section('title', 'Materias primas cargadas')
 
 @section('content_header')
 <h2 class="font-semibold text-xl text-gray-400 leading-tight">
@@ -20,7 +20,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th colspan="7">MATERIAS PRIMAS DIRECTAS</th>
+                                <th colspan="8">MATERIAS PRIMAS DIRECTAS</th>
                             </tr>
                         </thead>
                         <thead>
@@ -32,6 +32,7 @@
                                 <th class="px-1">NUMERO DE FACTURA</th>
                                 <th class="px-1">NUMERO DE ORDEN DE COMPRA</th>
                                 <th class="px-1">PRECIO UNITARIO</th>
+                                <th class="px-1">Eliminar</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,6 +45,13 @@
                                     <td class="px-1">{{ $materiaPrimaDirecta->numero_factura }}</td>
                                     <td class="px-1">{{ $materiaPrimaDirecta->numero_orden_compra }}</td>
                                     <td class="px-1">{{ $materiaPrimaDirecta->precio_unit }}</td>
+                                    <td>
+                                        <form action="{{ route('destroyDirectas', ['numero_sdp' => $sdp->numero_sdp, 'id' => $materiaPrimaDirecta->pivot->id]) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta materia prima directa?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -53,7 +61,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th colspan="7">MATERIAS PRIMAS INDIRECTAS</th>
+                                <th colspan="8">MATERIAS PRIMAS INDIRECTAS</th>
                             </tr>
                         </thead>
                         <thead>
@@ -65,6 +73,7 @@
                                 <th class="px-1">NUMERO DE FACTURA</th>
                                 <th class="px-1">NUMERO DE ORDEN DE COMPRA</th>
                                 <th class="px-1">PRECIO UNITARIO</th>
+                                <th class="px-1">Eliminar</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -77,6 +86,13 @@
                                     <td class="px-1">{{ $materiaPrimaIndirecta->numero_factura }}</td>
                                     <td class="px-1">{{ $materiaPrimaIndirecta->numero_orden_compra }}</td>
                                     <td class="px-1">{{ $materiaPrimaIndirecta->precio_unit }}</td>
+                                    <td class="px-1">
+                                        <form action="{{ route('destroyIndirectas', ['numero_sdp' => $sdp->numero_sdp, 'id' => $materiaPrimaIndirecta->pivot->id]) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta materia prima directa?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

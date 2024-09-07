@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Servicio_esterno extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'descripcion',
+        'proveedor',
+        'valor_hora'
+    ];
 }

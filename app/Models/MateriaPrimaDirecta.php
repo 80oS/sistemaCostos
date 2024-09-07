@@ -32,7 +32,7 @@ class MateriaPrimaDirecta extends Model
     public function costosProduccion()
     {
         return $this->belongsToMany(CostosProduccion::class, 'materia_prima_directas_costos')
-                    ->withPivot('cantidad', 'materia_prima_directa_id', 'costos_produccion_id',)
+                    ->withPivot('id','cantidad', 'materia_prima_directa_id', 'costos_produccion_id',)
                     ->withTimestamps();
     }
 }

@@ -6,6 +6,7 @@ use App\Models\MateriaPrimaDirecta;
 use App\Models\MateriaPrimaIndirecta;
 use App\Models\SDP;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CargarMateriaPrimaController extends Controller
@@ -118,5 +119,30 @@ class CargarMateriaPrimaController extends Controller
         $materias = $materiasPrimasDirectas->merge($materiasPrimasIndirectas);
 
         return response()->json($materias);
+    }
+
+
+    public function destroyDirectas($numero_sdp, $id)
+    {
+        Log::info('Numero SDP: ' . $numero_sdp);
+        Log::info('ID: ' . $id);
+        // Buscar la SDP por su número
+        DB::table('materia_prima_directas_costos')
+        ->where('id', $id)
+        ->delete();
+
+        return redirect()->back()->with('success', 'Materia prima directa eliminada exitosamente.');
+    }
+
+    public function destroyIndirectas($id, $numero_sdp)
+    {
+        Log::info('Numero SDP: ' . $numero_sdp);
+        Log::info('ID: ' . $id);
+        // Buscar la SDP por su número
+        DB::table('materia_prima_indirectas_costos')
+        ->where('id', $id)
+        ->delete();
+
+        return redirect()->back()->with('success', 'Carga de materia prima indirecta eliminada correctamente.');
     }
 }

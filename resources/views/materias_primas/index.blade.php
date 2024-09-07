@@ -28,7 +28,7 @@
                     <a href="{{ route('materiasPrimasIndirectas.create') }}" class="btn btn-info">crear materia primas indirectas</a>
                 </div>
                 <div class="mb-4">
-                    <a href="{{ route('materias_primas.create') }}" class="btn btn-info">servicios externos</a>
+                    <a href="{{ route('serviciosExternos.index') }}" class="btn btn-info">servicios externos</a>
                 </div>
                 <div class="mb-4">
                     <a href="{{ route('lista.sdp.cargar') }}" class="btn btn-info">Carga de Materias Primas</a>

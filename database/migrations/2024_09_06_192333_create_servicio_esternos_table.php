@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('servicio_esternos', function (Blueprint $table) {
             $table->id();
+            $table->string('descripcion');
+            $table->string('proveedor');
+            $table->string('valor_hora');
             $table->timestamps();
         });
     }
