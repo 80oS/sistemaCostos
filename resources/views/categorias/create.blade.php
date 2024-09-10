@@ -13,21 +13,21 @@
         <div class="container">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('categorias.store') }}" method="POST">
+                    <form action="{{ route('categorias.store') }}" method="POST" class="max-w-sm mx-auto space-y-4">
                         @csrf
-                        <div class="mb-4">
-                            <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre</label>
-                            <input type="text" id="nombre" name="nombre" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-light focus:outline-none focus:shadow-outline" required>
+                        <div class="form-group mb-4">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" id="nombre" name="nombre" class="form-control" required>
                         </div>
-                        <div class="mb-4">
-                            <label for="descripcion" class="block text-gray-700 text-sm font-bold mb-2">Descripción</label> 
-                            <textarea id="descripcion" name="descripcion" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-light focus:outline-none focus:shadow-outline" required></textarea>
+                        <div class="form-group mb-4">
+                            <label for="descripcion" class="form-label">Descripción</label> 
+                            <textarea id="descripcion" name="descripcion" class="form-control" required></textarea>
                         </div>
                         <div class="flex items-center justify-between">
-                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            <button type="submit" class="btn btn-primary">
                                 Crear Categoria
                             </button>
-                            <a href="{{ route('categorias.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            <a href="{{ route('categorias.index') }}" class="btn btn-default">
                                 Cancelar
                             </a>
                         </div>

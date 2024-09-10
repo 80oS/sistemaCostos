@@ -37,4 +37,9 @@ class Producto extends Model
     {
         return $this->hasOne(NivelStock::class);
     }
+
+    public function inventario()
+    {
+        return $this->hasOne(Inventario::class);
+    }
 }
