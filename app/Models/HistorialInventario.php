@@ -5,23 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Inventario extends Model
+class HistorialInventario extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'producto_id',
-        'stock',
-        'ubicacion_id'
+        'stock_anterior',
+        'stock_nuevo',
+        'fecha_movimiento',
+        'descripcion'
     ];
 
     public function producto()
     {
         return $this->belongsTo(Producto::class);
-    }
-
-    public function ubicacion()
-    {
-        return $this->belongsTo(Ubicacion::class);
     }
 }

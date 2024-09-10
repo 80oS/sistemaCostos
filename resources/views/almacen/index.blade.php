@@ -3,13 +3,14 @@
 @section('title', 'ALMACEN')
 
 @section('content_header')
-    
+
 @stop
 
 @section('content')
 <div class="container mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-6">Almacén</h1>
-    
+    <h2 class="font-semibold text-xl text-gray-300 leading-tight uppercase mb-10">
+        {{ __('Almacen') }}
+    </h2>
     <div class="flex justify-between items-center mb-6">
         <div class="search">
             <i class="fa-solid fa-magnifying-glass"></i>
@@ -30,7 +31,7 @@
                 <p class="text-3xl font-bold">1,234</p>
             </div>
             <div class="p-4 border-t border-gray-200">
-                <a href="" class="text-center px-4 py-2 border border-gray-300 text-gray-700 font-semibold rounded-lg shadow-md hover:text-gray-800">
+                <a href="{{ route('inventario.index') }}" class="text-center px-4 py-2 border border-gray-300 text-gray-700 font-semibold rounded-lg shadow-md hover:text-gray-800">
                     <i class="fa-solid fa-box"></i> Ver Inventario
                 </a>
             </div>
@@ -38,15 +39,15 @@
         
         <div class="bg-white shadow-md rounded-lg">
             <div class="p-4 border-b border-gray-200">
-                <h2 class="text-lg font-semibold">Pedidos</h2>
-                <p class="text-sm text-gray-500">Pedidos pendientes de envío</p>
+                <h2 class="text-lg font-semibold">Categorias</h2>
+                <p class="text-sm text-gray-500">Categorias de productos</p>
             </div>
             <div class="p-4">
                 <p class="text-3xl font-bold">42</p>
             </div>
             <div class="p-4 border-t border-gray-200">
-                <a href="" class="tex-center px-4 py-2 border border-gray-300 text-gray-700 font-semibold rounded-lg shadow-md hover:text-gray-800">
-                    <i class="fa-regular fa-clipboard"></i> Ver Pedidos
+                <a href="{{ route('categorias.index') }}" class="tex-center px-4 py-2 border border-gray-300 text-gray-700 font-semibold rounded-lg shadow-md hover:text-gray-800">
+                    <i class="fa-solid fa-layer-group"></i> Ver Categorias
                 </a>
             </div>
         </div>
@@ -60,11 +61,46 @@
                 <p class="text-3xl font-bold">7</p>
             </div>
             <div class="p-4 border-t border-gray-200">
-                <a href="" class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 font-semibold rounded-lg shadow-md hover:text-gray-800">
-                    Ver Movimientos
+                <a href="" class=" text-center px-4 py-2 border border-gray-300 text-gray-700 font-semibold rounded-lg shadow-md hover:text-gray-800">
+                    <i class="fa-solid fa-boxes-packing"></i> Ver Movimientos
                 </a>
             </div>
         </div>
+    </div>
+    <div class="mt-10">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Productos</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>codigo</th>
+                            <th>producto</th>
+                            <th>descripcion</th>
+                            <th>stock</th>
+                            <th>precio unitario</th>
+                            <th>ubicacion</th>
+                            <th>proveedor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>6</td>
+                            <td>7</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+    </div>
+    <div class="flex items-end justify-end p-10">
+        <a href="{{ route('AdministraciónInventario') }}" class="bg-yellow-600 hover:bg-yellow-400 px-3 py-2 rounded">volver</a>    
     </div>
 </div>
 @stop
@@ -77,16 +113,61 @@
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <style>
         .search {
-            background: #fff;
-            color: #000;
+            background: #fafafa24;
+            color: #000 !important;
             padding: 5px;
             border-radius: 5px;
             height: 40px;
+            backdrop-filter: blur(0.4rem);
+            -webkit-backdrop-filter: blur(0.4rem);
         }
 
         .search input {
             border: none !important;
             height: 30px;
+            background: #fafafa2d;
+            color: #000 !important;
+            backdrop-filter: blur(0.4rem);
+            -webkit-backdrop-filter: blur(0.4rem);
+        }
+
+        .content {
+            width: 100%;
+            height: 94.2vh;
+            background: url('https://soporte.mygestion.com/media/wp-content/uploads/beneficios-gesti%C3%B3n-de-almac%C3%A9n-700x467.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #000;
+        }
+
+        .card {
+            background: #fafafa10 !important;
+            backdrop-filter: blur(0.4rem) !important;
+            -webkit-backdrop-filter: blur(0.4rem) !important;
+            color: #fff !important;
+        }
+
+        .card-header {
+            background: #fafafa78 !important;
+            backdrop-filter: blur(0.4rem) !important;
+            -webkit-backdrop-filter: blur(0.4rem) !important;
+            color: #413e3e !important;
+        }
+
+        .card-body {
+            background: #fafafa78 !important;
+            backdrop-filter: blur(0.4rem) !important;
+            -webkit-backdrop-filter: blur(0.4rem) !important;
+            color: #302d2d !important;
+        }
+
+        table thead tr th , table tbody tr td {
+            background: #fafafa78;
+            backdrop-filter: blur(0.4rem);
+            -webkit-backdrop-filter: blur(0.4rem);
+            color: #292828 !important;
+            border: 1px solid #fafafa10 !important;
         }
     </style>
 @stop

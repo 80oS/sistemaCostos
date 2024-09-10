@@ -180,6 +180,7 @@ Route::resource('compras', Ordenes_compraController::class);
 
 // inventario
 Route::resource('inventario', InventoryController::class);
+Route::get('inventario/bajo_minimos', [InventoryController::class, 'bajoMinimos'])->name('inventario.bajo_minimos');
 
 // categorias
 Route::resource('categorias', CategoryController::class);

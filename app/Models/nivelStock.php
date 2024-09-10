@@ -5,23 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Inventario extends Model
+class nivelStock extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'producto_id',
-        'stock',
-        'ubicacion_id'
+        'stock_minimo',
+        'stock_maximo',
+        'punto_reorden'
     ];
 
     public function producto()
     {
         return $this->belongsTo(Producto::class);
-    }
-
-    public function ubicacion()
-    {
-        return $this->belongsTo(Ubicacion::class);
     }
 }

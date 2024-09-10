@@ -13,7 +13,6 @@ class Producto extends Model
         'nombre', 
         'codigo', 
         'descripcion', 
-        'cantidad', 
         'precio', 
         'categoria_id', 
         'proveedor_id'
@@ -24,19 +23,18 @@ class Producto extends Model
         return $this->belongsTo(Categoria::class);
     }
 
-    /**
-     * Relación muchos a uno con Proveedor.
-     */
     public function proveedor()
     {
         return $this->belongsTo(Proveedor::class);
     }
 
-    /**
-     * Relación uno a muchos con movimientos.
-     */
     public function movimientos()
     {
         return $this->hasMany(Movimiento::class);
+    }
+
+    public function nivelStock()
+    {
+        return $this->hasOne(NivelStock::class);
     }
 }
