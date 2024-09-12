@@ -11,7 +11,7 @@ class Inventario extends Model
 
     protected $fillable = [
         'producto_id',
-        'stock',
+        'cantidad',
         'ubicacion_id'
     ];
 

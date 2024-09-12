@@ -11,8 +11,8 @@ class HistorialInventario extends Model
 
     protected $fillable = [
         'producto_id',
-        'stock_anterior',
-        'stock_nuevo',
+        'cantidad_anterior',
+        'antidad_nuevo',
         'fecha_movimiento',
         'descripcion'
     ];

@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('historial_inventarios', function (Blueprint $table) {
             $table->id();
             $table->foreignId('producto_id')->constrained('productos')->onDelete('cascade');
-            $table->integer('stock_anterior');
-            $table->integer('stock_nuevo');
+            $table->integer('cantidad_anterior');
+            $table->integer('cantidad_nuevo');
             $table->date('fecha_movimiento');
             $table->text('descripcion')->nullable();
             $table->timestamps();

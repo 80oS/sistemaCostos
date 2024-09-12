@@ -22,7 +22,7 @@ use App\Http\Controllers\NominaController;
 use App\Http\Controllers\OperativoController;
 use App\Http\Controllers\Ordenes_compraController;
 use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\RemicionesController;
 use App\Http\Controllers\RoleController;
@@ -184,6 +184,10 @@ Route::get('inventario/bajo_minimos', [InventoryController::class, 'bajoMinimos'
 
 // categorias
 Route::resource('categorias', CategoryController::class);
+
+// productos
+
+route::resource('productos', ProductosController::class);
 
 // CIF
 

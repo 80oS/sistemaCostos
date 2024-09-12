@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('materia_Prima_Indirectas_costos', function (Blueprint $table) {
+        Schema::create('materia_prima_indirectas_costos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('materia_prima_indirecta_id')->constrained('materia_prima_indirectas')->onDelete('cascade');
+            $table->foreignId('materia_indirecta_id')->constrained('materia_prima_indirectas')->onDelete('cascade');
             $table->foreignId('costos_produccion_id')->constrained('costos_produccions')->onDelete('cascade');
             $table->integer('cantidad');
             $table->timestamps();

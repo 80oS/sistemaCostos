@@ -12,43 +12,24 @@
         volver
     </a>
 </div>
-<div class="bg-white shadow-md rounded my-6">
-    <table class="min-w-max w-full table-auto">
+<div class="container">
+    <h1>Inventario</h1>
+    <table class="table">
         <thead>
-            <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                <th class="py-3 px-6 text-left">Producto</th>
-                <th class="py-3 px-6 text-left">Categoría</th>
-                <th class="py-3 px-6 text-center">Stock Total</th>
-                <th class="py-3 px-6 text-center">Ubicaciones</th>
-                <th class="py-3 px-6 text-center">Estado</th>
+            <tr>
+                <th>Producto</th>
+                <th>Ubicación</th>
+                <th>Cantidad</th>
+                <th>Última Actualización</th>
             </tr>
         </thead>
-        <tbody class="text-gray-600 text-sm font-light">
-            @foreach ($inventario as $item)
-                <tr class="border-b border-gray-200 hover:bg-gray-100">
-                    <td class="py-3 px-6 text-left whitespace-nowrap">
-                        <div class="flex items-center">
-                            <span class="font-medium">{{ $item->producto_nombre }}</span>
-                        </div>
-                    </td>
-                    <td class="py-3 px-6 text-left">
-                        <span>{{ $item->categoria }}</span>
-                    </td>
-                    <td class="py-3 px-6 text-center">
-                        <span>{{ $item->stock_total }}</span>
-                    </td>
-                    <td class="py-3 px-6 text-center">
-                        <span>{{ $item->num_ubicaciones }}</span>
-                    </td>
-                    <td class="py-3 px-6 text-center">
-                        @if ($item->stock_total < $item->stock_minimo)
-                            <span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">Bajo Mínimo</span>
-                        @elseif ($item->stock_total > $item->stock_maximo)
-                            <span class="bg-yellow-200 text-yellow-600 py-1 px-3 rounded-full text-xs">Sobre Máximo</span>
-                        @else
-                            <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">Normal</span>
-                        @endif
-                    </td>
+        <tbody>
+            @foreach($inventarios as $inventario)
+                <tr>
+                    <td>{{ $inventario->producto->nombre }}</td>
+                    <td>{{ $inventario->ubicacion->nombre }}</td>
+                    <td>{{ $inventario->cantidad }}</td>
+                    <td>{{ $inventario->fecha_actualizacion }}</td>
                 </tr>
             @endforeach
         </tbody>

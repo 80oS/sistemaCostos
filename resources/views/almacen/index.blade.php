@@ -16,7 +16,7 @@
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="search" placeholder="Buscar productos" class="pl-8 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         </div>
-        <a href="" class="text-center px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">
+        <a href="{{ route('productos.create') }}" class="text-center px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600">
             <i class="fa-solid fa-box"></i> Agregar Producto
         </a>
     </div>
@@ -133,7 +133,7 @@
 
         .content {
             width: 100%;
-            height: 94.2vh;
+            height: 120vh;
             background: url('https://soporte.mygestion.com/media/wp-content/uploads/beneficios-gesti%C3%B3n-de-almac%C3%A9n-700x467.jpg');
             background-size: cover;
             background-position: center;

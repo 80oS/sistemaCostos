@@ -36,8 +36,8 @@
                                             <th class="px-4 py-2 border">año</th>
                                             <th class="px-4 py-2 border">hora de inicio</th>
                                             <th class="px-4 py-2 border">hora de fin</th>
-                                            <th class="px-4 py-2 border">cdigo del servicio</th>
-                                            <th class="px-4 py-2 border">proseso/servicio</th>
+                                            <th class="px-4 py-2 border">codigo del servicio</th>
+                                            <th class="px-4 py-2 border">proceso/servicio</th>
                                             <th class="px-4 py-2 border">valor hora del sevicio</th>
                                             <th class="px-4 py-2 border">horas</th>
                                             <th class="px-4 py-2 border">valor total por las horas trabajadas</th>
