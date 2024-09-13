@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('sdp_id');
             $table->unsignedBigInteger('articulo_id');
             $table->integer('cantidad');
+            $table->decimal('precio', 20, 2);
 
             $table->foreign('sdp_id')->references('id')->on('sdps')->onDelete('cascade');
             $table->foreign('articulo_id')->references('id')->on('articulos')->onDelete('cascade');

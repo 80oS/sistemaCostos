@@ -12,7 +12,7 @@ class ArticuloSdp extends Model
     protected $table = 'articulo_sdp'; // Nombre de la tabla pivot
 
 
-    protected $fillable = ['articulo_id', 's_d_p_id', 'cantidad'];
+    protected $fillable = ['articulo_id', 's_d_p_id', 'cantidad', 'precio'];
 
 
 }

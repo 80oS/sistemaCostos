@@ -29,7 +29,6 @@
                                 <th>descripcion</th>
                                 <th>material</th>
                                 <th>plano</th>
-                                <th>precio</th>
                                 <th>editar</th>
                                 <th>eliminar</th>
                             </tr>
@@ -44,7 +43,6 @@
                                 <td>{{ $articulo->descripcion }}</td>
                                 <td>{{ $articulo->material }}</td>
                                 <td>{{ $articulo->plano }}</td>
-                                <td>{{ number_format($articulo->precio, 2, ',', '.') }}</td>
                                 <td>
                                     <a href="{{ route('articulos.edit', $articulo->id) }}" class="text-yellow-700 hover:text-yellow-300">
                                         Editar

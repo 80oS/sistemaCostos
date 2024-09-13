@@ -19,8 +19,8 @@
             </ul>
         </div>
     @endif
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
+    <div class="card max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="card-body  overflow-hidden  sm:rounded-lg p-6">
             <form action="{{ route('sdp.update', $sdp->id) }}" method="POST"  class="max-w-sm mx-auto space-y-4">
                 @csrf
                 @method('PUT')
@@ -58,11 +58,6 @@
                                 </div>
                                 
                                 <div class="mb-4">
-                                    <label for="articulo_{{ $loop->index }}_cantidad">Cantidad</label>
-                                    <input type="number" name="articulos[{{ $loop->index }}][cantidad]" id="articulo_{{ $loop->index }}_cantidad" class="form-control" value="{{ old('articulos.' . $loop->index . '.cantidad', $articulo->pivot->cantidad) }}" required>
-                                </div>
-                                
-                                <div class="mb-4">
                                     <label for="articulo_{{ $loop->index }}_material">Material</label>
                                     <input type="text" name="articulos[{{ $loop->index }}][material]" id="articulo_{{ $loop->index }}_material" class="form-control" value="{{ old('articulos.' . $loop->index . '.material', $articulo->material) }}">
                                 </div>
@@ -71,10 +66,15 @@
                                     <label for="articulo_{{ $loop->index }}_plano">Plano</label>
                                     <input type="text" name="articulos[{{ $loop->index }}][plano]" id="articulo_{{ $loop->index }}_plano" class="form-control" value="{{ old('articulos.' . $loop->index . '.plano', $articulo->plano) }}">
                                 </div>
+
+                                <div class="mb-4">
+                                    <label for="articulo_{{ $loop->index }}_cantidad">Cantidad</label>
+                                    <input type="number" name="articulos[{{ $loop->index }}][cantidad]" id="articulo_{{ $loop->index }}_cantidad" class="form-control" value="{{ old('articulos.' . $loop->index . '.cantidad', $articulo->pivot->cantidad) }}" required>
+                                </div>
                                 
                                 <div class="mb-4">
                                     <label for="articulo_{{ $loop->index }}_precio">Precio</label>
-                                    <input type="number" name="articulos[{{ $loop->index }}][precio]" id="articulo_{{ $loop->index }}_precio" class="form-control" value="{{ old('articulos.' . $loop->index . '.precio', $articulo->precio) }}" required>
+                                    <input type="number" name="articulos[{{ $loop->index }}][precio]" id="articulo_{{ $loop->index }}_precio" class="form-control" value="{{ old('articulos.' . $loop->index . '.precio', $articulo->pivot->precio) }}" required>
                                 </div>
                 
                                 <button type="button" class="btn btn-danger remove-articulo">Eliminar Artículo</button>
@@ -148,10 +148,6 @@
                         <label for="plano">Plano</label>
                         <input type="text" name="plano" id="plano" class="form-control" required>
                     </div>
-                    <div class="form-group">
-                        <label for="precio">Precio</label>
-                        <input type="number" name="precio" id="precio" class="form-control" required>
-                    </div>
                     <button type="submit" class="btn btn-primary">Guardar Artículo</button>
                 </form>
             </div>
@@ -193,6 +189,68 @@
             display: flex;
             flex-direction: row;
             gap: 20px;
+        }
+
+        form {
+            max-width: 24rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+            --tw-space-y-reverse: 0;
+            margin-top: calc(1rem /* 16px */ * calc(1 - var(--tw-space-y-reverse)));
+            margin-bottom: calc(1rem /* 16px */ * var(--tw-space-y-reverse));
+        }
+
+        .card-body label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem /* 14px */;
+            line-height: 1.25rem /* 20px */;
+            font-weight: 500;
+            --tw-text-opacity: 1;
+            color: rgb(243 244 246 / var(--tw-text-opacity)) /* #f3f4f6 */;
+        }
+
+        .card-body input, .card-body select  {
+            --tw-bg-opacity: 1;
+            background-color: rgb(17 24 39 / var(--tw-bg-opacity)) /* #111827 */;
+            border-width: 1px;
+            --tw-border-opacity: 1;
+            border-color: rgb(209 213 219 / var(--tw-border-opacity)) /* #d1d5db */;
+            --tw-text-opacity: 1;
+            color: rgb(243 244 246 / var(--tw-text-opacity)) /* #f3f4f6 */;
+            font-size: 0.875rem /* 14px */;
+            line-height: 1.25rem /* 20px */;
+            border-radius: 0.5rem /* 8px */;
+            width: 100%;
+        }
+
+        .card-body input.focus\:ring-blue-500:focus, .card-body select.focus\:ring-blue-500:focus {
+            --tw-ring-opacity: 1;
+            --tw-ring-color: rgb(59 130 246 / var(--tw-ring-opacity)) /* #3b82f6 */;
+        }
+        .card-body input.p-2\.5, .card-body select.p-2\.5 {
+            padding: 0.625rem /* 10px */;
+        }
+
+        .card-body button {
+            --tw-bg-opacity: 1;
+            background-color: rgb(59 130 246 / var(--tw-bg-opacity)) /* #3b82f6 */;
+            --tw-text-opacity: 1;
+            color: rgb(255 255 255 / var(--tw-text-opacity)) /* #ffffff */;
+            font-weight: 700;
+            padding-top: 0.5rem /* 8px */;
+            padding-bottom: 0.5rem /* 8px */;
+            padding-left: 1rem /* 16px */;
+            padding-right: 1rem /* 16px */;
+            border-radius: 0.25rem /* 4px */;
+        }
+
+        .card-body button.hover\:bg-blue-700:hover {
+            --tw-bg-opacity: 1;
+            background-color: rgb(29 78 216 / var(--tw-bg-opacity)) /* #1d4ed8 */;
         }
 
         input.form-control::placeholder {
@@ -252,10 +310,6 @@
                     <input type="text" name="articulos[${articuloIndex}][descripcion]" id="articulo_${articuloIndex}_descripcion" class="form-control" required>
                 </div>    
 
-                <div class="mb-4">
-                    <label for="articulo_${articuloIndex}_cantidad">Cantidad</label>
-                    <input type="number" name="articulos[${articuloIndex}][cantidad]" id="articulo_${articuloIndex}_cantidad" class="form-control" required>
-                </div>
 
                 <div class="mb-4">
                     <label for="articulo_${articuloIndex}_material">Material</label>
@@ -265,6 +319,11 @@
                 <div class="mb-4">
                     <label for="articulo_${articuloIndex}_plano">Plano</label>
                     <input type="text" name="articulos[${articuloIndex}][plano]" id="articulo_${articuloIndex}_plano" class="form-control">
+                </div>
+
+                <div class="mb-4">
+                    <label for="articulo_${articuloIndex}_cantidad">Cantidad</label>
+                    <input type="number" name="articulos[${articuloIndex}][cantidad]" id="articulo_${articuloIndex}_cantidad" class="form-control" required>
                 </div>
 
                 <div class="mb-4">

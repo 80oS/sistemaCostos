@@ -17,6 +17,46 @@
         <!-- Styles -->
         @livewireStyles
     </head>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .math-wallpaper {
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(135deg, rgb(230, 240, 255) 0%, rgb(180, 210, 255) 100%),
+                radial-gradient(circle at 20% 20%, rgba(25, 75, 180, 0.8) 0.1em, transparent 0.1em),
+                radial-gradient(circle at 40% 60%, rgba(25, 75, 180, 0.8) 0.1em, transparent 0.1em),
+                radial-gradient(circle at 60% 30%, rgba(25, 75, 180, 0.8) 0.1em, transparent 0.1em),
+                radial-gradient(circle at 80% 70%, rgba(25, 75, 180, 0.8) 0.1em, transparent 0.1em);
+            background-size: 100% 100%, 10em 10em, 10em 10em, 10em 10em, 10em 10em;
+            background-repeat: no-repeat, repeat, repeat, repeat, repeat;
+            position: relative;
+        }
+
+        .math-wallpaper::before,
+        .math-wallpaper::after {
+            content: "+ - × ÷";
+            position: absolute;
+            color: rgba(25, 75, 180, 0.8);
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .math-wallpaper::before {
+            top: 25%;
+            left: 33%;
+        }
+
+        .math-wallpaper::after {
+            bottom: 40%;
+            right: 20%;
+        }
+    </style>
     <body class="font-sans antialiased">
         <x-banner />
 
@@ -36,6 +76,8 @@
             <main>
                 {{ $slot }}
             </main>
+    
+            @yield('content')
         </div>
 
         @stack('modals')

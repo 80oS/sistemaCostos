@@ -16,7 +16,6 @@ class Articulo extends Model
         'descripcion',
         'material',
         'plano',
-        'precio',
     ];
 
     protected static function boot()
@@ -28,7 +27,7 @@ class Articulo extends Model
     public function sdps()
     {
         return $this->belongsToMany(Sdp::class, 'articulo_sdp')
-                    ->withPivot('cantidad', 's_d_p_id', 'articulo_id')
+                    ->withPivot('cantidad', 'precio', 's_d_p_id', 'articulo_id')
                     ->withTimestamps();
     }
 }

@@ -32,11 +32,6 @@
                         <input type="text" name="plano" id="plano" value="{{ $articulo->plano }}" class="form-control">
                     </div>
                     
-                    <div class="form-group mb-3">
-                        <label for="precio" class="form-label">Precio</label>
-                        <input type="number" name="precio" id="precio" value="{{ $articulo->precio }}" class="form-control">
-                    </div>
-                    
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary">Actualizar Artículo</button>
                         <a href="{{ route('articulos.index') }}" class="btn btn-default">Cancelar</a>

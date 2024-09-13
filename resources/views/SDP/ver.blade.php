@@ -92,7 +92,7 @@
                             <td class="border p-1 text-left">{{ $sdp->fecha_despacho_produccion }}</td>
                             <td class="border p-1 text-left">{{ $articulo->plano }}</td>
                             <td class="border p-1  text-center">{{ $articulo->pivot->cantidad }}</td>
-                            <td class="border p-1  text-right">{{ number_format($articulo->precio, 2, ',', '.') }}</td>
+                            <td class="border p-1  text-right">{{ number_format($articulo->pivot->precio, 2, ',', '.') }}</td>
                             <td class="border p-1  text-right">{{ number_format($articulo->subtotal, 2, ',', '.') }}</td>
                         </tr>
                     @endforeach

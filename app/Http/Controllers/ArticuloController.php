@@ -20,7 +20,6 @@ class ArticuloController extends Controller
             'descripcion' => 'required|string|unique:articulos,descripcion',
             'material' => 'required|string',
             'plano' => 'required|string',
-            'precio'=> 'required|numeric|min:0' // Cambié integer a numeric porque precio generalmente admite decimales
         ]);
 
         try {
@@ -61,7 +60,6 @@ class ArticuloController extends Controller
                 'descripcion' => 'required|string',
                 'material' => 'nullable|string',
                 'plano' => 'nullable|string',
-                'precio' => 'required|numeric',
             ]);
     
             // Buscar y actualizar el artículo

@@ -36,14 +36,14 @@ class Costos_produccionController extends Controller
         // Calcular el subtotal de cada artículo y acumular al total
         $articulosConSubtotales = $sdp->articulos->map(function ($articulo) use (&$total) {
             // Calcular el subtotal del artículo
-            $subtotal = $articulo->pivot->cantidad * $articulo->precio;
+            $subtotal = $articulo->pivot->cantidad * $articulo->pivot->precio;
             // Acumular el subtotal al total general
             $total += $subtotal;
             // Agregar el subtotal al artículo
             Log::info('Subtotal calculado para el artículo:', [
                 'articulo_id' => $articulo->id,
                 'cantidad' => $articulo->pivot->cantidad,
-                'precio' => $articulo->precio,
+                'precio' => $articulo->pivot->precio,
                 'subtotal' => $subtotal,
                 'total_acumulado' => $total
             ]);
@@ -250,14 +250,14 @@ class Costos_produccionController extends Controller
         // Calcular el subtotal de cada artículo y acumular al total
         $articulosConSubtotales = $sdp->articulos->map(function ($articulo) use (&$total) {
             // Calcular el subtotal del artículo
-            $subtotal = $articulo->pivot->cantidad * $articulo->precio;
+            $subtotal = $articulo->pivot->cantidad * $articulo->pivot->precio;
             // Acumular el subtotal al total general
             $total += $subtotal;
             // Agregar el subtotal al artículo
             Log::info('Subtotal calculado para el artículo:', [
                 'articulo_id' => $articulo->id,
                 'cantidad' => $articulo->pivot->cantidad,
-                'precio' => $articulo->precio,
+                'precio' => $articulo->pivot->precio,
                 'subtotal' => $subtotal,
                 'total_acumulado' => $total
             ]);

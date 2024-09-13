@@ -41,12 +41,19 @@ class SDP extends Model
     public function articulos()
     {
         return $this->belongsToMany(Articulo::class, 'articulo_sdp')
-                    ->withPivot('cantidad', 's_d_p_id', 'articulo_id')
+                    ->withPivot('cantidad', 'precio', 's_d_p_id', 'articulo_id')
                     ->withTimestamps();
     }
 
     public function costosProduccion()
     {
         return $this->hasMany(CostosProduccion::class, 'sdp_id', 'numero_sdp');
+    }
+
+    public function numero_sdp()
+    {
+        $ultimoSDP = SDP::latest('id')->first();
+        $nuevoNumeroSDP = $ultimoSDP ? $ultimoSDP->numero_sdp + 1 : 1;
+        return $nuevoNumeroSDP;
     }
 }
