@@ -304,63 +304,63 @@ return [
             'text' => 'Gestion Humana',
             'route' => 'gestion-humana',
             'icon' => 'fas fa-fw fa-city',
-            'role' => 'admin'
+            'role' => 'Admin'
         ],
         [
             'text' => 'servicios',
             'route' => 'servicio',
             'icon' => 'fas fa-w fa-wrench',
-            'role' => 'admin'
+            'role' => 'Admin'
         ],
         [
             'text' => 'Gestion de clientes',
             'route' => 'ADD_C_S',
             'icon' => 'fas fa-fw fa-handshake',
-            'role' => 'admin'
+            'role' => 'Admin'
         ],
         [
             'text' => 'ANALISIS DE COSTOS',
             'route' => 'cif.index',
             'icon' => 'fas fa-fw fa-dollar-sign',
-            'role' => 'admin'
+            'role' => 'Admin'
         ],
         [
             'text' => 'ADMINISTRACIÓN DE INVENTARIO ',
             'route' => 'AdministraciónInventario',
             'icon' => 'fas fa-fw fa-boxes',
-            'role' => 'admin'
+            'role' => 'Admin'
         ],
         ['header' => 'CONFIGURACION DE CUENTA'],
         [
             'text' => 'profile',
             'route' => 'profile.show',
             'icon' => 'fas fa-fw fa-address-card',
-            'role' => 'admin'
+            'role' => 'Admin'
         ],
-        ['header' => 'PERMISOS Y ROLES'],
+        ['header' => 'USUARIOS'],
         [
             'text' => 'Roles',
-            'url'  => 'roles',
+            'url'  => '',
             'icon' => 'fas fa-users-cog',
-            'role' => 'admin'
+            'role' => 'Admin'
         ],
         [
             'text' => 'Permissions',
             'url'  => 'permissions',
             'icon' => 'fas fa-key',
-            'role' => 'admin'
+            'role' => 'Admin'
         ],
         [
             'text' => 'Users',
             'route'  => 'admin.users',
             'icon' => 'fas fa-users',
-            'role' => 'admin'
+            'role' => 'Admin'
         ],
         [
             'text' => 'asignacion de permisos a roles',
             'route'  => 'admin.roles-permissions',
             'icon' => 'fas fa-users-cog',
-            'role' => 'admin'
+            'role' => 'Admin'
         ]
     ],
 

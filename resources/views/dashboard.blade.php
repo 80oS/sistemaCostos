@@ -4,5 +4,5 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
-    <div class="math-wallpaper"></div>
+    
 </x-app-layout>

@@ -30,10 +30,12 @@
     },
     "dependencies": {
         "flatpickr": "^4.6.13",
+        "glob": "^11.0.0",
         "html2canvas": "^1.4.1",
         "jspdf": "^2.5.1",
         "ldrs": "^1.0.2",
-        "lucide-react": "^0.436.0"
+        "lucide-react": "^0.436.0",
+        "normalize.css": "^8.0.1"
     },
     "build": {
         "appId": "com.idimcol.sistemaCostos",

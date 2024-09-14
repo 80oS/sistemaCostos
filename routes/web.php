@@ -50,10 +50,13 @@ route::middleware([
 ])->group(function (){
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-});
-
+    
 Route::get('home/gestion-humana', [TalentoHConroller::class, 'index'])->name('gestion-humana');
+// Ruta para mostrar el formulario de registro
+Route::get('/register', [UsersController::class, 'create'])->name('register');
 
+// Ruta para manejar la solicitud de registro
+Route::post('/register', [UsersController::class, 'store']);
 // trabajadores
 Route::resource('trabajadores', TrabajadoresController::class);
 Route::get('/butons', [TrabajadoresController::class, 'butons'])->name('trabajador.butons');
@@ -228,3 +231,4 @@ Route::get('AdministraciónInventario', [AdministraciónInventarioController::cl
 
 Route::resource('serviciosExternos', servicioExternoController::class);
 
+});

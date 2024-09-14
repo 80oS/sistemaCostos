@@ -95,3 +95,5 @@
         });
     </script>
 @stop
+
+mysql -hautorack.proxy.rlwy.net -uroot -pjgHNyoyZxPEjDSAWbEotzZPNljXcpmgx --port 57198 --protocol=TCP railway
