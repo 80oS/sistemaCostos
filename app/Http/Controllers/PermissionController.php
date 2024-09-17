@@ -11,8 +11,8 @@ class PermissionController extends Controller
 {
     public function index()
     {
-        $permissions = Permission::all();
-        return view('permissions.index', compact('permissions'));
+        $permisos = Permission::all();
+        return view('users.permisos', compact('permisos'));
     }
 
     public function create()
@@ -22,8 +22,11 @@ class PermissionController extends Controller
 
     public function store(Request $request)
     {
-        Permission::create(['name' => $request->name]);
-        return redirect()->route('permissions.index')->with('success', 'permiso creado con extito');
+        Permission::create([
+            'name' => $request->name,
+            'guard_name' => 'web'
+        ]);
+        return redirect()->back()->with('success', 'permiso creado con extito');
     }
 
     public function asignar()
@@ -72,9 +75,9 @@ class PermissionController extends Controller
         return redirect()->route('permissions.index')->with('success', 'permiso actualizado con extito');;
     }
 
-    public function destroy(Permission $permission)
+    public function destroy(Permission $permiso)
     {
-        $permission->delete();
-        return redirect()->route('permissions.index')->with('success', 'permiso eliminado con extito');;
+        $permiso->delete();
+        return redirect()->back()->with('success', 'permiso eliminado con extito');;
     }
 }

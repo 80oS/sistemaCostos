@@ -1,10 +1,10 @@
 @extends('adminlte::page')
 
-@section('title', 'users')
+@section('title', 'permisos')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-800 leading-tight">
-    {{ __('Lista de usuarios') }}
+<h2 class="font-semibold text-xl text-gray-300 leading-tight">
+    {{ __('Lista de permisos') }}
 </h2>
 
 @stop
@@ -18,8 +18,8 @@
     @endif
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-            <div class="mb-4">
-                <a href="{{route('register')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Crear nuevo usuario</a>
+            <div class="card-header">
+                <x-adminlte-button label="nuevo" data-toggle="modal" data-target="#modalPurple" theme="primary" icon="fas fa-key"/>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full bg-white border border-gray-200">
@@ -27,28 +27,25 @@
                         <tr class="bg-gray-50 text-gray-700">
                             <th class="px-4 py-2 border">id</th>
                             <th class="px-4 py-2 border">nombre</th>
-                            <th class="px-4 py-2 border">correo</th>
-                            <th class="px-4 py-2 border">editar</th>
-                            <th class="px-4 py-2 border">eliminar</th>
+                            <th class="px-4 py-2 border">actualizar y eliminar</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($users as $user)
+                        @foreach ($permisos as $index => $permiso)
                         <tr class="bg-gray-50 text-gray-700">
-                            <td class="px-4 py-2 border">{{$user->id}}</td>
-                            <td class="px-4 py-2 border">{{$user->name}}</td>
-                            <td class="px-4 py-2 border">{{$user->email}}</td>
+                            <td class="px-4 py-2 border">{{ $index + 1 }}</td>
+                            <td class="px-4 py-2 border">{{$permiso->name}}</td>
                             <td class="px-4 py-2 border">
-                                <a href="{{route('users.edit', $user->id)}}" class="btn btn-info">
-                                    <i class="fas fa-edit"></i>
+                                <a href="{{route('permisos.edit', $permiso->id)}}" class="btn btn-info">
+                                    <i class="fa-solid fa-pencil"></i>
                                 </a>
                             </td>
                             <td class="px-4 py-2 border">
-                                <form action="{{route('users.destroy', $user->id)}}" method="POST">
+                                <form action="{{route('permisos.destroy', $permiso->id)}}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿seguro que quieres eliminar este usuario?')">
-                                        <i class="fas fa-trash-alt"></i>
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('seguro que quieres eliminar este role')">
+                                        <i class="fa-solid fa-trash-can"></i>
                                     </button>
                                 </form>
                             </td>
@@ -63,13 +60,25 @@
         <a href="{{route('home')}}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 rounded">volver</a>
     </div>
 </div>
+{{-- Themed --}}
+<x-adminlte-modal id="modalPurple" title="Nuevo permiso" theme="primary"
+    icon="fas fa-bolt" size='lg' disable-animations>
+    <form action="{{ route('permisos.store') }}" method="POST">
+        @csrf
+        <div class="row">
+            <x-adminlte-input name="name" label="nombre" placeholder="permiso..."
+                fgroup-class="col-md-6" disable-feedback/>
+        </div>
+        <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
+    </form>
+</x-adminlte-modal>
 @stop
 
 @section('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <style>
-        
         .p {
             padding: 20px;
         }

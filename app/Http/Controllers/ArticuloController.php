@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Articulo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ArticuloController extends Controller
 {
@@ -34,15 +35,24 @@ class ArticuloController extends Controller
     
     public function buscarArticulos(Request $request)
     {
-        $query = $request->input('q');
-    
-        if (!$query) {
-            return response()->json(['message' => 'No se proporcionó una consulta de búsqueda.'], 400); // Validación básica
-        }
-    
+        $query = $request->get('q');
         $articulos = Articulo::where('descripcion', 'LIKE', "%{$query}%")->get();
     
         return response()->json($articulos);
+    }
+
+    public function getPrecioArticuloSdp(Request $request)
+    {
+        $articuloId = $request->input('id');
+        $sdpId = $request->input('sdp_id');
+
+        // Obtener el precio desde la tabla pivot
+        $precio = DB::table('articulo_sdp')
+            ->where('articulo_id', $articuloId)
+            ->where('sdp_id', $sdpId)
+            ->value('precio');
+
+        return response()->json(['precio' => $precio]);
     }
 
     public function edit($id)

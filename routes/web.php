@@ -50,7 +50,9 @@ route::middleware([
 ])->group(function (){
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+});
+
+ 
 Route::get('home/gestion-humana', [TalentoHConroller::class, 'index'])->name('gestion-humana');
 // Ruta para mostrar el formulario de registro
 Route::get('/register', [UsersController::class, 'create'])->name('register');
@@ -121,7 +123,7 @@ Route::get('/api/buscar-articulos', [ArticuloController::class, 'buscarArticulos
 Route::delete('/articulos/{id}', [ArticuloController::class, 'destroy'])->name('articulos.destroy');
 Route::get('/articulos/{id}/edit', [ArticuloController::class, 'edit'])->name('articulos.edit');
 Route::put('/articulos/{id}/update', [ArticuloController::class, 'update'])->name('articulos.update');
-
+Route::get('/api/precio-articulo-sdp', [ArticuloController::class, 'getPrecioArticuloSdp']);
 // vendedores
 Route::resource('vendedor', VendedorController::class);
 
@@ -207,21 +209,13 @@ Route::post('/recalcular-mano-obra-directa', [Costos_produccionController::class
 Route::get('/costos_produccion/{id}/resumen', [costos_produccionController::class, 'resumen'])->name('resumen.costos');
 
 // Roles
-Route::resource('roles', RoleController::class);
-Route::post('/roles/assign/{id}', [RoleController::class, 'assignRole'])->name('roles.assign');
+Route::resource('/roles', RoleController::class);
 
-// Permissions
-Route::resource('permissions', PermissionController::class);
-Route::post('/assign-permission', [PermissionController::class, 'assignPermission'])
-    ->middleware('auth')
-    ->name('assign.permission');
-Route::get('/assign-permission', [PermissionController::class, 'asignar'])
-    ->middleware('auth')
-    ->name('permission.asignar');
+// permisos
+Route::resource('/permisos', PermissionController::class);
 
-    Route::get('/admin/roles-permissions', [RolePermissionController::class, 'index'])->name('admin.roles-permissions');
-    Route::post('/admin/roles-permissions', [RolePermissionController::class, 'update'])->name('admin.roles.permissions.update');
-    Route::get('/admin/users', [UsersController::class, 'index'])->name('admin.users');
+// usuarios
+Route::resource('/users', UsersController::class);
 
 // Administración de Inventario
 
@@ -230,5 +224,3 @@ Route::get('AdministraciónInventario', [AdministraciónInventarioController::cl
 // servocios Externos 
 
 Route::resource('serviciosExternos', servicioExternoController::class);
-
-});

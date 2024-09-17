@@ -375,6 +375,13 @@
                     }
                 }
             });
+
+            // Función para obtener el ID del SDP actual
+            function getCurrentSdpId() {
+                // Implementa la lógica para obtener el ID del SDP actual
+                // Por ejemplo, si está en un campo oculto en el formulario:
+                return document.getElementById('sdp_id').value;
+            }
     
             // Enviar el formulario para crear un artículo
             document.getElementById('crearArticuloForm').addEventListener('submit', function(event) {

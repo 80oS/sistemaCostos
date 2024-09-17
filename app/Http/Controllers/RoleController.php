@@ -11,48 +11,50 @@ class RoleController extends Controller
 {
     public function index()
     {
-        $roles = Role::all();
-        $users = User::all();
-        return view('roles.index', compact('roles', 'users'));
+        $roles = Role::with('permissions')->get();
+        return view('users.roles', compact('roles'));
     }
 
     public function create()
     {
-        $permissions = Permission::all();
-        return view('roles.create', compact('permissions'));
+        
     }
 
     public function store(Request $request)
     {
-        $role = Role::create(['name' => $request->name]);
-        $role->syncPermissions($request->permissions);
-        return redirect()->route('roles.index');
+        $role = Role::create([
+            'name' => $request->name,
+            'guard_name' => 'web',
+        ]);
+        
+        return back()->with('success', 'role creado exitosamente');
     }
 
-    public function assignRole(Request $request, $id)
+    public function edit(string $id)
     {
-        $user = User::findOrFail($id);
-        $user->assignRole($request->role);
-
-        return redirect()->route('roles.index')->with('success', 'Rol asignado con éxito.');
+        $role = Role::findOrFail($id);
+        $permisos = Permission::all();
+        $rolePermisos = $role->permissions->pluck('id')->toArray();
+        return view('users.rolepermisos', compact('role', 'permisos', 'rolePermisos'));
     }
 
-    public function edit(Role $role)
+    public function update(Request $request, string $id)
     {
-        $permissions = Permission::all();
-        return view('roles.edit', compact('role', 'permissions'));
+        $role = Role::findOrFail($id);
+        $permisosId = $request->input('permissions', []);
+
+        $permisos = Permission::whereIn('id', $permisosId)->pluck('name')->toArray();
+
+        $role->syncPermissions($permisos);
+        return redirect()->route('roles.index')->with('success', 'El rol se ha asignado correctamente');
     }
 
-    public function update(Request $request, Role $role)
+    public function destroy(string $id)
     {
-        $role->update(['name' => $request->name]);
-        $role->syncPermissions($request->permissions);
-        return redirect()->route('roles.index');
-    }
-
-    public function destroy(Role $role)
-    {
+        $role = Role::findOrFail($id);
+        $role->permissions()->detach();
+        $role->users()->detach();
         $role->delete();
-        return redirect()->route('roles.index');
+        return redirect()->route('roles.index')->with('success', 'el rol fue eliminado exitosamente');
     }
 }
