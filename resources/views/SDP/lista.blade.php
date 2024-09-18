@@ -12,11 +12,6 @@
 <div class=" flex items-end justify-end mb-4 px-20">
     <a href="{{ route('sdp.paquetes') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">volver</a>
 </div>
-@if (session('success'))
-    <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-        <span class="block sm:inline">{{ session('success') }}</span>
-    </div>
-@endif
 <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="dark:bg-gray-700 shadow-sm sm:rounded-lg">
@@ -90,14 +85,6 @@
 @section('js')
     <script src="https://cdn.tailwindcss.com"></script>
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
-    <script>
-        setTimeout(function() {
-            var successMessage = document.getElementById('success-message');
-            if (successMessage) {
-                successMessage.style.display = 'none';
-            }
-        }, 5000);
-    </script>
 @stop
 
 

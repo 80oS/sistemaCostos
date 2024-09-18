@@ -17,9 +17,7 @@ class SDPController extends Controller
 
     public function indexPaquetes()
     {
-        $clientes = Cliente::with(['sdp' => function ($query) {
-            $query->orderBy('created_at', 'desc');
-        }])->get();
+        $clientes = Cliente::with(['sdp' => function ($query) {$query->orderBy('created_at', 'desc');}])->get();
         return view('SDP.paquetes', compact('clientes'));
     }
 

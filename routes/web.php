@@ -52,7 +52,7 @@ route::middleware([
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
- 
+
 Route::get('home/gestion-humana', [TalentoHConroller::class, 'index'])->name('gestion-humana');
 // Ruta para mostrar el formulario de registro
 Route::get('/register', [UsersController::class, 'create'])->name('register');
@@ -69,8 +69,8 @@ Route::post('/trabajadores/{id}/enable', [TrabajadoresController::class, 'enable
 
 Route::get('/print-options', [TrabajadoresController::class, 'showPrintOptions'])->name('show.print.options');
 Route::post('/generate-print-list', [TrabajadoresController::class, 'generatePrintList'])->name('generate.print.list');
+Route::resource('/operarios', OperativoController::class);
 
-Route::get('/asignar-codigos-operarios', [OperativoController::class, 'asignarCodigoOperarios'])->name('asignar.codigos');
 Route::get('/listar-operativos', [OperativoController::class, 'listarOperativos'])->name('listar.operarios');
 
 // Tiempos de Producción

@@ -13,12 +13,14 @@
     <div class="col-12 px-20 mb-4">
         <a href="{{ route('trabajadores.index') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-3 rounded">volver</a>
     </div>
-    <div class="flex items-end justify-end px-20 mb-4">
-        <a href="{{ route('asignar.codigos') }}" class="btn btn-primary">Asignar Códigos Operarios</a>
+    <div class="flex flex-col items-end justify-end px-20 mb-4">
+        <a href="{{ route('horas-extras.index') }}" id="exportToExcel" class="btnE btn btn-info">
+            Bonos
+        </a>
     </div>
-    {{-- <div class="flex items-end justify-end px-20 mb-4">
-        <a href="{{ route('operarios.test') }}" class="btn btn-primary">test</a>
-    </div> --}}
+    <div class="flex items-end justify-end px-20 mb-4">
+        <button data-toggle="modal" data-target="#modalPurple" class="btn btn-primary">nuevo operario</button>
+    </div>
     <div class="container">
         @if (session('success'))
             <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -36,11 +38,8 @@
                         <th class=" c-3">Nombre</th>
                         <th class=" c-4">Apellido</th>
                         <th class=" c-5">Sueldo Base</th>
-                        <th class=" v">Teléfono Fijo</th>
-                        <th class=" v">Celular</th>
-                        <th class=" v">Correo</th>
-                        <th class=" v">Area</th>
-                        <th class=" v">Edad</th>
+                        <th class=" v">Editar</th>
+                        <th class=" v">Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,11 +52,16 @@
                             <td class="c-3">{{ $operario->operario }}</td>
                             <td class="c-4">{{ $operario->trabajador->apellido }}</td>
                             <td class="c-5">{{ $operario->trabajador->sueldos->first()->sueldo ?? 'No tiene sueldo registrado' }}</td>
-                            <td class="v">{{ $operario->trabajador->telefono_fijo }}</td>
-                            <td class="v">{{ $operario->trabajador->celular }}</td>
-                            <td class="v">{{ $operario->trabajador->correo }}</td>
-                            <td class="v">{{ $operario->trabajador->departamentos }}</td>
-                            <td class="v">{{ $operario->trabajador->edad }}</td>  
+                            <td class="v">
+                                <a href="{{ route('operarios.edit', $operario->id) }}" class="btn btn-warning">Editar</a>
+                            </td>
+                            <td class="v">
+                                <form action="{{ route('operarios.destroy', $operario->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('seguro que queres eliminar este operario') ">Eliminar</button>
+                                </form>
+                            </td>
                         </tr>                  
                     @endforeach
                 </tbody>
@@ -65,11 +69,21 @@
         </div>
     </div>
 </div>
-<div class="flex flex-col items-end justify-end px-20">
-    <a href="{{ route('horas-extras.index') }}" id="exportToExcel" class="btnE btn btn-info">
-        Bonos
-    </a>
-</div>
+
+{{-- Themed --}}
+<x-adminlte-modal id="modalPurple" title="nuevo operario" theme="purple"
+    icon="fas fa-bolt" size='lg' disable-animations>
+    <form action="{{ route('operarios.store') }}" method="POST">
+        @csrf
+
+        <x-adminlte-select name="trabajador_id">
+            @foreach ($trabajadores as $trabajador)
+            <option value="{{ $trabajador->id }}">{{ $trabajador->nombre }} {{ $trabajador->apellido }}</option>
+            @endforeach
+        </x-adminlte-select>
+        <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
+    </form>
+</x-adminlte-modal>
 @stop
 
 @section('css')
@@ -88,11 +102,19 @@
                 padding: 10px;
                 max-width: 900rem;
             }
+
+            .content, .content-header {
+                background: #fff !important;
+            }
+
+            .content {
+                height: 90vh;
+            }
     
         .container {
-                width: 100rem;
-                max-height: 900px;
-                background: #2a293b;
+                width: 70rem;
+                max-height: 500px;
+                background: #8a8a8b;
                 border-radius: 10px;
                 padding: 20px;
             }
@@ -101,11 +123,12 @@
                 background: #d6d6d6;
                 padding: 10px;
                 border-radius: 10px;
-                max-height: 800px;
+                max-height: 400px;
                 overflow-x: auto;
             }
     
         table {
+                width: 100%;
                 border: #000000 1px solid;
                 border-collapse: collapse;
                 padding: 10px;

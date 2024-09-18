@@ -3,7 +3,7 @@
 @section('title', 'empleados')
 
 @section('content_header')
-    <h2 class="font-semibold text-xl text-gray-300 leading-tight uppercase">
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
         {{ __('Todos los Empleados') }}
     </h2>
 @stop
@@ -34,18 +34,8 @@
                 </div>
             </div>
         <div class="table_wrapper">
-            <table class="">
+            <table >
                 <thead>
-                    <tr class="">
-                        <!-- Sección de Información Personal -->
-                        <th colspan="17" class=" d ">Información Personal</th>
-                        <!-- Sección de Información Médica -->
-                        <th colspan="4" class=" d ">Información Médica</th>
-                        <!-- Sección de Información Familiar -->
-                        <th colspan="{{ 13 + (5 * $maxHijos) }}" class=" d ">Información Familiar</th>
-                        <!-- Sección de Acciones -->
-                        <th colspan="3" class=" d ">Acciones</th>
-                    </tr>
                     <tr class="">
                         <th class=" cd">#</th>
                         <!-- Información Personal -->
@@ -53,51 +43,20 @@
                         <th class=" c-2">Nombre</th>
                         <th class=" c-3">Apellido</th>
                         <th class=" c-4">Sueldo Base</th>
-                        <th class=" v">Teléfono Fijo</th>
                         <th class=" v">Celular</th>
-                        <th class=" v">Correo</th>
                         <th class=" v">Area</th>
                         <th class=" v">Edad</th>
-                        <th class=" v">Estado Civil</th>
-                        <th class=" v">Sexo</th>
                         <th class=" v">Cargo</th>
                         <th class=" v">Fecha de Nacimiento</th>
                         <th class=" v">Fecha de Ingreso</th>
-                        <th class=" v">Lugar de Nacimiento</th>
-                        <th class=" v">Dirección</th>
-        
                         <!-- Información Médica -->
-                        <th class=" v">ARL</th>
                         <th class=" v">EPS</th>
-                        <th class=" v">Alergias</th>
-                        <th class=" v">Tipo de Sangre</th>
-        
-                        <!-- Información Familiar -->
-                        <th class=" v">Nombre del Contacto</th>
-                        <th class=" v">Parentesco</th>
-                        <th class=" v">Teléfono del Contacto</th>
                         <th class=" v">Cuenta Bancaria</th>
-                        <th class=" v">Fondo de Pensión</th>
-                        <th class=" v">Fondo de Cesantías</th>
-                        <th class=" v">Caja</th>
-                        <th class=" v">Número de Hijos</th>
-                            @for($i = 1; $i <= $maxHijos; $i++ )
-                            <th class=" v">Nombre del Hijo{{ $i }}</th>
-                            <th class=" v">Fecha de Nacimiento del Hijo{{ $i }}</th>
-                            <th class=" v">Edad del Hijo{{ $i }}</th>
-                            <th class=" v">Tipo de Documento del Hijo{{ $i }}</th>
-                            <th class=" v">Número de Documento del Hijo{{ $i }}</th>
-                            @endfor
-                            <th class=" v">Nombre del Cónyuge</th>
-                            <th class=" v">Fecha de Nacimiento del Cónyuge</th>
-                            <th class=" v">Número de Documento del Cónyuge</th>
-                            <th class=" v">Fecha de Expedición del Cónyuge</th>
-                            <th class=" v">lugar de Expedición del Cónyuge</th>
+                        <th class=" v">Banco</th>
                             <!-- Acciones -->
-                            {{-- <th class=" v">Eliminar</th> --}}
-                            <th class=" v">Actualizar</th>
-                            <th class=" v">crear o actualizar sueldo</th>
-                            <th class=" v">Habilitar/Deshabilitar</th>
+                        <th class=" v">Actualizar</th>
+                        <th class=" v">crear o actualizar sueldo</th>
+                        <th class=" v">Habilitar/Deshabilitar</th>
                     </tr>
                 </thead>
                 <tbody id="trabajadoresTable">
@@ -109,63 +68,15 @@
                                 <td class=" c-2">{{ $trabajador->nombre }}</td>
                                 <td class=" c-3">{{ $trabajador->apellido }}</td>
                                 <td class=" c-4">{{ $trabajador->sueldos->first()->sueldo ?? 'No tiene sueldo registrado' }}</td>
-                                <td class=" v">{{ $trabajador->telefono_fijo }}</td>
                                 <td class=" v">{{ $trabajador->celular }}</td>
-                                <td class=" v">{{ $trabajador->correo }}</td>
                                 <td class=" v">{{ $trabajador->departamentos }}</td>
                                 <td class=" v">{{ $trabajador->edad }}</td>
-                                <td class=" v">{{ $trabajador->estado_civil }}</td>
-                                <td class=" v">{{ $trabajador->sexo }}</td>
                                 <td class=" v">{{ $trabajador->cargo }}</td>
                                 <td class=" v">{{ $trabajador->fecha_nacimiento }}</td>
                                 <td class=" v">{{ $trabajador->fecha_ingreso }}</td>
-                                <td class=" v">{{ $trabajador->lugar_nacimiento }}</td>
-                                <td class=" v">{{ $trabajador->direccion }}</td>
-        
-                                <!-- Información Médica -->
-                                <td class=" v">{{ $trabajador->ARL }}</td>
                                 <td class=" v">{{ $trabajador->Eps }}</td>
-                                <td class=" v">{{ $trabajador->alergias }}</td>
-                                <td class=" v">{{ $trabajador->tipo_sangre }}</td>
-        
-                                <!-- Información Familiar -->
-                                <td class=" v">{{ $trabajador->nombre_persona_contacto }}</td>
-                                <td class=" v">{{ $trabajador->parentesco_con_persona_contacto }}</td>
-                                <td class=" v">{{ $trabajador->telefono_celular_persona_contacto }}</td>
                                 <td class=" v">{{ $trabajador->cuenta_bancaria }}</td>
-                                <td class=" v">{{ $trabajador->fondo_pencion }}</td>
-                                <td class=" v">{{ $trabajador->fondo_cesantias }}</td>
-                                <td class=" v">{{ $trabajador->caja }}</td>
-                                <td class=" v">{{ $trabajador->hijos_count }}</td>
-                            @if ($trabajador->hijos_count > 0)
-                                @foreach ($trabajador->hijos as $hijo)
-                                    <td class=" v">{{ $hijo->nombre }}</td>
-                                    <td class=" v">{{ $hijo->fecha_nacimiento }}</td>
-                                    <td class=" v">{{ $hijo->edad }}</td>
-                                    <td class=" v">{{ $hijo->tipo_documento }}</td>
-                                    <td class=" v">{{ $hijo->numero_documento }}</td>  
-                                @endforeach
-                                @for ($i = $trabajador->hijos_count; $i < $maxHijos; $i++)
-                                    <td class=" v">NO APLICA</td>
-                                    <td class=" v">NO APLICA</td>
-                                    <td class=" v">NO APLICA</td>
-                                    <td class=" v">NO APLICA</td>
-                                    <td class=" v">NO APLICA</td>
-                                @endfor
-                            @else
-                                @for ($i = 0; $i < $maxHijos; $i++ )
-                                    <td class=" v">NO APLICA</td>
-                                    <td class=" v">NO APLICA</td>
-                                    <td class=" v">NO APLICA</td>
-                                    <td class=" v">NO APLICA</td>
-                                    <td class=" v">NO APLICA</td>
-                                @endfor
-                            @endif
-                            <td class=" v">{{ $trabajador->nombre_conyuge }}</td>
-                            <td class=" v">{{ $trabajador->fecha_nacimiento_conyuge }}</td>
-                            <td class=" v">{{ $trabajador->numero_documento_conyuge }}</td>
-                            <td class=" v">{{ $trabajador->fecha_expedicion_conyuge }}</td>
-                            <td class=" v">{{ $trabajador->lugar_expedicion_conyuge }}</td>
+                                <td class=" v">{{ $trabajador->banco }}</td>
                                 <td class=" v">
                                     <a href="{{ route('trabajadores.edit', $trabajador->id) }}" class="btn-yellow">Actualizar</a>
                                 </td>
@@ -265,22 +176,19 @@
     @tailwind components;
     @tailwind utilities;
     <style>
-
     * {
     text-transform: capitalize;
     }
-    .p-6 {
-        padding: auto;
-    }
-
     .box {
         padding: 15px;
+        width: 100%;
+        height: 150vh;
     }
 
     .container {
-        width: 900rem;
-        max-height: 900px;
-        background: #403e49;
+        width: 90rem;
+        max-height: 800px;
+        background: #a2a2a2;
         border-radius: 10px;
         padding: 20px;
         box-shadow: 5px #000;
@@ -288,17 +196,27 @@
 
     .table_wrapper {
         background: #d6d6d6;
-        padding: 10px;
         border-radius: 10px;
+        max-width: 100rem;
         max-height: 600px;
         overflow-x: auto;
     }
 
+    .content, .content-header, header {
+            background: #fff !important;
+            
+        }
+
+        .content {
+            height: 150vh !important;
+        }
+
     table {
+            width: 100%;
             table-layout: auto;
             border: #000000 1px solid;
             border-collapse: collapse;
-            height: 400px;
+            max-height: 500px;
         }
 
         th, td {
@@ -306,14 +224,6 @@
             border: #000000 1px solid;
             text-align: center;
             text-transform: uppercase; 
-        }
-
-        table thead tr th.d {
-            background: #37759e;
-            border: #000000 1px solid;
-            position: sticky;
-            top: -12px;
-            z-index: 2;
         }
 
         thead tr th.cd {
@@ -407,7 +317,7 @@
             background: #91dcff;
             border: #000000 1px solid;
             position: sticky;
-            top: 32px;
+            top: -13px;
             z-index: 2;
         }
 
@@ -416,8 +326,7 @@
             color: #000000;
             border: #000000 1px solid;
             position: sticky;
-            top: 32px;
-
+            top: -13px;
             text-transform: uppercase;
         }
 
@@ -462,8 +371,6 @@
             max-height: 500px;
             overflow: auto;
         }
-
-    
     </style>
 @stop
 

@@ -62,7 +62,7 @@
                     </div>
                     <!-- Columna 4 -->
                     <div>
-                        <p><span class="font-semibold">Fecha S.D.P: </span>{{ $sdp->fecha_despacho_comercial }}</p>
+                        <p><span class="font-semibold">Fecha S.D.P: </span>{{ $sdp->created_at->format('d-m-y') }}</p>
                     </div>
                 </div>
             </div>

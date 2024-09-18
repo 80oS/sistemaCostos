@@ -12,73 +12,73 @@ use Illuminate\Support\Facades\Log;
 
 class OperativoController extends Controller
 {
-
-    public function asignarCodigoOperarios()
-    {
-        // Obtener todos los trabajadores del departamento de producción
-        Log::info('Iniciando asignación de códigos');
-        $trabajadores = Trabajador::where('departamentos', Departamento::Produccion->value)->get();
-        Log::info('Trabajadores encontrados: ' . $trabajadores->count());
-
-        foreach ($trabajadores as $trabajador) {
-            // Verificar si ya tiene un código de operario asignado
-            Log::info('Procesando trabajador: ' . $trabajador->id);
-            if (!Operativo::where('trabajador_id', $trabajador->id)->exists()) {
-                Log::info('Trabajador no tiene código, asignando...');
-                try {
-                    DB::transaction(function () use ($trabajador) {
-                        // Generar un código único
-                        $codigo = $this->generateUniqueCode();
-                        
-                        // Depurar el nombre del trabajador y el código generado
-                        Log::info('Asignando código a trabajador:', [
-                            'trabajador_id' => $trabajador->id,
-                            'operario' => $trabajador->nombre,
-                            'codigo' => $codigo
-                        ]);
-                        $operativo = Operativo::create([
-                            'codigo' => $codigo,
-                            'trabajador_id' => $trabajador->id,
-                            'operario' => $trabajador->nombre,
-                        ]);
-    
-                        // Depurar el resultado de la creación
-                        Log::info('Operativo creado:', ['operativo' => $operativo]);
-                        });
-                        Log::info('Código asignado correctamente');
-                    } catch (\Exception $e) {
-                        Log::error('Error al asignar código: ' . $e->getMessage());
-                    }
-                } else {
-                    Log::info('Trabajador ya tiene código asignado');
-            }
-        }
-
-        return redirect()->route('listar.operarios')->with('success', 'Códigos de operarios asignados con éxito.');
-    }
-
     private function generateUniqueCode()
     {
-        $latestOperativo = Operativo::latest('codigo')->first();
+        $ultimoOperativo = Operativo::latest('codigo')->first();
         
-        if (!$latestOperativo) {
-            $nextNumber = 1;
+        // Si no existe un operativo previo, empieza desde 1
+        if (!$ultimoOperativo) {
+            $siguienteNumero = 1;
         } else {
-            $lastCode = $latestOperativo->codigo;
-            $lastNumber = intval(substr($lastCode, 2));
-            $nextNumber = $lastNumber + 1;
+            // Extraer el número a partir del código, asumiendo que el código es algo como 'OP001'
+            $ultimoCodigo = $ultimoOperativo->codigo;
+            $ultimoNumero = intval(substr($ultimoCodigo, 2)); // Obtener el número después de 'OP'
+            $siguienteNumero = $ultimoNumero + 1;
         }
 
-        return 'OP' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        // Retornar el nuevo código con el formato 'OPXXX', donde XXX es el número con 3 dígitos
+        return 'OP' . str_pad($siguienteNumero, 3, '0', STR_PAD_LEFT);
     }
+
+
+    public function store(Request $request)
+    {
+        // Validar que el trabajador_id está presente y existe
+        $request->validate([
+            'trabajador_id' => 'required|exists:trabajadors,id',
+        ]);
+
+        // Obtener el trabajador seleccionado del formulario
+        $trabajador = Trabajador::find($request->input('trabajador_id'));
+
+        // Crear un nuevo operativo para el trabajador seleccionado
+        $operario = new Operativo([
+            'trabajador_id' => $trabajador->id,
+            'operario' => $trabajador->nombre,
+        ]);
+
+        // Generar el código único para el operativo
+        $operario->codigo = $this->generateUniqueCode();
+
+        // Guardar el operativo
+        $operario->save();
+
+        // Redirigir con un mensaje de éxito
+        return redirect()->route('listar.operarios')->with('success', 'Operario asignado con éxito.');
+    }
+
 
     public function listarOperativos()
     {
-        // Obtener trabajadores del departamento de producción que tengan un código de operario asignado
+        
         $operativos = Operativo::with('trabajador')->orderBy('codigo')->get();
+        $trabajadores = Trabajador::orderBy('nombre')->get();
 
+        return view('trabajadores.operativos', compact('operativos', 'trabajadores'));
+    }
 
-        return view('trabajadores.operativos', compact('operativos'));
+    public function edit(string $id)
+    {
+        $operario = Operativo::findOrFail($id);
+        return view('trabajadores.operativos.edit', compact('operario'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $operarios = Operativo::findOrFail($id);
+        $operarios->update($request->all());
+
+        return redirect()->route('listar.operarios')->with('success', 'Operativo actualizado correctamente');
     }
 
     public function destroy(string $id)

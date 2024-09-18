@@ -1,8 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import '~normalize.css/normalize';
-@import '~admin-lte/dist/css/adminlte.min.css';
 
 [x-cloak] {
     display: none;

@@ -38,3 +38,10 @@
     </ul>
 
 </nav>
+
+<style>
+    .navbar-nav {
+        
+        color: #000 !important;
+    }
+</style>
