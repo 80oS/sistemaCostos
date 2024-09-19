@@ -47,7 +47,7 @@
             justify-content: center;
             align-items: center;
             gap: 10px; /* Espacio entre botones */
-            background-color: #4a5568; /* Color de fondo de la barra azul */
+            background-color: #a1a2a4; /* Color de fondo de la barra azul */
             padding: 10px;
             border-radius: 5px;
             width: 800px;
@@ -60,6 +60,10 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+        }
+
+        .content, .content-header {
+            background: #fff !important;
         }
     </style>
 @stop

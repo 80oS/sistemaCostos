@@ -11,18 +11,18 @@
 @section('content')
 <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-gray-500 overflow-hidden shadow-xl sm:rounded-lg p-6">
+        <div class="bg-gray-400 overflow-hidden shadow-xl sm:rounded-lg p-6">
             <form action="{{ route('servicios.store') }}" method="POST" class="max-w-sm mx-auto space-y-4">
                 @csrf
 
                 <div>
-                    <label class="block mb-2 text-sm font-medium text-gray-100" for="nombre">nombre</label>
-                    <input type="text" name="nombre" id="nombre" class="bg-gray-800 border border-gray-700 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    <label class="form-label" for="nombre">nombre</label>
+                    <input type="text" name="nombre" id="nombre" class="form-control" required>
                 </div>
 
                 <div>
-                    <label class="block mb-2 text-sm font-medium text-gray-100" for="cantidad">valor por hora</label>
-                    <input type="number" name="valor_hora" id="valor_hora" class="bg-gray-800 border border-gray-700 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    <label class="form-label" for="cantidad">valor por hora</label>
+                    <input type="number" name="valor_hora" id="valor_hora" class="form-control" required>
                 </div>
 
                 <div class="flex items-center justify-between mt-4">
@@ -39,6 +39,35 @@
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <style>
+        .content, .content-header {
+            background-color: #ffff !important;
+            color: #000 !important;
+        }
+
+        .content {
+            height: 87vh;
+        }
+
+        input {
+            background-color: #fff !important;
+            color: #000 !important;
+        }
+
+        label {
+            color: #000 !important;
+        }
+
+        .card, .card-body {
+            color: #000 !important;
+        }
+
+        h2 {
+            color: #000 !important;
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+    </style>
 @stop
 
 @section('js')

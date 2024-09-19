@@ -36,7 +36,7 @@
                         </thead>
                         <tbody>
                             @foreach ($tiempos_produccion as $operativo_id => $tiempo)
-                                <tr class=" text-gray-200"">
+                                <tr class="bg-gray-300 text-gray-800 border border-black">
                                     <td class="px-4 py-2 border">{{ $loop->iteration }}</td>
                                     <td class="px-4 py-2 border">{{ $tiempo->first()->operativo_id }}</td>
                                     <td class="px-4 py-2 border">{{ $tiempo->first()->nombre_operario}}</td>
@@ -65,7 +65,7 @@
             background: #fff !important;
         }
         .content{
-            height: 80vh;
+            height: 87vh;
         }
     </style>
 @stop

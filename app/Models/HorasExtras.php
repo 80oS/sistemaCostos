@@ -29,20 +29,26 @@ class HorasExtras extends Model
     public function calcular_horas()
     {
         $trabajador = $this->operarios->trabajador;
+        $tiempo_produccion = $this->operarios->Tiempos_Produccion()->first();
 
-        $sueldo_base = $trabajador->sueldos()->orderBy('created_at', 'desc')->first()->sueldo ?? 0;
-        $horasMes = $trabajador->sueldos()->orderBy('created_at', 'desc')->first()->horas_mes ?? 0;
-        
-        $horas_diurnas = ($sueldo_base/$horasMes)*1.25;
-        $horas_nocturnas = ($sueldo_base/$horasMes)*1.75;
-        $horas_festivos = ($sueldo_base/$horasMes)*1.75;
-        $horas_recargo_nocturno = ($sueldo_base/$horasMes)*0.3;
+        if ($tiempo_produccion){
 
-        $this->update([
-            'horas_diurnas' => $horas_diurnas,
-            'horas_nocturnas' => $horas_nocturnas,
-            'horas_festivos' => $horas_festivos,
-            'horas_recargo_nocturno' => $horas_recargo_nocturno
-        ]);
+            $cif = $tiempo_produccion->Cif;
+            
+            $sueldo_base = $trabajador->sueldos()->orderBy('created_at', 'desc')->first()->sueldo ?? 0;
+            $horasMes = $cif->NMH ?? 0;
+            
+            $horas_diurnas = ($sueldo_base/$horasMes)*1.25;
+            $horas_nocturnas = ($sueldo_base/$horasMes)*1.75;
+            $horas_festivos = ($sueldo_base/$horasMes)*1.75;
+            $horas_recargo_nocturno = ($sueldo_base/$horasMes)*0.3;
+
+            $this->update([
+                'horas_diurnas' => $horas_diurnas,
+                'horas_nocturnas' => $horas_nocturnas,
+                'horas_festivos' => $horas_festivos,
+                'horas_recargo_nocturno' => $horas_recargo_nocturno
+            ]);
+        }
     }
 }

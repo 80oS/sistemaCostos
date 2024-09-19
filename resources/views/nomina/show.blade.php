@@ -18,7 +18,7 @@
         }
 
         table {
-            border: #37759e 1px solid;
+            border: #1b9ef5 1px solid;
             border-collapse: collapse;
         }
 
@@ -53,7 +53,7 @@
         }
 
         thead tr th.c-1 {
-            background: #91dcff;
+            background: #b8dbeb;
             border:1px solid #000000;
         }
         table .c-1 {
@@ -62,27 +62,27 @@
             border:1px solid #000000;
         }
         table tbody tr td.c-1 {
-            background: #91dcff;
+            background: #b8dbeb;
             border:1px solid #000000;
         }
 
         thead tr th.c-2 {
-            background: #91dcff;
+            background: #b8dbeb;
             border:1px solid #000000;
         }
         table .c-2 {
-            background: #91dcff;
+            background: #b8dbeb;
             position: sticky;
             left: 50px;
             border:1px solid #000000;
         }
         table tbody tr .c-2 {
-            background: #91dcff;
+            background: #b8dbeb;
             border: 1px solid #000000;
         }
 
         thead tr th.c-3{
-            background: #91dcff;
+            background: #b8dbeb;
             border:1px solid #000000;
         }
         table .c-3 {
@@ -91,12 +91,12 @@
             border:1px solid #000000;
         }
         table tbody tr .c-3 {
-            background: #91dcff;
+            background: #b8dbeb;
             border:1px solid #000000;
         }
 
         thead tr th.c-4{
-            background: #91dcff;
+            background: #b8dbeb;
             border:1px solid #000000;
         }
         table .c-4 {
@@ -105,12 +105,12 @@
             border:1px solid #000000;
         }
         table tbody tr .c-4 {
-            background: #91dcff;
+            background: #b8dbeb;
             border:1px solid #000000;
         }
 
         thead tr th.c-5{
-            background: #91dcff;
+            background: #b8dbeb;
             border:1px solid #000000;
         }
         table .c-5 {
@@ -119,12 +119,12 @@
             border:1px solid #000000;
         }
         table tbody tr .c-5 {
-            background: #91dcff;
+            background: #b8dbeb;
             border:1px solid #000000;
         }
 
         table thead tr th.c-1, table thead tr th.c-2, table thead tr th.c-3, table thead tr th.c-4, table thead tr th.c-5 {
-            background: #91dcff;
+            background: #b8dbeb;
             border: #000000 1px solid;
             position: sticky;
             top: 110px;
@@ -132,7 +132,7 @@
         }
 
         table thead tr th.c {
-            background: #585ab3;
+            background: #9999b0;
             border: #000000 1px solid;
             position: sticky;
             top: 110px;
@@ -180,6 +180,10 @@
             justify-content: flex-end;
 
             padding-right: 200px;
+        }
+
+        .content, .content-header {
+            background: #fff !important;
         }
 
     </style>

@@ -43,9 +43,9 @@ class Tiempos_produccion extends Model
         return $this->belongsTo(SDP::class, 'sdp_id', 'numero_sdp');
     }
 
-    public function cif()
+    public function Cif()
     {
-        return $this->belongsTo(cif::class, 'cif_id');
+        return $this->belongsTo(Cif::class, 'cif_id');
     }
 
     public function costosProduccion()

@@ -7,7 +7,7 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
-                
+                <x-welcome />
             </div>
         </div>
     </div>

@@ -385,6 +385,10 @@
             background: #fff !important;
         }
 
+        .content{
+            height: 86vh;
+        }
+
         .operario {
             display: flex;
             flex-direction: row;

@@ -31,8 +31,8 @@
                         </div>
         
                         <div class="mb-4">
-                            <button type="submit" class="btn btn-info mr-3">guardar</button>
-                            <a href="{{ route('horas-extras.index') }}" class="btn btn-default">cancelar</a>
+                            <button type="submit" class="btn btn-info mr-3">Guardar</button>
+                            <a href="{{ route('horas-extras.index') }}" class="btn btn-default">Cancelar</a>
                         </div>
                     </form>
                 </div>
@@ -44,6 +44,31 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    <style>
+        .content, .content-header{
+            background: #fff !important;
+        }
+
+        .content {
+            height: 87vh;
+        }
+
+        h2 {
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+
+        .card, .card-body {
+            background: #9f9f9f !important;
+            color: #000 !important;
+        }
+
+        input, select {
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+    </style>
 @stop
 
 @section('js')

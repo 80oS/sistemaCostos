@@ -10,20 +10,20 @@
 
 @section('content')
 <div class=" flex items-end justify-end mb-4 px-20">
-    <a href="{{ route('clientes-comerciales') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">volver</a>
+    <a href="{{ route('clientes-comerciales') }}" class="btn btn-warning">volver</a>
 </div>
-<div class="py-12">
+<div class="container">
     @if (session('success'))
         <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
             <span class="block sm:inline">{{ session('success') }}</span>
         </div>
     @endif
-    <div class="tg max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6"> 
-            <div class="mb-4">
-                <a href="{{ route('clientes.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Crear</a>
+    <div class="card">
+        <div class="card-body"> 
+            <div class="">
+                <a href="{{ route('clientes.create') }}" class="btn btn-info">Crear</a>
             </div>
-            <table class="table" id="clientes">
+            <table class="table table-striped" id="clientes">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -54,14 +54,14 @@
                         <td>{{ $cliente->correo }}</td>
                         <td>{{ $cliente->vendedores->nombre }}</td>
                         <td>
-                            <a href="{{ route('clientes.edit', $cliente->nit) }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded">Editar</a>
+                            <a href="{{ route('clientes.edit', $cliente->nit) }}" class="btn btn-warning">Editar</a>
                         </td>
                         <td>
                             
                             <form action="{{ route('clientes.destroy', $cliente->nit) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">Eliminar</button>
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">Eliminar</button>
                             </form>
                         </td>
                     </tr>
@@ -76,20 +76,39 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.3/css/dataTables.tailwindcss.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.bootstrap5.css">
     <style>
         table.table {
             max-height: 700px;
             overflow: auto;
         }
+
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        .card, .card-body {
+            background: #acacac !important;
+            color: #000 !important;
+        }
+
+        .content {
+            height: 87vh;
+        }
+
+        input {
+            background: #fff !important;
+            color: #000 !important;
+        }
     </style>
 @stop
 
 @section('js')
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.1.3/js/dataTables.tailwindcss.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.js"></script>
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
     <script>
         setTimeout(function() {

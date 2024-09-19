@@ -22,11 +22,8 @@
                 <thead>
                     <tr class=" border-gray-900 ">
                         <!-- Sección de Información Personal -->
-                        <th colspan="17" class=" d border-gray-900 ">Información Personal</th>
+                        <th colspan="14" class=" d border-gray-900 ">Información Personal</th>
                         <!-- Sección de Información Médica -->
-                        <th colspan="4" class=" d border-gray-900 ">Información Médica</th>
-                        <!-- Sección de Información Familiar -->
-                        <th colspan="{{ 13 + (5 * $maxHijos) }}" class=" d border-gray-900 ">Información Familiar</th>
                         <!-- Sección de Acciones -->
                         <th colspan="3" class=" d border-gray-900 ">Acciones</th>
                     </tr>
@@ -37,46 +34,27 @@
                         <th class=" border-gray-900   c-2">Nombre</th>
                         <th class=" border-gray-900   c-3">Apellido</th>
                         <th class="  border-gray-900 c-4">Sueldo Base</th>
-                        <th class="  border-gray-900 v">Teléfono Fijo</th>
+                        
                         <th class="  border-gray-900 v">Celular</th>
-                        <th class=" border-gray-900  v">Correo</th>
+                        
                         <th class="  border-gray-900 v">Area</th>
                         <th class="  border-gray-900  v">Edad</th>
-                        <th class="  border-gray-900  v">Estado Civil</th>
-                        <th class="  border-gray-900  v">Sexo</th>
+                        
                         <th class="  border-gray-900  v">Cargo</th>
                         <th class=" border-gray-900  v">Fecha de Nacimiento</th>
                         <th class="  border-gray-900 v">Fecha de Ingreso</th>
-                        <th class=" border-gray-900  v">Lugar de Nacimiento</th>
-                        <th class=" border-gray-900  v">Dirección</th>
+                        
         
                         <!-- Información Médica -->
-                        <th class="  border-gray-900 v">ARL</th>
+                        
                         <th class="  border-gray-900 v">EPS</th>
-                        <th class="  border-gray-900 v">Alergias</th>
-                        <th class="  border-gray-900 v">Tipo de Sangre</th>
+                        
         
                         <!-- Información Familiar -->
-                        <th class=" border-gray-900  v">Nombre del Contacto</th>
-                        <th class=" border-gray-900  v">Parentesco</th>
-                        <th class=" border-gray-900  v">Teléfono del Contacto</th>
+                        
                         <th class=" border-gray-900  v">Cuenta Bancaria</th>
-                        <th class=" border-gray-900  v">Fondo de Pensión</th>
-                        <th class=" border-gray-900  v">Fondo de Cesantías</th>
-                        <th class=" border-gray-900  v">Caja</th>
-                        <th class=" border-gray-900  v">Número de Hijos</th>
-                            @for($i = 1; $i <= $maxHijos; $i++ )
-                            <th class="  border-gray-900 v">Nombre del Hijo{{ $i }}</th>
-                            <th class=" border-gray-900  v">Fecha de Nacimiento del Hijo{{ $i }}</th>
-                            <th class=" border-gray-900  v">Edad del Hijo{{ $i }}</th>
-                            <th class=" border-gray-900  v">Tipo de Documento del Hijo{{ $i }}</th>
-                            <th class=" border-gray-900  v">Número de Documento del Hijo{{ $i }}</th>
-                            @endfor
-                            <th class=" border-gray-900  v">Nombre del Cónyuge</th>
-                            <th class=" border-gray-900  v">Fecha de Nacimiento del Cónyuge</th>
-                            <th class="  border-gray-900 v">Número de Documento del Cónyuge</th>
-                            <th class=" border-gray-900  v">Fecha de Expedición del Cónyuge</th>
-                            <th class=" border-gray-900  v">Lugar de Expedición del Cónyuge</th>
+                        
+                        <th class=" border-gray-900  v">Banco</th>
                             <!-- Acciones -->
                             {{-- <th class=" v">Eliminar</th> --}}
                             <th class=" border-gray-900  v">Habilitar/Deshabilitar</th>
@@ -91,63 +69,19 @@
                                 <td class=" border-gray-900  c-2">{{ $trabajador->nombre }}</td>
                                 <td class=" border-gray-900  c-3">{{ $trabajador->apellido }}</td>
                                 <td class=" border-gray-900  c-4">{{ $trabajador->sueldos->first()->sueldo ?? 'No tiene sueldo registrado' }}</td>
-                                <td class=" border-gray-900  v">{{ $trabajador->telefono_fijo }}</td>
                                 <td class=" border-gray-900  v">{{ $trabajador->celular }}</td>
-                                <td class=" border-gray-900  v">{{ $trabajador->correo }}</td>
                                 <td class=" border-gray-900  v">{{ $trabajador->departamentos }}</td>
                                 <td class=" border-gray-900  v">{{ $trabajador->edad }}</td>
-                                <td class=" border-gray-900  v">{{ $trabajador->estado_civil }}</td>
-                                <td class=" border-gray-900  v">{{ $trabajador->sexo }}</td>
                                 <td class=" border-gray-900  v">{{ $trabajador->cargo }}</td>
                                 <td class=" border-gray-900  v">{{ $trabajador->fecha_nacimiento }}</td>
                                 <td class=" border-gray-900  v">{{ $trabajador->fecha_ingreso }}</td>
-                                <td class=" border-gray-900  v">{{ $trabajador->lugar_nacimiento }}</td>
-                                <td class=" border-gray-900  v">{{ $trabajador->direccion }}</td>
         
                                 <!-- Información Médica -->
-                                <td class=" border-gray-900  v">{{ $trabajador->ARL }}</td>
                                 <td class=" border-gray-900  v">{{ $trabajador->Eps }}</td>
-                                <td class=" border-gray-900  v">{{ $trabajador->alergias }}</td>
-                                <td class=" border-gray-900  v">{{ $trabajador->tipo_sangre }}</td>
         
                                 <!-- Información Familiar -->
-                                <td class=" v">{{ $trabajador->nombre_persona_contacto }}</td>
-                                <td class=" border-gray-900  v">{{ $trabajador->parentesco_con_persona_contacto }}</td>
-                                <td class=" border-gray-900  v">{{ $trabajador->telefono_celular_persona_contacto }}</td>
                                 <td class="  border-gray-900 v">{{ $trabajador->cuenta_bancaria }}</td>
-                                <td class="  border-gray-900 v">{{ $trabajador->fondo_pencion }}</td>
-                                <td class=" border-gray-900 v">{{ $trabajador->fondo_cesantias }}</td>
-                                <td class="  border-gray-900 v">{{ $trabajador->caja }}</td>
-                                <td class="  border-gray-900 v">{{ $trabajador->hijos_count }}</td>
-                            @if ($trabajador->hijos_count > 0)
-                                @foreach ($trabajador->hijos as $hijo)
-                                    <td class=" border-gray-900  v">{{ $hijo->nombre }}</td>
-                                    <td class=" border-gray-900  v">{{ $hijo->fecha_nacimiento }}</td>
-                                    <td class="  border-gray-900 v">{{ $hijo->edad }}</td>
-                                    <td class=" border-gray-900  v">{{ $hijo->tipo_documento }}</td>
-                                    <td class="  border-gray-900 v">{{ $hijo->numero_documento }}</td>  
-                                @endforeach
-                                @for ($i = $trabajador->hijos_count; $i < $maxHijos; $i++)
-                                    <td class="  border-gray-900 v">NO APLICA</td>
-                                    <td class="  border-gray-900 v">NO APLICA</td>
-                                    <td class="  border-gray-900 v">NO APLICA</td>
-                                    <td class="  border-gray-900 v">NO APLICA</td>
-                                    <td class="  border-gray-900 v">NO APLICA</td>
-                                @endfor
-                            @else
-                                @for ($i = 0; $i < $maxHijos; $i++ )
-                                    <td class="  border-gray-900 v">NO APLICA</td>
-                                    <td class="  border-gray-900 v">NO APLICA</td>
-                                    <td class="  border-gray-900 v">NO APLICA</td>
-                                    <td class="  border-gray-900 v">NO APLICA</td>
-                                    <td class="  border-gray-900 v">NO APLICA</td>
-                                @endfor
-                            @endif
-                            <td class=" border-gray-900  v">{{ $trabajador->nombre_conyuge }}</td>
-                            <td class=" border-gray-900  v">{{ $trabajador->fecha_nacimiento_conyuge }}</td>
-                            <td class=" border-gray-900  v">{{ $trabajador->numero_documento_conyuge }}</td>
-                            <td class=" border-gray-900  v">{{ $trabajador->fecha_expedicion_conyuge }}</td>
-                            <td class=" border-gray-900  v">{{ $trabajador->lugar_expedicion_conyuge }}</td>
+                                <td class="  border-gray-900 v">{{ $trabajador->banco }}</td>
                                 <td class="  border-gray-900  v">
                                     @if ($trabajador->estado === 'activo')
                                         <form action="{{ route('trabajadores.disable', $trabajador->id) }}" method="POST">
@@ -193,9 +127,17 @@
     .container {
         width: 900rem;
         max-height: 900px;
-        background: #2a293b;
+        background: #a9a9a9;
         border-radius: 10px;
         padding: 20px;
+    }
+
+    .content, .content-header{
+        background: #fff !important;
+    }
+
+    .content {
+        height: 87vh;
     }
 
     .table_wrapper {

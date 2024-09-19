@@ -20,7 +20,7 @@
     <div class="py-12">
         <body class="desprendibles" id="desprendible">
             <div class="max-w-4xl mx-auto bg-white shadow-lg">
-                <div class="flex justify-between items-center border-b-2 border-gray-200 p-4">
+                <div class="flex justify-between items-center  border-gray-200 p-4">
                     <div class="flex items-center">
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsVpDdEZpcQyL21RirrUW88r-ATjStR6UG7X4GjWd2PQ&s" alt="IDIMCOL Logo" class="w-16 h-16 mr-4">
                         <div>
@@ -33,10 +33,10 @@
                     <div class="text-right">
                         <h2 class="text-xl font-semibold">DESPRENDIBLE</h2>
                         <p>PAGO DE NÓMINA</p>
-                        <p class="font-bold">{{ $nomina->paqueteNomina->mes }}/{{ $nomina->paqueteNomina->año }}</p>
+                        <p class="font-bold">{{ $meses[$nomina->paqueteNomina->mes] }}/{{ $nomina->paqueteNomina->año }}</p>
                     </div>
                 </div>
-    
+    <hr>
                 <div class="p-4">
                     <h3 class="text-lg font-semibold mb-2">NOMINAL GENERAL</h3>
                     <div class="grid grid-cols-2 gap-4 mb-4">
@@ -89,7 +89,7 @@
                                     <td class="text-right">{{ number_format($nomina->devengado_vacaciones, 2, ',', '.') }}</td>
                                 </tr>
                                 <tr>
-                                    <td>otra remuneracion</td>
+                                    <td>otra remuneracion/Liquidación</td>
                                     <td class="text-right">{{ $nomina->dias->dias_remunerados }}</td>
                                     <td class="text-right">{{ number_format($nomina->devengado_remunerados, 2, ',', '.') }}</td>
                                 </tr>
@@ -143,6 +143,16 @@
                     </div>
     
                     <p class="text-right mt-4 font-bold">TOTAL CANCELADO: {{ number_format($nomina->total_a_pagar, 2, ',', '.') }}</p>
+                    <div class="">
+                        <div class="">
+                            <label for="" class="form-label">Pago en efectivo</label>
+                            <input type="checkbox" name="" id="">
+                        </div>
+                        <div class="">
+                            <label for="" class="form-label">Pago por transaccion</label>
+                            <input type="checkbox" name="" id="">
+                        </div>
+                    </div>
     
                     <div class="mt-8 pt-8 flex flex-col items-center justify-center">
                         <input type="text" class="border-b bg-white text-black">
@@ -152,7 +162,7 @@
             </div>
 
             <div class="max-w-4xl mx-auto bg-white shadow-lg">
-                <div class="flex justify-between items-center border-b-2 border-gray-200 p-4">
+                <div class="flex justify-between items-center border-gray-200 p-4">
                     <div class="flex items-center">
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsVpDdEZpcQyL21RirrUW88r-ATjStR6UG7X4GjWd2PQ&s" alt="IDIMCOL Logo" class="w-16 h-16 mr-4">
                         <div>
@@ -165,10 +175,10 @@
                     <div class="text-right">
                         <h2 class="text-xl font-semibold">DESPRENDIBLE</h2>
                         <p>PAGO DE NÓMINA</p>
-                        <p class="font-bold">{{ $nomina->paqueteNomina->mes }}/{{ $nomina->paqueteNomina->año }}</p>
+                        <p class="font-bold">{{ $meses[$nomina->paqueteNomina->mes] }}/{{ $nomina->paqueteNomina->año }}</p>
                     </div>
                 </div>
-    
+    <hr>
                 <div class="p-4">
                     <h3 class="text-lg font-semibold mb-2">NOMINAL GENERAL</h3>
                     <div class="grid grid-cols-2 gap-4 mb-4">
@@ -256,7 +266,7 @@
                                     <td class="text-right">{{ number_format($nomina->anticipo, 2, ',', '.') }}</td>
                                 </tr>
                                 <tr>
-                                    <td>licencia no renumerada</td>
+                                    <td>licencia no renumerada/Liquidación</td>
                                     <td class="text-right">{{ $nomina->dias->dias_no_remunerados }}</td>
                                     <td class="text-right">{{ number_format($nomina->suspencion, 2, ',', '.') }}</td>
                                 </tr>
@@ -275,10 +285,15 @@
                     </div>
     
                     <p class="text-right mt-4 font-bold">TOTAL CANCELADO: {{ number_format($nomina->total_a_pagar, 2, ',', '.') }}</p>
-    
-                    <div class="mt-8 pt-8 flex flex-col items-center justify-center">
-                        <input type="text" class="border-b bg-white text-black">
-                        <p class="text-center">FIRMA Y C.C. DEL BENEFICIARIO</p>
+                    <div class="">
+                        <div class="">
+                            <label for="" class="form-label">Pago en efectivo</label>
+                            <input type="checkbox" name="" id="">
+                        </div>
+                        <div class="">
+                            <label for="" class="form-label">Pago por transaccion</label>
+                            <input type="checkbox" name="" id="">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -300,6 +315,15 @@
 
         .desprendibles {
             border-radius: 10px;
+        }
+
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        h2 {
+            font-size: 18px;
+            text-transform: uppercase;
         }
 
         @media print {

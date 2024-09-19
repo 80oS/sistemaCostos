@@ -18,8 +18,8 @@
             <span class="block sm:inline">{{ session('success') }}</span>
         </div>
     @endif
-    <div class="tg max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6"> 
+    <div class="card">
+        <div class="card-body"> 
             <div class="mb-4">
                 <a href="{{ route('clientes.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Crear</a>
             </div>
@@ -76,19 +76,39 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.3/css/dataTables.tailwindcss.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.bootstrap5.css">
+    
     <style>
         table.table {
             max-height: 700px;
             overflow: auto;
         }
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        .card, .card-body {
+            background: #acacac !important;
+            color: #000 !important;
+        }
+
+        .content {
+            height: 87vh;
+        }
+
+        input {
+            background: #fff !important;
+            color: #000 !important;
+        }
     </style>
 @stop
 
 @section('js')
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.1.3/js/dataTables.tailwindcss.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
     <script>

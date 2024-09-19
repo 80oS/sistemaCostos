@@ -10,7 +10,7 @@
 
 @section('content')
 <div class="flex flex-col items-end justify-end mb-4">
-    <a href="{{ route('nomina.show', $paquete->id) }}" class="font-medium bg-blue-600 hover:bg-blue-800 px-3 py-2 rounded">volver</a>
+    <a href="{{ route('nomina.show', $paquete->id) }}" class="btn btn-warning">volver</a>
 </div>
 <div class="card">
     <div class="card-body">
@@ -93,9 +93,9 @@
 </div>
 <div class="card">
     <div class="card-body">
-        <table class="table table-striped" id="totales">
+        <table id="totales" class="table table-striped">
             <thead>
-                <tr class="">
+                <tr>
                     <th>salario</th>
                     <th>dias trabajados</th>
                     <th>dias incapacidad</th>
@@ -108,7 +108,6 @@
                     <th>devengado dias vacaciones</th>
                     <th>devengado dias remunerados</th>
                     <th>auxilio de transporte</th>
-                    <th>bono_horas_extras</th>
                     <th>total devengados</th>
                     <th>salud</th>
                     <th>pencion</th>
@@ -123,48 +122,47 @@
             </thead>
             <tbody>
                 <tr class="">
-                    <td>{{ number_format($totalSueldo, 2, '.', ',') }}</td>
+                    <td>{{ number_format($totalSueldo, 2, ',', '.') }}</td>
                     <td>{{ $total_dias_trabajados }}</td>
                     <td>{{  $total_dias_incapacidad }}</td>
                     <td>{{ $total_dias_vacaciones }}</td>
                     <td>{{ $total_dias_remunerados }}</td>
                     <td>{{ $total_dias }}</td>
-                    <td>{{ number_format($total_bonificacion, 2, '.', ',') }}</td>
-                    <td>{{ number_format($total_D_dias_trabajados, 2, '.', ',') }}</td>
-                    <td>{{ number_format($total_D_dias_incapacidad, 2, '.', ',') }}</td>
-                    <td>{{ number_format($total_D_dias_vacaciones, 2, '.', ',') }}</td>
-                    <td>{{ number_format($total_D_dias_remunerados, 2, '.', ',') }}</td>
-                    <td>{{ number_format($total_auxilio, 2, '.', ',') }}</td>
-                    <td>{{ number_format($total_bono, 2, '.', ',') }}</td>
-                    <td>{{ number_format($total_devengado, 2, '.', ',') }}</td>
-                    <td>{{ number_format($total_pencion, 2, '.', ',') }}</td>
-                    <td>{{ number_format($total_salud, 2, '.', ',') }}</td>
-                    <td>{{ number_format($total_celular, 2, '.', ',') }}</td>
-                    <td>{{ number_format($total_anticipo, 2, '.', ',') }}</td>
-                    <td>{{ number_format($total_dias_no_remunerados, 2, '.', ',') }}</td>
+                    <td>{{ number_format($total_bonificacion, 2, ',', '.') }}</td>
+                    <td>{{ number_format($total_D_dias_trabajados, 2, ',', '.') }}</td>
+                    <td>{{ number_format($total_D_dias_incapacidad, 2, ',', '.') }}</td>
+                    <td>{{ number_format($total_D_dias_vacaciones, 2, ',', '.') }}</td>
+                    <td>{{ number_format($total_D_dias_remunerados, 2, ',', '.') }}</td>
+                    <td>{{ number_format($total_auxilio, 2, ',', '.') }}</td>
+                    <td>{{ number_format($total_devengado, 2, ',', '.') }}</td>
+                    <td>{{ number_format($total_pencion, 2, ',', '.') }}</td>
+                    <td>{{ number_format($total_salud, 2, ',', '.') }}</td>
+                    <td>{{ number_format($total_celular, 2, ',', '.') }}</td>
+                    <td>{{ number_format($total_anticipo, 2, ',', '.') }}</td>
+                    <td>{{ number_format($total_dias_no_remunerados, 2, ',', '.') }}</td>
                     <td>{{ number_format($total_suspencion, 2, '.', ',') }}</td>
-                    <td>{{ number_format($total_otro, 2, '.', ',') }}</td>
-                    <td>{{ number_format($total_deducido, 2, '.', ',') }}</td>
-                    <td>{{ number_format($total_a_pagar, 2, '.', ',') }}</td>
+                    <td>{{ number_format($total_otro, 2, ',', '.') }}</td>
+                    <td>{{ number_format($total_deducido, 2, ',', '.') }}</td>
+                    <td>{{ number_format($total_a_pagar, 2, ',', '.') }}</td>
                 </tr>
             </tbody>
             <tfoot>
                 
                 <tr>
-                    <td  colspan="22">TOTAL PCC</td>
-                    <td >{{ number_format($total_a_pagar_pcc, 2, '.', ',') }}</td>
+                    <td colspan="11">TOTAL PCC</td>
+                    <td>{{ number_format($total_a_pagar_pcc, 2, ',', '.') }}</td>
                 </tr>
                 <tr>
-                    <td  colspan="22">TOTAL ADMON</td>
-                    <td >{{ number_format($total_a_pagar_admon, 2, '.', ',') }}</td>
+                    <td colspan="11">TOTAL ADMON</td>
+                    <td>{{ number_format($total_a_pagar_admon, 2, ',', '.') }}</td>
                 </tr>
                 <tr>
-                    <td  colspan="22">TOTAL SOCIOS</td>
-                    <td >{{ number_format($total_a_pagar_socios, 2, '.', ',') }}</td>
+                    <td colspan="11">TOTAL SOCIOS</td>
+                    <td>{{ number_format($total_a_pagar_socios, 2, ',', '.') }}</td>
                 </tr>
-                <tr class="bg-gray-300">
-                    <td  colspan="22">SUBTOTAL</td>
-                    <td >{{ number_format($subtotal, 2, '.', ',') }}</td>
+                <tr>
+                    <td colspan="11">SUBTOTAL</td>
+                    <td>{{ number_format($subtotal, 2, ',', '.') }}</td>
                 </tr>
             </tfoot>
         </table>
@@ -173,8 +171,8 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.3/css/dataTables.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.3/css/dataTables.tailwindcss.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.bootstrap5.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.1/css/buttons.dataTables.css">
 
     <script src="https://cdn.jsdelivr.net/npm/datatables-buttons-excel-styles@1.2.0/js/buttons.html5.styles.min.js"></script>
@@ -188,15 +186,39 @@
         .table thead tr th, .table tbody tr td{
             border: #fff solid 1px;
             text-transform: uppercase;
-        } 
+        }
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        h2 {
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+
+        .card, .card-body {
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+        input {
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+        .export-button-container {
+            background: #34a54b !important;
+            color: #000 !important;
+        }
     </style>
 @stop
 
 @section('js')
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.1.3/js/dataTables.tailwindcss.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-latest/xlsx.full.min.js"></script>
 

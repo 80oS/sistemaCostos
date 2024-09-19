@@ -9,15 +9,15 @@
 @stop
 
 @section('content')
-<div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
+<div class="container">
+    <div class="card">
+        <div class="card-body">
             <form action="{{ route('clientes.store') }}" method="POST" class="max-w-sm mx-auto space-y-4">
                 @csrf
 
-                <div>
-                    <label for="comerciales_id" class="block mb-2 text-sm font-medium text-gray-100">R.comercial</label>
-                    <select name="comerciales_id" id="comerciales_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                <div class="form-group">    
+                    <label for="comerciales_id" class="form-label">R.comercial</label>
+                    <select name="comerciales_id" id="comerciales_id" class="form-control" required>
                         <option value="">Seleccione un comercial</option>
                         @foreach($comerciales as $comercial)
                             <option value="{{ $comercial->id }}">{{ $comercial->nombre }}</option>
@@ -25,24 +25,24 @@
                     </select>
                 </div>
 
-                <div>
-                    <label class="block mb-2 text-sm font-medium text-gray-100" for="nombre">Nombre / Razon Social</label>
-                    <input type="text" name="nombre" id="nombre" class="bg-gray-900 border border-gray-300 text-gray-200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                <div class="form-group">    
+                    <label class="form-label" for="nombre">Nombre / Razon Social</label>
+                    <input type="text" name="nombre" id="nombre" class="form-control" required>
                 </div>
 
                 <div>
                     <label class="block mb-2 text-sm font-medium text-gray100" for="nit">Nit / Cedula</label>
-                    <input type="text" name="nit" id="nit" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    <input type="text" name="nit" id="nit" class="form-control" required>
                 </div>
 
-                <div>
-                    <label class="block mb-2 text-sm font-medium text-gray-100" for="direccion">direccion</label>
-                    <input type="text" name="direccion" id="" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                <div class="form-group">    
+                    <label class="form-label" for="direccion">direccion</label>
+                    <input type="text" name="direccion" id="" class="form-control">
                 </div>
 
-                <div>
-                    <label class="block mb-2 text-sm font-medium text-gray-100" for="departamento">Departamento / pais</label>
-                    <select name="departamento" id="departamento" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                <div class="form-group">    
+                    <label class="form-label" for="departamento">Departamento / pais</label>
+                    <select name="departamento" id="departamento" class="form-control" required>
                         <option value="">Seleccione un departamento</option>
                         @foreach($departamentos as $departamento)
                             <option value="{{ $departamento->id }}">{{ $departamento->nombre }}</option>
@@ -50,29 +50,29 @@
                     </select>
                 </div>
 
-                <div>
-                    <label class="block mb-2 text-sm font-medium text-gray-100" for="ciudad">Ciudad / Municipio</label>
+                <div class="form-group">
+                    <label class="form-label" for="ciudad">Ciudad / Municipio</label>
                     <div class="relatives">
-                        <select name="ciudad" id="ciudad" class="select bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
-                            <option value="">Seleccione una ciudad/municipio</option>
+                        <select name="ciudad" id="ciudad" class="select form-control" required>
+                            <option value="ciudad">Seleccione una ciudad/municipio</option>
                         </select>
                         <button type="button" id="addMunicipioBtn" class="bg-green-600 text-white rounded-lg hover:bg-green-700">Agregar Municipio</button>
                     </div>
                 </div>
 
-                <div>
-                    <label class="block mb-2 text-sm font-medium text-gray-100" for="telefono">Teléfono</label>
-                    <input type="text" name="telefono" id="telefono" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                <div class="form-group">    
+                    <label class="form-label" for="telefono">Teléfono</label>
+                    <input type="text" name="telefono" id="telefono" class="form-control">
                 </div>
 
-                <div>
-                    <label class="block mb-2 text-sm font-medium text-gray-100" for="contacto">contacto</label>
-                    <input type="text" name="contacto" id="contacto" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                <div class="form-group">    
+                    <label class="form-label" for="contacto">contacto</label>
+                    <input type="text" name="contacto" id="contacto" class="form-control">
                 </div>
 
-                <div>
-                    <label class="block mb-2 text-sm font-medium text-gray-100" for="correo">Correo</label>
-                    <input type="email" name="correo" id="correo" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                <div class="form-group">    
+                    <label class="form-label" for="correo">Correo</label>
+                    <input type="email" name="correo" id="correo" class="form-control">
                 </div>
 
                 <div class="flex items-center justify-between mt-4">
@@ -90,7 +90,7 @@
             @csrf
             <div class="mb-4">
                 <label for="newMunicipio" class="block text-sm font-medium text-gray-900">Nombre del Municipio</label>
-                <input type="text" id="newMunicipio" name="newMunicipio" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                <input type="text" id="newMunicipio" name="newMunicipio" class="form-control" required>
             </div>
             <div class="flex items-center justify-end">
                 <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Guardar</button>
@@ -105,6 +105,11 @@
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <style>
+
+        .container {
+            padding: 10px;
+        }
+
         .flext {
             display: flex;
         }
@@ -117,6 +122,8 @@
         .relatives select.select {
             width: 500rem;
             height: 40px;
+            background: #fff !important;
+            color: #000 !important;
 
         }
 
@@ -125,6 +132,24 @@
             height: 60px;
             text-align: center;
             padding: 10px;
+        }
+
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        .card, .card-body {
+            background: #acacac !important;
+            color: #000 !important;
+        }
+
+        .content {
+            height: 90vh;
+        }
+
+        input, select {
+            background: #fff !important;
+            color: #000 !important;
         }
     </style>
 @stop

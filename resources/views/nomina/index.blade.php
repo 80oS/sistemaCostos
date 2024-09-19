@@ -16,20 +16,20 @@
         </div>
     @endif
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
+        <div class="dark:bg-gray-300 overflow-hidden shadow-xl sm:rounded-lg p-6">
             
             <form action="{{ route('nomina.crearPaquete') }}" method="POST" class="max-w-sm mx-auto space-y-4 mb-8">
                 @csrf
 
-                <div>
-                    <label for="mes" class="block text-gray-100 text-sm font-bold mb-2">Mes</label>
-                    <input type="number" name="mes" min="1" max="12" class="bg-gray-800 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
-                </div>
+                <div class="form-group">
+                    <label for="mes" class="label-form">Mes</label>
+                    <input type="number" name="mes" min="1" max="12" class="form-control" required>
+                </div class="form-group">
                 
-                <div>
-                    <label for="año" class="block text-gray-100 text-sm font-bold mb-2">Año</label>
-                    <input type="number" name="año" class="bg-gray-800 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
-                </div>
+                <div class="form-group">
+                    <label for="año" class="label-form">Año</label>
+                    <input type="number" name="año" class="form-control" required>
+                </div class="form-group">
                 
                 <button type="submit" class="w-full inline-flex justify-center items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     Crear Paquete de Nóminas
@@ -38,7 +38,7 @@
 
             <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
                 <table class="w-full text-sm text-left text-gray-500">
-                    <thead class="text-xs text-gray-200 uppercase bg-gray-700">
+                    <thead class="text-xs text-gray-800 uppercase bg-gray-400">
                         <tr>
                             <th scope="col" class="py-3 px-6">#</th>
                             <th scope="col" class="py-3 px-6">Mes</th>
@@ -50,7 +50,7 @@
                     <tbody>
                         @foreach($paquetes as $index => $paquete)
                             <tr class="bg-white border-b hover:bg-gray-50">
-                                <td class="py-4 px-4 bg-slate-600 text-white">{{ $index + 1 }}</td>
+                                <td class="py-4 px-4">{{ $index + 1 }}</td>
                                 <td class="py-4 px-4">{{ $paquete->mes }}</td>
                                 <td class="py-4 px-4">{{ $paquete->año }}</td>
                                 <td class="py-4 px-4">
@@ -90,6 +90,17 @@
         td, th {
             font-size: 15px;
             font-family: "Roboto Condensed", sans-serif;
+        }
+        .content, .content-header {
+            background: #fff !important;
+        }
+        .content{
+            height: 87vh;
+        }
+
+        input {
+            background: #fff !important;
+            color: #000 !important;
         }
     </style>
 @stop

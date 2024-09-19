@@ -3,7 +3,7 @@
 @section('title', 'servicios')
 
 @section('content_header')
-    <h2 class="font-semibold text-xl text-white leading-tight">
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         {{ __('Lista de Servicios') }}
     </h2>
 @stop
@@ -11,7 +11,7 @@
 @section('content')
 <div class="py-12 tg">
     <div class="tg max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-gray-700 overflow-hidden shadow-xl sm:rounded-lg p-6 tg">
+        <div class="bg-gray-400 overflow-hidden shadow-xl sm:rounded-lg p-6 tg">
             @if (session('success'))
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
                     <span class="block sm:inline">{{ session('success') }}</span>
@@ -78,6 +78,19 @@
         table {
             height: 500px;
             border-collapse: collapse;
+        }
+
+        .content, .content-header {
+            background-color: #fff !important;
+        }
+
+        .content {
+            height: 86vh;
+        }
+
+        h2 {
+            font-size: 18px;
+            text-transform: uppercase;
         }
 
     </style>

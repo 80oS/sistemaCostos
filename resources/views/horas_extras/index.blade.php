@@ -77,7 +77,30 @@
 
 @section('css')
     {{-- Add here extra stylesheets --}}
+    <style>
+        .content, .content-header{
+            background: #fff !important;
+        }
 
+        .content {
+            height: 87vh;
+        }
+
+        h2 {
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+
+        table thead tr th, tbody tbody tr td {
+            background: #fff !important;
+            color: #000 !important;
+            border: #000 1px solid;
+        }
+        
+        .card, .card-body {
+            background: #9f9f9f !important;
+        }
+    </style>
 @stop
 
 @section('js')
