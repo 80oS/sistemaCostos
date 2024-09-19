@@ -113,7 +113,6 @@ Route::get('/ADD_Clientes_servicios', [ADD_Clientes_servicios_Controller::class,
 // SDP
 Route::resource('sdp', SDPController::class);
 Route::get('/sdp-paquetes', [SDPController::class, 'indexPaquetes'])->name('sdp.paquetes');
-Route::get('/sdp-lista/{nit}', [SDPController::class, 'lista'])->name('sdp.lista');
 Route::get('/sdp-ver/{id}', [SDPController::class, 'ver'])->name('sdp.ver');
 
 // Artículos
@@ -224,3 +223,7 @@ Route::get('AdministraciónInventario', [AdministraciónInventarioController::cl
 // servocios Externos 
 
 Route::resource('serviciosExternos', servicioExternoController::class);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

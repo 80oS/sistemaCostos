@@ -8,7 +8,9 @@
 
 @section('content')
     <div class="cont">
-        <a href="{{ route('gestion-humana') }}" class="button btn btn-warning">volver</a>
+        <div class="col">
+            <a href="{{ route('gestion-humana') }}" class="button btn btn-warning">volver</a>
+        </div>
         <div class="container">
             <div class="center">
                 <a href="{{ route('trabajadores.activos') }}" class="btn btn-success">empleados_activos</a>
@@ -37,7 +39,7 @@
             height: 100%;
             margin: 0;
             padding: 0;
-            background-color: #343a40; /* Color de fondo gris oscuro */
+            background-color: #ffffff; /* Color de fondo gris oscuro */
         }
 
         .container {
@@ -52,7 +54,7 @@
             justify-content: center;
             align-items: center;
             gap: 10px; /* Espacio entre botones */
-            background-color: #4a5568; /* Color de fondo de la barra azul */
+            background-color: #c6c7c8; /* Color de fondo de la barra azul */
             padding: 10px;
             border-radius: 5px;
             width: 800px;
@@ -66,6 +68,8 @@
             align-items: center;
             height: 100vh;
         }
+        
+        
     </style>
 @stop
 

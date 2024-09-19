@@ -9,11 +9,11 @@
 @stop
 
 @section('content')
-<div class="">
+<div class="p">
     <a href="{{ route('ADD_C_S') }}" class="btn btn-warning">volver</a>
 </div>
 @if (session('success'))
-<div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+<div id="success-message" class="success-message" role="alert">
     <span class="block sm:inline">{{ session('success') }}</span>
 </div>
 @endif
@@ -26,30 +26,40 @@
             <table class="table table-striped" id="sdp">
                 <thead>
                     <tr>
+                        <th>numero_sdp</th>
                         <th>clientes</th>
                         <th>nit</th>
-                        <th>numeros de sdp</th>
-                        <th>cantidad de SDPs</th>
+                        <th>fecha de creacion</th>
                         <th>lista sdps</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($clientes as $cliente)
+                    @foreach($sdps as $sdp)
                     <tr>
-                        <td>{{ $cliente->nombre }}</td>
-                        <td>{{ $cliente->nit }}</td>
+                        <td>{{ $sdp->numero_sdp }}</td>
+                        <td>{{ $sdp->clientes->nombre }}</td>
+                        <td>{{ $sdp->created_at->format('d-m-Y') }}</td>
+                        <td>{{ $sdp->clientes->nit }}</td>
                         <td>
-                            <p>
-                                @foreach($cliente->sdp as $sdp)
-                                    {{ $sdp->numero_sdp }},
-                                @endforeach
-                            </p>
-                        </td>
-                        <td>{{ $cliente->sdp->count() }}</td>
-                        <td>
-                            <a href="{{ route('sdp.lista', $cliente->nit) }}" class="btn btn-info">
-                                lista de sdps
+                            <a href="{{ route('sdp.ver', $sdp->id) }}" class="btn btn-info">
+                                ver sdp
                             </a>
+                        </td>
+                        <td>
+                            <div class="col-4">
+                                <a href="{{ route('sdp.edit', $sdp->id) }}" class="btn btn-warning">Editar</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="COL-4">
+                                <form action="{{ route('sdp.destroy', $sdp->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este SDP?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @endforeach
@@ -82,6 +92,27 @@
         .content {
             width: 100%;
             height: 90vh;
+        }
+
+        .success-message {
+            --tw-bg-opacity: 1;
+            background-color: rgb(220 252 231 / var(--tw-bg-opacity)) /* #dcfce7 */;
+            border-width: 1px;
+            --tw-border-opacity: 1;
+            border-color: rgb(74 222 128 / var(--tw-border-opacity)) /* #4ade80 */;
+            --tw-text-opacity: 1;
+            color: rgb(21 128 61 / var(--tw-text-opacity)) /* #15803d */;
+            padding-left: 1rem /* 16px */;
+            padding-right: 1rem /* 16px */;
+            padding-top: 0.75rem /* 12px */;
+            padding-bottom: 0.75rem /* 12px */;
+            border-radius: 0.25rem /* 4px */;
+            position: relative;
+            margin-bottom: 1rem /* 16px */;
+        }
+
+        .p {
+            margin-bottom: 1rem /* 16px */;
         }
     </style>
 @stop

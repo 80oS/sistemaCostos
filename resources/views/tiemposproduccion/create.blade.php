@@ -12,112 +12,112 @@
 <div class="flex items-end justify-end col-12 px-20">
     <a href="{{ route('gestion-humana') }}" class="btn btn-success">volver</a>
 </div>
-<div class="box">
-    <div class="container">
-        <div class="title">
-            <h3 class="uppercase">Tiempo de Producción</h3>
-        </div>
-        <form action="{{ route('tiempos-produccion.store') }}" method="POST">
-            @csrf
-
-            <div class="mb-4">
-                <div class="mb-4">
-                    <label for="codigo_operario">Código del Operario</label>
-                    <input type="text" id="codigo_operario" name="operativo_id" readonly placeholder="Código del operario">
-                </div>
-
-                <div class="mb-4">
-                    <label for="nombre_operario">Nombre del Operario</label>
-                    <input type="text" id="nombre_operario" name="nombre_operario" readonly placeholder="Nombre del operario">
-                </div>
-            </div>
-
-            <div class="mb-4">
-                <div class="mb-4">
-                    <label for="dia">Día</label>
-                    <select name="dia" id="dia" required>
-                        @for ($i = 1; $i <= 31; $i++)
-                            <option value="{{ $i }}">{{ $i }}</option>
-                        @endfor
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label for="mes">Mes</label>
-                    <select name="mes" id="mes" required>
-                        @foreach ([
-                            1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio',
-                            7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre'
-                        ] as $numero => $nombre)
-                            <option value="{{ $numero }}">{{ $nombre }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label for="año">Año</label>
-                    <select name="año" id="año" required>
-                        @for ($i = date('Y'); $i >= 1900; $i--)
-                            <option value="{{ $i }}">{{ $i }}</option>
-                        @endfor
-                    </select>
-                </div>
-            </div>
-
-            <div class="mb-4">
-                <div class="mb-4">
-                    <label for="hora_inicio">Hora Inicio</label>
-                    <input type="time" id="hora_inicio" name="hora_inicio" required>
-                </div>
-                
-                <div class="mb-4">
-                    <label for="hora_fin">Hora Fin</label>
-                    <input type="time" id="hora_fin" name="hora_fin" required>
-                </div>
-            
-                <div class="mb-4">
-                    <label for="laboral_descanso">Laboral con descansos</label>
-                    <input type="checkbox" id="laboral_descanso">
-                    
-                    <label for="tiempo_a_restar">Tiempo a restar (en minutos)</label>
-                    <input type="number" min="0" step="1" placeholder="Minutos a restar" id="tiempo_restar">
-                </div>
-            </div>
-
-            <div class="mb-4">
-                <div class="mb-4">
-                    <label for="nombre_servicio">Proceso/Servicio</label>
-                    <input type="text" id="nombre_servicio" name="nombre_servicio" readonly placeholder="Nombre del servicio">
-                </div>
-
-                <div class="mb-4">
-                    <label for="proseso_id">Código Servicio</label>
-                    <input type="text" id="proseso_id" name="proseso_id" readonly placeholder="Código del servicio">
-                </div>
-
-                <div class="mb-4">
-                    <label for="sdp_id">SDP</label>
-                    <input type="text" id="sdp_id" name="sdp_id" required placeholder="Número del SDP" readonly>
-                </div>
-            </div>
-
-            <div class="buttons">
-                <button type="submit" class="btn btn-primary">Guardar</button>
-                <a href="{{ route('tiempos.group') }}" class="btn btn-default">Cancelar</a>
-            </div>
-        </form>
-    </div>
-</div>
-<div class="butons">
-    <button id="abrirModalOperarios" type="button" class="btn btn-info">Ver operarios</button>
-    <button id="abrirModalServicios" type="button" class="btn btn-info">ver servicios</button>
-    <button id="abrirModalSDP" type="button" class="btn btn-info">ver SDP</button>
-</div>
-
 <div class="ver">
     <a href="{{ route('tiempos.group') }}" class="btn">ver tiempos</a>
 </div>
-
+<div class="box">
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <form action="{{ route('tiempos-produccion.store') }}" method="POST">
+                    @csrf
+        
+                    <div class="form-group">
+                        <div class="mb-4 ">
+                            <label for="codigo_operario">Código del Operario</label>
+                            <div class="operario">
+                                <button id="abrirModalOperarios" type="button" class="btn btn-info">Ver operarios</button>
+                                <input type="text"  id="codigo_operario" name="operativo_id" readonly placeholder="Código del operario">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="nombre_operario">Nombre del Operario</label>
+                            <input type="text" id="nombre_operario" name="nombre_operario" readonly placeholder="Nombre del operario">
+                        </div>
+                    </div>
+        
+                    <div class="mb-4">
+                        <div class="mb-4">
+                            <label for="dia">Día</label>
+                            <select name="dia" id="dia" required>
+                                @for ($i = 1; $i <= 31; $i++)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+        
+                        <div class="mb-4">
+                            <label for="mes">Mes</label>
+                            <select name="mes" id="mes" required>
+                                @foreach ([
+                                    1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio',
+                                    7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre'
+                                ] as $numero => $nombre)
+                                    <option value="{{ $numero }}">{{ $nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+        
+                        <div class="mb-4">
+                            <label for="año">Año</label>
+                            <select name="año" id="año" required>
+                                @for ($i = date('Y'); $i >= 1900; $i--)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+        
+                    <div class="mb-4">
+                        <div class="mb-4">
+                            <label for="hora_inicio">Hora Inicio</label>
+                            <input type="time" id="hora_inicio" name="hora_inicio" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="hora_fin">Hora Fin</label>
+                            <input type="time" id="hora_fin" name="hora_fin" required>
+                        </div>
+                    
+                        <div class="mb-4">
+                            <label for="laboral_descanso">Laboral con descansos</label>
+                            <input type="checkbox" id="laboral_descanso">
+                            
+                            <label for="tiempo_a_restar">Tiempo a restar (en minutos)</label>
+                            <input type="number" min="0" step="1" placeholder="Minutos a restar" id="tiempo_restar">
+                        </div>
+                    </div>
+        
+                    <div class="mb-4">
+                        <div class="mb-4">
+                            <label for="nombre_servicio">Proceso/Servicio</label>
+                            <div class="servicio">
+                                <input type="text" id="nombre_servicio" name="nombre_servicio" readonly placeholder="Nombre del servicio">
+                                <button id="abrirModalServicios" type="button" class="btn btn-info">ver servicios</button>
+                            </div>
+                        </div>
+        
+                        <div class="mb-4">
+                            <label for="proseso_id">Código Servicio</label>
+                            <input type="text" id="proseso_id" name="proseso_id" readonly placeholder="Código del servicio">
+                        </div>
+        
+                        <div class="mb-4">
+                            <label for="sdp_id">SDP</label>
+                            <div class="sdp">
+                                <button id="abrirModalSDP" type="button" class="btn btn-info">ver SDP</button>
+                                <input type="text" id="sdp_id" name="sdp_id" required placeholder="Número del SDP" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <div id="modalOperarios" class="modal" style="display: none;">
     <div class="modal-contenido">
         <span class="cerrar">&times;</span>
@@ -155,7 +155,6 @@
             </div>
             <div class="buton mb-4">
                 <button type="submit" id="seleccionarOperario" class="btn btn-primary">seleccionar operario</button>
-                <button class="btn btn-default cerrarModal">cancelar</button>
             </div>
         </div>
     </div>
@@ -197,7 +196,6 @@
             </div>
             <div class="buton mb-4">
                 <button type="submit" id="selectServicio" class="btn btn-primary">seleccionar servicio</button>
-                <button class="btn btn-default cerrarModal">cancelar</button>
             </div>
         </div>
     </div>
@@ -240,7 +238,7 @@
             </div>
             <div class="buton mb-4">
                 <button type="button" id="selectSDP" class="btn btn-primary">Seleccionar SDP</button>
-                <button type="button" class="btn btn-default cerrarModal">Cancelar</button>
+                
             </div>
         </div>
     </div>
@@ -257,14 +255,14 @@
             left: 0;
             top: 0;
             width: 20rem;
-            height: 100%;
+            height: 300px;
             overflow: auto;
             background-color: rgba(0,0,0,0.4);
         }
 
         .modal-contenido {
             background-color: #3a7280;
-            margin: 15% auto;
+            margin: 20px auto;
             padding: 20px;
             border: 1px solid #888;
             width: 50rem;
@@ -295,7 +293,7 @@
 
         .table {
             background: #cccdce;
-            max-height: 400px;
+            max-height: 300px;
             overflow-y: auto; 
             padding: 10px;
             border-radius: 10px;
@@ -329,19 +327,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         .box {
-            padding: 20px;
+            padding: 10px;
         }
 
         .container {
-            width: 500rem;
-            height: 600px;
-            padding: 20px;
-            background: #2d2a3a;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            
         }
 
         form {
@@ -360,42 +350,26 @@
             /* width: 400px; */
             display:inline-block;
             border-radius: 8px;
-            background: #a8bccf;
+            background: #d0d7de !important;
+            color: #000 !important;
         }
 
         input:focus, select:focus {
-            border-color: rgb(24, 160, 160);
+            border-color: rgb(24, 160, 160) !important;
         }
 
-        .title {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            justify-content: start;
 
-            margin-bottom: 10rem;
-        }
-
-        h3 {
-            text-align: center;
-            text-transform: uppercase;
-        }
-
-        .buttons {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-end;
-            justify-content: end;
-            gap: 10px;
-
-            margin-top: 20rem;
+        .card, .card-body {
+            border-radius: 10px;
+            background: #d6d6d2 !important;
+            color: #000 !important;
         }
 
         .ver {
             display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
+            flex-direction: col;
+            align-items: flex-end;
+            justify-content: flex-end;
         }
         
         .btn {
@@ -405,6 +379,29 @@
 
         .btn:hover {
             background: #5c5a05;
+        }
+
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        .operario {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+
+            
+        }
+
+        .servicio, .sdp {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            
         }
 
     </style>
@@ -576,6 +573,7 @@
             dateFormat: "H:i:S",
             time_24hr: true,
             enableSeconds: true,
+            minuteIncrement: 1,
         });
     
         flatpickr("#hora_fin", {
@@ -584,6 +582,7 @@
             dateFormat: "H:i:S",
             time_24hr: true,
             enableSeconds: true,
+            minuteIncrement: 1,
         });
     </script>
     <script>

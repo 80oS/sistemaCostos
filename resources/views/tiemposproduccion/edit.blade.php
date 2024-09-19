@@ -11,106 +11,116 @@
 @section('content')
 <div class="box">
     <div class="container">
-        <div class="title">
-            <h3 class="uppercase">Tiempo de Producción</h3>
+        <div class="card">
+            <div class="card-body">
+                <form action="{{ route('tiempos-produccion.update', $tiempo_produccion->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+        
+                    <div class="mb-4">
+                        <div class="mb-4">
+                            <label for="codigo_operario">Código del Operario</label>
+                            <input type="text" id="codigo_operario" name="operativo_id"  value="{{ old('operativo_id', $tiempo_produccion->operativo_id) }}" readonly placeholder="Código del operario">
+                        </div>
+        
+                        <div class="mb-4">
+                            <label for="nombre_operario">Nombre del Operario</label>
+                            <input type="text" id="nombre_operario" name="nombre_operario" value="{{ old('nombre_operario', $tiempo_produccion->nombre_operario) }}" readonly placeholder="Nombre del operario">
+                        </div>
+                    </div>
+        
+                    <div class="mb-4">
+                        <div class="mb-4">
+                            <label for="dia">Día</label>
+                            <select name="dia" id="dia" required>
+                                @for ($i = 1; $i <= 31; $i++)
+                                    <option value="{{ $i }}" {{ $tiempo_produccion->dia == $i ? 'selected' : '' }}>
+                                        {{ $i }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+        
+                        <div class="mb-4">
+                            <label for="mes">Mes</label>
+                            <select name="mes" id="mes" required>
+                                @foreach ([
+                                    1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio',
+                                    7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre'
+                                ] as $numero => $nombre)
+                                    <option value="{{ $numero }}" {{ $tiempo_produccion->mes == $numero ? 'selected' : '' }}
+                                    >
+                                        {{ $nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+        
+                        <div class="mb-4">
+                            <label for="año">Año</label>
+                            <select name="año" id="año" required>
+                                @for ($i = date('Y'); $i >= 1900; $i--)
+                                    <option value="{{ $i }}" {{ $tiempo_produccion->año == $i ? 'selected' : '' }}
+                                    >
+                                        {{ $i }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+        
+                    <div class="mb-4">
+                        <div class="mb-4">
+                            <label for="hora_inicio">Hora Inicio</label>
+                            <input type="time" name="hora_inicio" id="hora_inicio" value="{{ old('hora_inicio', $tiempo_produccion->hora_inicio) }}" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="hora_fin">Hora Fin</label>
+                            <input type="time" name="hora_fin" id="hora_fin" value="{{ old('hora_fin', $tiempo_produccion->hora_fin) }}" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="laboral_descanso">Laboral con descansos</label>
+                            <input type="checkbox" id="laboral_descanso">
+                            
+                            <label for="tiempo_a_restar">Tiempo a restar (en minutos)</label>
+                            <input type="number" min="0" step="1" placeholder="Minutos a restar" id="tiempo_restar">
+                        </div>
+                    </div>
+        
+                    <div class="mb-4">
+                        <div class="mb-4">
+                            <label for="nombre_servicio">Proceso/Servicio</label>
+                            <div class="">
+                                <button id="abrirModalServicios" type="button" class="btn btn-info">ver servicios</button>
+                                <input type="text" id="nombre_servicio" name="nombre_servicio" value="{{ old('nombre_servicio', $tiempo_produccion->nombre_servicio) }}" readonly placeholder="Nombre del servicio">
+                            </div>
+                        </div>
+        
+                        <div class="mb-4">
+                            <label for="proseso_id">Código Servicio</label>
+                            <input type="text" id="proseso_id" name="proseso_id" value="{{ old('proseso_id', $tiempo_produccion->proseso_id) }}" readonly placeholder="Código del servicio">
+                        </div>
+        
+                        <div class="mb-4">
+                            <label for="sdp_id">SDP</label>
+                            <div class="">
+                                <button id="abrirModalSDP" type="button" class="btn btn-info">ver SDP</button>
+                            <input type="text" id="sdp_id" name="sdp_id" value="{{ old('sdp_id', $tiempo_produccion->sdp_id) }}" required placeholder="Número del SDP">
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="buttons">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <a href="{{ route('tiempos.group') }}" class="btn btn-default">Cancelar</a>
+                    </div>
+                </form>
+            </div>
         </div>
-        <form action="{{ route('tiempos-produccion.update', $tiempo_produccion->id) }}" method="POST">
-            @csrf
-            @method('PUT')
-
-            <div class="mb-4">
-                <div class="mb-4">
-                    <label for="codigo_operario">Código del Operario</label>
-                    <input type="text" id="codigo_operario" name="operativo_id"  value="{{ old('operativo_id', $tiempo_produccion->operativo_id) }}" readonly placeholder="Código del operario">
-                </div>
-
-                <div class="mb-4">
-                    <label for="nombre_operario">Nombre del Operario</label>
-                    <input type="text" id="nombre_operario" name="nombre_operario" value="{{ old('nombre_operario', $tiempo_produccion->nombre_operario) }}" readonly placeholder="Nombre del operario">
-                </div>
-            </div>
-
-            <div class="mb-4">
-                <div class="mb-4">
-                    <label for="dia">Día</label>
-                    <select name="dia" id="dia" required>
-                        @for ($i = 1; $i <= 31; $i++)
-                            <option value="{{ $i }}" {{ $tiempo_produccion->dia == $i ? 'selected' : '' }}>
-                                {{ $i }}
-                            </option>
-                        @endfor
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label for="mes">Mes</label>
-                    <select name="mes" id="mes" required>
-                        @foreach ([
-                            1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio',
-                            7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre'
-                        ] as $numero => $nombre)
-                            <option value="{{ $numero }}" {{ $tiempo_produccion->mes == $numero ? 'selected' : '' }}
-                            >
-                                {{ $nombre }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="mb-4">
-                    <label for="año">Año</label>
-                    <select name="año" id="año" required>
-                        @for ($i = date('Y'); $i >= 1900; $i--)
-                            <option value="{{ $i }}" {{ $tiempo_produccion->año == $i ? 'selected' : '' }}
-                            >
-                                {{ $i }}
-                            </option>
-                        @endfor
-                    </select>
-                </div>
-            </div>
-
-            <div class="mb-4">
-                <div class="mb-4">
-                    <label for="hora_inicio">Hora Inicio</label>
-                    <input type="time" name="hora_inicio" id="hora_inicio" value="{{ old('hora_inicio', $tiempo_produccion->hora_inicio) }}" required>
-                </div>
-                
-                <div class="mb-4">
-                    <label for="hora_fin">Hora Fin</label>
-                    <input type="time" name="hora_fin" id="hora_fin" value="{{ old('hora_fin', $tiempo_produccion->hora_fin) }}" required>
-                </div>
-            </div>
-
-            <div class="mb-4">
-                <div class="mb-4">
-                    <label for="nombre_servicio">Proceso/Servicio</label>
-                    <input type="text" id="nombre_servicio" name="nombre_servicio" value="{{ old('nombre_servicio', $tiempo_produccion->nombre_servicio) }}" readonly placeholder="Nombre del servicio">
-                </div>
-
-                <div class="mb-4">
-                    <label for="proseso_id">Código Servicio</label>
-                    <input type="text" id="proseso_id" name="proseso_id" value="{{ old('proseso_id', $tiempo_produccion->proseso_id) }}" readonly placeholder="Código del servicio">
-                </div>
-
-                <div class="mb-4">
-                    <label for="sdp_id">SDP</label>
-                    <input type="text" id="sdp_id" name="sdp_id" value="{{ old('sdp_id', $tiempo_produccion->sdp_id) }}" required placeholder="Número del SDP">
-                </div>
-            </div>
-
-            <div class="buttons">
-                <button type="submit" class="btn btn-primary">Guardar</button>
-                <a href="{{ route('tiempos.group') }}" class="btn btn-default">Cancelar</a>
-            </div>
-        </form>
     </div>
 </div>
-<div class="butons">
-    <button id="abrirModalServicios" type="button" class="btn btn-info">ver servicios</button>
-    <button id="abrirModalSDP" type="button" class="btn btn-info">ver SDP</button>
-</div>
-
 <div id="modalServicios" class="modal" style="display: none;">
     <div class="modal-contenido">
         <span class="cerrar">&times;</span>
@@ -198,6 +208,7 @@
 @stop
 
 @section('css')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         .modal {
             display: none;
@@ -213,7 +224,7 @@
 
         .modal-contenido {
             background-color: #3a7280;
-            margin: 15% auto;
+            margin: 20px auto;
             padding: 20px;
             border: 1px solid #888;
             width: 50rem;
@@ -280,19 +291,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         .box {
-            padding: 20px;
+            padding: 10px;
         }
 
         .container {
-            width: 500rem;
-            height: 600px;
-            padding: 20px;
-            background: #2d2a3a;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            
         }
 
         form {
@@ -311,42 +314,26 @@
             /* width: 400px; */
             display:inline-block;
             border-radius: 8px;
-            background: #a8bccf;
+            background: #d0d7de !important;
+            color: #000 !important;
         }
 
         input:focus, select:focus {
-            border-color: rgb(24, 160, 160);
+            border-color: rgb(24, 160, 160) !important;
         }
 
-        .title {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            justify-content: start;
 
-            margin-bottom: 10rem;
-        }
-
-        h3 {
-            text-align: center;
-            text-transform: uppercase;
-        }
-
-        .buttons {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-end;
-            justify-content: end;
-            gap: 10px;
-
-            margin-top: 20rem;
+        .card, .card-body {
+            border-radius: 10px;
+            background: #d6d6d2 !important;
+            color: #000 !important;
         }
 
         .ver {
             display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
+            flex-direction: col;
+            align-items: flex-end;
+            justify-content: flex-end;
         }
         
         .btn {
@@ -358,10 +345,55 @@
             background: #5c5a05;
         }
 
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        .operario {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+
+            
+        }
+
+        .servicio, .sdp {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            
+        }
+
     </style>
 @stop
 
 @section('js')
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        flatpickr("#hora_inicio", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i:S",
+            time_24hr: true,
+            enableSeconds: true,
+            minuteIncrement: 1,
+        });
+    
+        flatpickr("#hora_fin", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i:S",
+            time_24hr: true,
+            enableSeconds: true,
+            minuteIncrement: 1,
+        });
+    </script>
 <script>
     // modal servicios
     document.addEventListener('DOMContentLoaded', function() {
@@ -481,7 +513,36 @@
         filterTable('searchSDP', 'sdpTableBody');
     });
 </script>
-    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+            const horaFinInput = document.getElementById('hora_fin');
+            const tiempoRestarInput = document.getElementById('tiempo_restar');
+            const laboral_descanso = document.getElementById('laboral_descanso');
+
+            function calcularNuevaHoraFin() {
+                if (!horaFinInput.value || !tiempoRestarInput.value) return;
+
+                let [horas, minutos, segundos] = horaFinInput.value.split(':').map(Number);
+                let minutosARestar = parseInt(tiempoRestarInput.value);
+
+                if (!laboral_descanso.checked) return;
+
+                let totalSegundos = (horas * 3600) + (minutos * 60) + (segundos);
+                let segundosARestar = minutosARestar * 60;
+
+                let nuvosTotalSegundos = totalSegundos - segundosARestar;
+
+                let nuevasHoras = Math.floor(nuvosTotalSegundos / 3600);
+                let nuevosMinutos = Math.floor((nuvosTotalSegundos % 3600) / 60);
+                let nuevosSegundos = nuvosTotalSegundos % 60;
+
+                let nuevaHoraFin = `${nuevasHoras.toString().padStart(2, '0')}:${nuevosMinutos.toString().padStart(2, '0')}:${nuevosSegundos.toString().padStart(2, '0')}`;
+
+                horaFinInput.value = nuevaHoraFin;
+            }
+
+            tiempoRestarInput.addEventListener('input', calcularNuevaHoraFin);
+            laboral_descanso.addEventListener('change', calcularNuevaHoraFin);
+        });
+    </script>
 @stop

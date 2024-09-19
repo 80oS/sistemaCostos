@@ -108,24 +108,12 @@
             padding: 30px;
         }
 
-        /* table {
-            border: #000000 1px solid;
-            border-collapse: collapse;
-            padding: 5px;
-            color: #000;
+        .content, .content-header {
+            background: #fff !important;
         }
-
-        th, td {
-            padding: 5px;
-            border: #000000 1px solid;
-            text-align: center;
-            text-transform: uppercase; 
+        .content{
+            height: 80vh;
         }
-
-        thead tr {
-            background-color: #2a293b;
-            color: #fff;
-        } */
     </style>
 @stop
 

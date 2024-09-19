@@ -4,5 +4,11 @@
             {{ __('Dashboard') }}
         </h2>
     </x-slot>
-    
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                
+            </div>
+        </div>
+    </div>
 </x-app-layout>

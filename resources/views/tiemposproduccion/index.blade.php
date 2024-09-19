@@ -3,7 +3,7 @@
 @section('title', 'grupos de tiempos de produccion')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-200 leading-tight">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight">
     {{ __('grupos de tiempos de procuccion por operario') }}
 </h2>
 @stop
@@ -16,7 +16,7 @@
         </div>
     @endif
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
+        <div class="dark:bg-gray-500 overflow-hidden shadow-xl sm:rounded-lg p-6">
             <div class="mb-4">
                 <a href="{{ route('tiempos-produccion.create') }}" class="bg-blue-600 hover:bg-blue-900 text-white px-3 py-2 rounded">
                     crear tiempo de produccion
@@ -36,7 +36,7 @@
                         </thead>
                         <tbody>
                             @foreach ($tiempos_produccion as $operativo_id => $tiempo)
-                                <tr class=" text-gray-500">
+                                <tr class=" text-gray-200"">
                                     <td class="px-4 py-2 border">{{ $loop->iteration }}</td>
                                     <td class="px-4 py-2 border">{{ $tiempo->first()->operativo_id }}</td>
                                     <td class="px-4 py-2 border">{{ $tiempo->first()->nombre_operario}}</td>
@@ -60,6 +60,14 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    <style>
+        .content, .content-header {
+            background: #fff !important;
+        }
+        .content{
+            height: 80vh;
+        }
+    </style>
 @stop
 
 @section('js')

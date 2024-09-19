@@ -17,15 +17,10 @@ class SDPController extends Controller
 
     public function indexPaquetes()
     {
-        $clientes = Cliente::with(['sdp' => function ($query) {$query->orderBy('created_at', 'desc');}])->get();
-        return view('SDP.paquetes', compact('clientes'));
+        $sdps = SDP::with('clientes')->get();
+        return view('SDP.paquetes', compact('sdps'));
     }
 
-    public function lista($nit)
-    {
-        $cliente = Cliente::with(['SDP.articulos'])->where('nit', $nit)->firstOrFail();
-        return view('SDP.lista', compact('cliente'));
-    }
 
     public function ver($id)
     {
