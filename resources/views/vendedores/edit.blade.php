@@ -9,21 +9,21 @@
 @stop
 
 @section('content')
-<div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
+<div class="container">
+    <div class="card">
+        <div class="card-body">
             <form action="{{ route('vendedor.update', $vendedor->id) }}" method="POST" class="max-w-sm mx-auto space-y-4">
                 @csrf
                 @method('PUT')
                 
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="nombre">nombre</label>
-                    <input type="text" name="nombre" value="{{ $vendedor->nombre }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    <label class="form-label" for="nombre">nombre</label>
+                    <input type="text" name="nombre" value="{{ $vendedor->nombre }}" class="form-control" required>
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="correo">correo electronico</label>
-                    <input type="email" name="correo" value="{{ $vendedor->correo }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    <label class="form-label" for="correo">correo electronico</label>
+                    <input type="email" name="correo" value="{{ $vendedor->correo }}" class="form-control" required>
                 </div>
 
                 <div class="flex items-center justify-between mt-4">
@@ -39,6 +39,34 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    <style>
+        .container {
+            padding: 10px;
+        }
+
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        .content {
+            height: 87vh;
+        }
+
+        .card, .card-body {
+            background: #b2b1b1 !important;
+            color: #fff !important;
+        }
+
+        input {
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+        label {
+            color: #000 !important;
+        }
+
+    </style>
 @stop
 
 @section('js')

@@ -159,6 +159,7 @@
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const baseUrl = '{{ url('/') }}';
             const departamentoSelect = document.getElementById('departamento');
             const ciudadSelect = document.getElementById('ciudad');
             const addMunicipioBtn = document.getElementById('addMunicipioBtn');
@@ -171,7 +172,7 @@
                 ciudadSelect.innerHTML = '<option value="">Seleccione una ciudad/municipio</option>'; // Limpiar opciones previas
 
                 if (departamentoId) {
-                    fetch(`/municipios/${departamentoId}`)
+                    fetch(`${baseUrl}/municipios/${departamentoId}`)
                         .then(response => response.json())
                         .then(data => {
                             data.forEach(municipio => {
@@ -199,7 +200,7 @@
                 const departamentoId = departamentoSelect.value;
 
                 if (nuevoMunicipio && departamentoId) {
-                    fetch(`/municipios/${departamentoId}/add`, {
+                    fetch(`${baseUrl}/municipios/${departamentoId}/add`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -216,7 +217,10 @@
                         addMunicipioModal.classList.add('hidden');
                         addMunicipioForm.reset();
                     })
-                    .catch(error => console.error('Error adding municipio:', error));
+                    .catch(error => {
+                        console.error('Error adding municipio:', error);
+                        alert('Ocurrió un error al cargar los municipios.');
+                    });
                 }
             });
         });

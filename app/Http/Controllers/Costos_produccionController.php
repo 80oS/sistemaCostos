@@ -91,7 +91,7 @@ class Costos_produccionController extends Controller
                 ->get();
     
             $materiasPrimasIndirectas = $costoProduccion->materiasPrimasIndirectas()
-                ->withPivot('cantidad', 'materia_prima_indirecta_id', 'costos_produccion_id')
+                ->withPivot('cantidad', 'materia_indirecta_id', 'costos_produccion_id')
                 ->get();
 
             $totalDirectas = $materiasPrimasDirectas->sum(function ($materiaPrima) {
@@ -306,7 +306,7 @@ class Costos_produccionController extends Controller
                 ->get();
     
             $materiasPrimasIndirectas = $costoProduccion->materiasPrimasIndirectas()
-                ->withPivot('cantidad', 'materia_prima_indirecta_id', 'costos_produccion_id')
+                ->withPivot('cantidad', 'materia_indirecta_id', 'costos_produccion_id')
                 ->get();
 
             $totalDirectas = $materiasPrimasDirectas->sum(function ($materiaPrima) {

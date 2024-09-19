@@ -9,9 +9,9 @@
 @stop
 
 @section('content')
-<div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class=" overflow-hidden shadow-xl sm:rounded-lg p-6">
+<div class="container">
+    <div class="card">
+        <div class="card-body">
             <form action="{{ route('clientes.update', $cliente->nit) }}" method="POST" class="max-w-sm mx-auto space-y-4">
                 @csrf
                 @method('PUT')
@@ -92,6 +92,30 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    <style>
+        .card, .card-body {
+            background-color: #a8a4a4 !important;
+            color: #000 !important;
+        }
+
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        input, select {
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+        h2 {
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+
+        container {
+            padding: 10px;
+        }
+    </style>
 @stop
 
 @section('js')
@@ -99,14 +123,15 @@
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-        const departamentoSelect = document.getElementById('departamento');
-        const municipioSelect = document.getElementById('ciudad');
+            const baseUrl = '{{ url('/') }}';
+            const departamentoSelect = document.getElementById('departamento');
+            const municipioSelect = document.getElementById('ciudad');
 
         departamentoSelect.addEventListener('change', function () {
             const departamentoId = this.value;
 
             if (departamentoId) {
-                fetch(`/api/municipios/${departamentoId}`)
+                fetch(`${baseUrl}/api/municipios/${departamentoId}`)
                     .then(response => response.json())
                     .then(data => {
                         municipioSelect.innerHTML = '<option value="">Seleccione una ciudad/municipio</option>';

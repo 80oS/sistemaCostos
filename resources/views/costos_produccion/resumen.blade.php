@@ -144,6 +144,14 @@
             border-radius: 10px;
         }
 
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        .content {
+            height: 90vh;
+        }
+
         @media print {
             @page {
                 size: landscape !important; /* Establecer la orientación en CSS también */

@@ -3,13 +3,13 @@
 @section('title', 'edit sdp')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-300 leading-tight uppercase">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
     {{ __('Formulario del nuevo sdp') }}
 </h2>
 @stop
 
 @section('content')
-<div class="py-12">
+<div class="container">
     @if($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -19,15 +19,15 @@
             </ul>
         </div>
     @endif
-    <div class="card max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="card-body  overflow-hidden  sm:rounded-lg p-6">
+    <div class="card">
+        <div class="card-body">
             <form action="{{ route('sdp.update', $sdp->id) }}" method="POST"  class="max-w-sm mx-auto space-y-4">
                 @csrf
                 @method('PUT')
             
                 <div class="form-group">
-                    <label for="numero_sdp" class="block mb-2 text-sm font-medium text-gray-900">Número de SDP</label>
-                    <input type="text" name="numero_sdp" id="numero_sdp" value="{{ $sdp->numero_sdp }}" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" readonly>
+                    <label for="numero_sdp" class="form-label">Número de SDP</label>
+                    <input type="text" name="numero_sdp" id="numero_sdp" value="{{ $sdp->numero_sdp }}" class="form-control" readonly>
                 </div>
             
                 <div class="form-group">
@@ -48,7 +48,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Artículos</label>
+                    <h1><b>Artículos</b></h1>
                     <div id="articulos-container">
                         @foreach($sdp->articulos as $articulo)
                             <div class="form-group articulo-item">
@@ -87,32 +87,32 @@
             
                 <div class="form-group">
                     <label for="fecha_despacho_comercial" class="block mb-2 text-sm font-medium text-gray-100">Fecha Despacho Comercial</label>
-                    <input type="date" name="fecha_despacho_comercial" id="fecha_despacho_comercial" value="{{ $sdp->fecha_despacho_comercial }}" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    <input type="date" name="fecha_despacho_comercial" id="fecha_despacho_comercial" value="{{ $sdp->fecha_despacho_comercial }}" class="form-control" required>
                 </div>
             
                 <div class="form-group">
                     <label for="fecha_despacho_produccion" class="block mb-2 text-sm font-medium text-gray-100">Fecha Despacho Producción</label>
-                    <input type="date" name="fecha_despacho_produccion" id="fecha_despacho_produccion" value="{{ $sdp->fecha_despacho_produccion }}" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    <input type="date" name="fecha_despacho_produccion" id="fecha_despacho_produccion" value="{{ $sdp->fecha_despacho_produccion }}" class="form-control" required>
                 </div>
             
                 <div class="form-group">
                     <label for="observaciones" class="block mb-2 text-sm font-medium text-gray-100">Observaciones</label>
-                    <input type="text" name="observaciones" id="observaciones" value="{{ $sdp->observaciones }}" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <input type="text" name="observaciones" id="observaciones" value="{{ $sdp->observaciones }}" class="form-control">
                 </div>
             
                 <div class="form-group">
                     <label for="orden_compra" class="block mb-2 text-sm font-medium text-gray-100">Orden de Compra</label>
-                    <input type="text" name="orden_compra" id="orden_compra" value="{{ $sdp->orden_compra }}" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <input type="text" name="orden_compra" id="orden_compra" value="{{ $sdp->orden_compra }}" class="form-control">
                 </div>
             
                 <div class="form-group">
                     <label for="memoria_calculo" class="block mb-2 text-sm font-medium text-gray-100">Memoria de Cálculo</label>
-                    <input type="text" name="memoria_calculo" id="memoria_calculo" value="{{ $sdp->memoria_calculo }}" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <input type="text" name="memoria_calculo" id="memoria_calculo" value="{{ $sdp->memoria_calculo }}" class="form-control">
                 </div>
             
                 <div class="form-group">
                     <label for="requisitos_cliente" class="block mb-2 text-sm font-medium text-gray-100">Requisitos Cliente</label>
-                    <input type="text" name="requisitos_cliente" id="requisitos_cliente" value="{{ $sdp->requisitos_cliente }}" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <input type="text" name="requisitos_cliente" id="requisitos_cliente" value="{{ $sdp->requisitos_cliente }}" class="form-control">
                 </div>
             
                 <div class="buttons">
@@ -162,6 +162,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
+        .modal-body, .modal-header {
+            background: #b1b1b1 !important;
+        }
+
         .flext {
             display: flex;
         }
@@ -280,6 +284,34 @@
             background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
             color: #000;
         }
+
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        h2 {
+            text-transform: uppercase;
+            font-size: 18px;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .card, .card-body {
+            background: #b1b1b1 !important;
+            color: #000 !important;
+        }
+
+        input, select {
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+        label {
+            color: #000 !important;
+        }
     </style>
 @stop
 
@@ -289,6 +321,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let articuloIndex = document.querySelectorAll('.articulo-item').length; // Contar artículos existentes
+            const baseUrl = '{{ url('/') }}';
 
             document.getElementById('add-articulo').addEventListener('click', function () {
                 const container = document.getElementById('articulos-container');
@@ -353,7 +386,7 @@
                 if (event.target.classList.contains('articulo-buscar')) {
                     let query = event.target.value;
                     if (query.length > 2) {
-                        fetch(`/api/buscar-articulos?q=${query}`)
+                        fetch(`${baseUrl}/api/buscar-articulos?q=${query}`)
                             .then(response => response.json())
                             .then(data => {
                                 let suggestionsContainer = event.target.nextElementSibling;

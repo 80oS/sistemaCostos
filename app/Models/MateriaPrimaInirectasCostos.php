@@ -12,7 +12,7 @@ class MateriaPrimaInirectasCostos extends Model
     protected $table = 'materia_prima_indirectas_costos';
 
     protected $fillable = [
-        'materia_prima_indirecta_id',
+        'materia_indirecta_id',
         'costos_produccion_id',
         'cantidad'
     ];

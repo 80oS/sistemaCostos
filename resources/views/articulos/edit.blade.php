@@ -46,6 +46,34 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    <style>
+        .container {
+            padding: 10px;
+        }
+
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        .content {
+            height: 100vh;
+        }
+
+        .card, .card-body {
+            background: #b2b1b1 !important;
+            color: #fff !important;
+        }
+
+        input {
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+        label {
+            color: #000 !important;
+        }
+
+    </style>
 @stop
 
 @section('js')

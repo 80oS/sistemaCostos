@@ -67,7 +67,7 @@ class CargarMateriaPrimaController extends Controller
 
             // Agregar materia prima indirecta al costo de producción
             $costoProduccion->materiasPrimasIndirectas()->attach($materiaPrimaIndirecta->id,[
-                'materia_prima_indirecta_id' => $materiaPrimaIndirecta->id,
+                'materia_indirecta_id' => $materiaPrimaIndirecta->id,
                 'costos_produccion_id' => $costoProduccion->id,
                 'cantidad' => $validatedData['cantidad']
             ]);
@@ -91,7 +91,7 @@ class CargarMateriaPrimaController extends Controller
 
         // Obtener las materias primas indirectas asociadas a la SDP
         $materiasPrimasIndirectas = $costoProduccion->materiasPrimasIndirectas()
-            ->withPivot('cantidad', 'materia_prima_indirecta_id', 'costos_produccion_id',)
+            ->withPivot('cantidad', 'materia_indirecta_id', 'costos_produccion_id',)
             ->get();
 
         // Pasar los datos a la vista

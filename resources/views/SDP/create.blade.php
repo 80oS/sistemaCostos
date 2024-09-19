@@ -3,13 +3,13 @@
 @section('title', 'crear sdp')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-300 leading-tight uppercase">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
     {{ __('Formulario del nuevo sdp') }}
 </h2>
 @stop
 
 @section('content')
-<div class="py-12">
+<div class="container">
     @if($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -19,20 +19,20 @@
             </ul>
         </div>
     @endif
-    <div class="card max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="card-body overflow-hidden sm:rounded-lg p-6">
+    <div class="card">
+        <div class="card-body">
             <form action="{{ route('sdp.store') }}" method="POST"  class="max-w-sm mx-auto space-y-4">
                 @csrf
             
                 <div class="form-group">
-                    <label for="numero_sdp" class="block mb-2 text-sm font-medium text-gray-100">Número de SDP</label>
-                    <input type="text" name="numero_sdp" id="numero_sdp" value="{{ $nuevoNumeroSDP }}" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" readonly>
+                    <label for="numero_sdp" class="form-label">Número de SDP</label>
+                    <input type="text" name="numero_sdp" id="numero_sdp" value="{{ $nuevoNumeroSDP }}" class="form-control" readonly>
                 </div>
 
                 <div class="">
-                    <label for="vendedor" class="block mb-2 text-sm font-medium text-gray-100">Vendedor</label>
+                    <label for="vendedor" class="form-label">Vendedor</label>
                     <div class="">
-                        <select name="vendedor_id" id="vendedor_id" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                        <select name="vendedor_id" id="vendedor_id" class="form-control" required>
                             <option value="">Seleccione un vendedor</option>
                             @foreach ($vendedores as $vendedor)
                                 <option value="{{ $vendedor->id }}">{{ $vendedor->nombre }}</option>
@@ -42,48 +42,48 @@
                 </div>
 
                 <div class="">
-                    <label for="cliente" class="block mb-2 text-sm font-medium text-gray-100">Cliente</label>
+                    <label for="cliente" class="form-label">Cliente</label>
                     <div class="">
-                        <select name="cliente_nit" id="cliente_nit" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                        <select name="cliente_nit" id="cliente_nit" class="form-control" required>
                             <option value="">Seleccione un cliente</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group ">
-                    <label>Artículos</label>
+                    <h1>Artículos</h1>
                     <div id="articulos-container"></div>
                     <button type="button" id="btn-add-articulo" class="btn btn-primary mt-2">Agregar Artículo</button>
                 </div>
             
                 <div class="form-group">
-                    <label for="fecha_despacho_comercial" class="block mb-2 text-sm font-medium text-gray-100">Fecha Despacho Comercial</label>
-                    <input type="date" name="fecha_despacho_comercial" id="fecha_despacho_comercial" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    <label for="fecha_despacho_comercial" class="form-label">Fecha Despacho Comercial</label>
+                    <input type="date" name="fecha_despacho_comercial" id="fecha_despacho_comercial" class="form-control" required>
                 </div>
             
                 <div class="form-group">
-                    <label for="fecha_despacho_produccion" class="block mb-2 text-sm font-medium text-gray-100">Fecha Despacho Producción</label>
-                    <input type="date" name="fecha_despacho_produccion" id="fecha_despacho_produccion" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                    <label for="fecha_despacho_produccion" class="form-label">Fecha Despacho Producción</label>
+                    <input type="date" name="fecha_despacho_produccion" id="fecha_despacho_produccion" class="form-control" required>
                 </div>
             
                 <div class="form-group">
-                    <label for="observaciones" class="block mb-2 text-sm font-medium text-gray-100">Observaciones</label>
-                    <input type="text" name="observaciones" id="observaciones" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <label for="observaciones" class="form-label">Observaciones</label>
+                    <input type="text" name="observaciones" id="observaciones" class="form-control">
                 </div>
             
                 <div class="form-group">
-                    <label for="orden_compra" class="block mb-2 text-sm font-medium text-gray-100">Orden de Compra</label>
-                    <input type="text" name="orden_compra" id="orden_compra" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <label for="orden_compra" class="form-label">Orden de Compra</label>
+                    <input type="text" name="orden_compra" id="orden_compra" class="form-control">
                 </div>
             
                 <div class="form-group">
-                    <label for="memoria_calculo" class="block mb-2 text-sm font-medium text-gray-100">Memoria de Cálculo</label>
-                    <input type="text" name="memoria_calculo" id="memoria_calculo" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <label for="memoria_calculo" class="form-label">Memoria de Cálculo</label>
+                    <input type="text" name="memoria_calculo" id="memoria_calculo" class="form-control">
                 </div>
             
                 <div class="form-group">
-                    <label for="requisitos_cliente" class="block mb-2 text-sm font-medium text-gray-100">Requisitos Cliente</label>
-                    <input type="text" name="requisitos_cliente" id="requisitos_cliente" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <label for="requisitos_cliente" class="form-label">Requisitos Cliente</label>
+                    <input type="text" name="requisitos_cliente" id="requisitos_cliente" class="form-control">
                 </div>
             
                 <div class="buttons">
@@ -133,6 +133,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
+        .modal-body, .modal-header {
+            background: #b1b1b1 !important;
+        }
         .flext {
             display: flex;
         }
@@ -260,6 +263,35 @@
             background-color: #f0f0f0; /* Color de fondo al pasar el ratón */
             color: #000;
         }
+
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        h2 {
+            text-transform: uppercase;
+            font-size: 18px;
+        }
+
+        h1 {
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .card, .card-body {
+            background: #b1b1b1 !important;
+            color: #000 !important;
+        }
+
+        input, select {
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+        label {
+            color: #000 !important;
+        }
+
     </style>
 @stop
 
@@ -269,6 +301,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let articuloIndex = 0;
+            const baseUrl = '{{ url('/') }}';
     
             // Añadir una fila de artículo
             function addArticuloRow() {
@@ -331,7 +364,7 @@
                 if (event.target.classList.contains('articulo-buscar')) {
                     let query = event.target.value;
                     if (query.length > 2) {
-                        fetch(`/api/buscar-articulos?q=${encodeURIComponent(query)}`)
+                        fetch(`${baseUrl}/api/buscar-articulos?q=${encodeURIComponent(query)}`)
                             .then(response => response.json())
                             .then(data => {
                                 let suggestionsContainer = event.target.nextElementSibling;

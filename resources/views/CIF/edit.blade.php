@@ -4,7 +4,7 @@
 
 @section('content_header')
 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-    {{ __('COSTO INDIRECTO DE FABRICACIÓN') }}
+    {{ __('COSTOS INDIRECTO DE FABRICACIÓN') }}
 </h2>
 @stop   
 
@@ -69,7 +69,30 @@
         }
         input {
             width: 300px;
+            background: #fff !important;
+            color: #000 !important;
         }
+        .container {
+            padding: 10px;
+        }
+
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        .content {
+            height: 100vh;
+        }
+
+        .card, .card-body {
+            background: #b2b1b1 !important;
+            color: #fff !important;
+        }
+
+        label {
+            color: #000 !important;
+        }
+
     </style>
 @stop
 
