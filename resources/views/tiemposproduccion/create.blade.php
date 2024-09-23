@@ -118,8 +118,17 @@
                                     <!-- Las opciones se cargarán dinámicamente -->
                                 </select>
                         
-                                <div id="articulosSeleccionados">
-                                    <!-- Aquí se mostrarán los artículos seleccionados -->
+                                <div>
+                                    <h3>Artículos Relacionados</h3>
+                                    @if ($articulosSeleccionados->isEmpty())
+                                        <p>No hay artículos asociados a la SDP seleccionada.</p>
+                                    @else
+                                        <ul>
+                                            @foreach ($articulosSeleccionados as $articulo)
+                                                <li>{{ $articulo->descripcion }} - Cantidad: {{ $articulo->pivot->cantidad }} - Precio: {{ $articulo->pivot->precio }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
                                 </div>
                         </div>
                     </div>

@@ -54,5 +54,6 @@
                 </div>
             </form>
         </div>
+        <script src="https://cdn.tailwindcss.com"></script>
     </x-authentication-card>
 </x-guest-layout>

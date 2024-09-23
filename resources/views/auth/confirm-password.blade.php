@@ -24,5 +24,6 @@
                 </x-button>
             </div>
         </form>
+        <script src="https://cdn.tailwindcss.com"></script>
     </x-authentication-card>
 </x-guest-layout>
