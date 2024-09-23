@@ -72,32 +72,43 @@ class TiemposProduccionController extends Controller
         // Obtener todos los servicios y SDPs
         $servicios = Servicio::all();
         $sdps = SDP::with('clientes', 'articulos')->get();
-
-        // Obtener el ID de la SDP desde la sesión
-        $sdpId = session('sdp_id');
-        $sdp = SDP::with('articulos')->findOrFail($sdpId);
-        $articulos = $sdp->articulos;
         $articulos = Articulo::all();
 
+        foreach ($articulos as $articulo) {
+            Log::info('Artículo relacionado:', [
+                'articulo_id' => $articulo->id,
+                'cantidad' => $articulo->pivot->cantidad,
+                'precio' => $articulo->pivot->precio
+            ]);
 
-        // Inicializar variable para artículos seleccionados
-        $articulosSeleccionados = collect();
+            $articiloId = $articulo->id;
+            $sdp = SDP::where('id')->with('articulos')->firstOrFail();
 
-        if ($sdpId) {
-            // Obtener los artículos seleccionados a través de la relación pivot
-            $articulosSeleccionados = $this->obtenerArticulosSeleccionados($sdpId);
+            $articulosFiltrados = $sdp->articulos()->whereHas('articulo_tiempos_produccion')->get();
+
+            $articulo = $articulosFiltrados->map(function ($articulo) use (&$sdp){
+                $articuloTiemposProduccion = DB::table('articulo_tiempos_produccion')
+                    ->where('articulo_id', $articulo->id)
+                    ->first();
+
+                if ($articuloTiemposProduccion) {
+                    $articuloSdp = DB::table('articulo_sdp')
+                        ->where('articulo_id', $articulo->id)
+                        ->first();
+
+                    if ($articuloSdp) {
+                        $sdpId = $articuloSdp->s_d_p_id;
+                        Log::info('SDP ID obtenido:', ['sdp_id' => $sdpId]);
+                    }
+                }
+            });
         }
-
-        $articulosSeleccionadosIds = $articulosSeleccionados->pluck('id')->toArray();
 
         return view('tiemposproduccion.create', compact(
             'operativos',
-            'articulosSeleccionadosIds',
-            'articulosSeleccionados',
             'servicios',
             'sdps',
             'articulos',
-            'sdpId'
         ));
     }
 
