@@ -72,43 +72,39 @@ class TiemposProduccionController extends Controller
         // Obtener todos los servicios y SDPs
         $servicios = Servicio::all();
         $sdps = SDP::with('clientes', 'articulos')->get();
-        $articulos = Articulo::all();
+        
+        // Obtener el ID de la SDP desde la sesión
+        $sdpId = session('sdp_id');
 
-        foreach ($articulos as $articulo) {
-            Log::info('Artículo relacionado:', [
-                'articulo_id' => $articulo->id,
-                'cantidad' => $articulo->pivot->cantidad,
-                'precio' => $articulo->pivot->precio
-            ]);
+        // Verificar que el SDP está seleccionado
+        if ($sdpId) {
+            // Obtener la SDP seleccionada con sus artículos
+            $sdpSeleccionada = SDP::with('articulos')->findOrFail($sdpId);
 
-            $articiloId = $articulo->id;
-            $sdp = SDP::where('id')->with('articulos')->firstOrFail();
+            // Filtrar los artículos relacionados a la SDP
+            $articulosSeleccionados = $sdpSeleccionada->articulos;
 
-            $articulosFiltrados = $sdp->articulos()->whereHas('articulo_tiempos_produccion')->get();
+            Log::info('SDP seleccionada con artículos:', ['sdp_id' => $sdpId, 'articulos' => $articulosSeleccionados]);
 
-            $articulo = $articulosFiltrados->map(function ($articulo) use (&$sdp){
-                $articuloTiemposProduccion = DB::table('articulo_tiempos_produccion')
-                    ->where('articulo_id', $articulo->id)
-                    ->first();
-
-                if ($articuloTiemposProduccion) {
-                    $articuloSdp = DB::table('articulo_sdp')
-                        ->where('articulo_id', $articulo->id)
-                        ->first();
-
-                    if ($articuloSdp) {
-                        $sdpId = $articuloSdp->s_d_p_id;
-                        Log::info('SDP ID obtenido:', ['sdp_id' => $sdpId]);
-                    }
-                }
-            });
+            // Depurar artículos con pivot
+            foreach ($articulosSeleccionados as $articulo) {
+                Log::info('Artículo relacionado:', [
+                    'articulo_id' => $articulo->id,
+                    'cantidad' => $articulo->pivot->cantidad,
+                    'precio' => $articulo->pivot->precio
+                ]);
+            }
+        } else {
+            // Si no hay SDP seleccionada, inicializar un array vacío
+            $articulosSeleccionados = collect();
         }
 
         return view('tiemposproduccion.create', compact(
             'operativos',
             'servicios',
             'sdps',
-            'articulos',
+            'articulosSeleccionados',
+            'sdpId'
         ));
     }
 
