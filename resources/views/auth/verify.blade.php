@@ -25,5 +25,4 @@
         </div>
     </div>
 </div>
-<script src="https://cdn.tailwindcss.com"></script>
 @endsection
