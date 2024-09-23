@@ -3,7 +3,7 @@
 @section('title', 'servicios externos')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-300 leading-tight uppercase">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
     {{ __('Lista de servicios externos') }}
 </h2>
 @stop
@@ -26,7 +26,7 @@
                             <div class="flex justify-start mb-4">
                                 <a href="{{ route('serviciosExternos.create') }}" class="btn btn-primary">Crear nuevo servicio externo</a>
                             </div>
-                            <table class="table table-bordered table-striped">
+                            <table class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -66,6 +66,25 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    <style>
+        .card-body {
+        background: #bbbbbb !important;
+    }
+
+    .content, .content-header {
+        background: #fff !important;
+    }
+
+    .content {
+        height: 87vh;
+    }
+
+    table thead tr th, table tbody tr td {
+        background-color: #787777;
+        color: #000;
+        border: #000 1px solid;
+    }
+    </style>
 @stop
 
 @section('js')

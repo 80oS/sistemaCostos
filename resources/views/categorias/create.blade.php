@@ -3,7 +3,7 @@
 @section('title', 'crear categoria')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-300 leading-tight">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight">
     {{ __('Crear Categoria') }}
 </h2>
 @stop
@@ -41,6 +41,25 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    <style>
+        .card, .card-body {
+        background: #bbbbbb !important;
+        color: #000 !important;
+    }
+
+    .content, .content-header {
+        background: #fff !important;
+    }
+
+    .content {
+        height: 87vh;
+    }
+
+    input, textarea {
+        background: #fff !important;
+        color: #000 !important;
+    }
+    </style>
 @stop
 
 @section('js')

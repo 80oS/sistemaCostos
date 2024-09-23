@@ -3,7 +3,7 @@
 @section('title', 'cargar materia prima')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-400 leading-tight">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight">
     {{ __('Cargar materias primas') }}
 </h2>
 @stop
@@ -23,30 +23,30 @@
                         @csrf
                         <div class="materias-container mb-4">
                             <div class="mb-4">
-                                <input type="text" id="buscar_materia" class="buscar_materia px-3 py-2" placeholder="buscar materia...">
+                                <input type="text" id="buscar_materia" class="buscar_materia px-3 py-2 form-control" placeholder="buscar materia...">
                                 <div class="suggestionsContainer" id="suggestionsContainer">
                                 </div>
                             </div>
                             <div class="mb-4">
-                                <label for="codigo">codigo/materia</label>
-                                <input type="text" id="codigo" name="codigo" class="px-3 py-2" readonly>
+                                <label for="codigo" class="form-label">codigo/materia</label>
+                                <input type="text" id="codigo" name="codigo" class=" form-control px-3 py-2" readonly>
                             </div>
                             <div class="mb-4">
-                                <label for="descripcion">descripcion</label>
-                                <input type="text" id="descripcion" name="descripcion" class="px-3 py-2" readonly>
+                                <label for="descripcion" class="form-label">descripcion</label>
+                                <input type="text" id="descripcion" name="descripcion" class=" form-control px-3 py-2" readonly>
                             </div>
                             <div class="mb-4">
-                                <label for="precio_unit">precio unitario</label>
-                                <input type="text" id="precio_unit" name="precio_unit" class="px-3 py-2" readonly>
+                                <label for="precio_unit" class="form-label">precio unitario</label>
+                                <input type="text" id="precio_unit" name="precio_unit" class=" form-control px-3 py-2" readonly>
                             </div>
                         </div>
                         <div class="mb-4">
-                            <label for="cantidad">cantidad</label>
-                            <input type="text" id="cantidad" name="cantidad" class="px-3 py-2">
+                            <label for="cantidad" class="form-label">cantidad</label>
+                            <input type="text" id="cantidad" name="cantidad" class=" form-control px-3 py-2">
                         </div>
                         <div class="mb4">
-                            <label for="valor">valor</label>
-                            <input type="text" id="valor" name="valor" class="px-3 py-2" readonly>
+                            <label for="valor" class="form-label">valor</label>
+                            <input type="text" id="valor" name="valor" class=" form-control px-3 py-2" readonly>
                         </div>
                         <div class="flex gap-2">
                             <button type="submit" class="button">cargar</button>
@@ -77,18 +77,8 @@
 
         label {
             display: block;
-            color: #fff;
+            color: #000000;
             text-transform: capitalize;
-        }
-
-        input, select {
-            width: 300px;
-            height: 30px;
-            padding: 16px;
-            background: #666666;
-            color: #fff;
-            border: 2px #8d8c8c solid;
-            border-radius: 5px;
         }
 
         button.button {
@@ -137,6 +127,23 @@
             color: #000;
         }
 
+        .card-body {
+            background: #bbbbbb !important;
+        }
+
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        .content {
+            height: 87vh;
+        }
+
+        input {
+            background-color: #fff !important;
+            color: #000 !important;
+        }
+
     </style>
 @stop
 
@@ -145,9 +152,10 @@
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
     <script>
         document.getElementById('buscar_materia').addEventListener('input', function(event) {
+            const baseUrl = '{{ url('/') }}';
             let query = event.target.value;
             if (query.length > 2) {
-                fetch(`/api/buscar-materias?q=${encodeURIComponent(query)}`)
+                fetch(`${baseUrl}/api/buscar-materias?q=${encodeURIComponent(query)}`)
                     .then(response => response.json())
                     .then(data => {
                         let suggestionsContainer = document.getElementById('suggestionsContainer');

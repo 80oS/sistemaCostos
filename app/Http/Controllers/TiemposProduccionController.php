@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Departamento;
+use App\Models\Articulo;
+use App\Models\ArticuloTiempoProduccion;
 use App\Models\CostosProduccion;
 use App\Models\Operativo;
 use App\Models\Operativos;
@@ -35,19 +37,68 @@ class TiemposProduccionController extends Controller
         return view('tiemposproduccion.index', compact('tiempos_produccion'));
     }
 
+    public function getArticulos($sdpId)
+    {
+        // Asegúrate de que el $sdpId sea el id de la tabla sdps, no el numero_sdp
+        $sdp = Sdp::with('articulos')->findOrFail($sdpId);
+
+        // Obtener los artículos relacionados
+        $articulos = $sdp->articulos;
+
+        // Verificar si los artículos se están recuperando correctamente
+        foreach ($articulos as $articulo) {
+            Log::info('Artículo relacionado:', [
+                'articulo_id' => $articulo->id,
+                'cantidad' => $articulo->pivot->cantidad,
+                'precio' => $articulo->pivot->precio
+            ]);
+        }
+
+        // Devolver los artículos como respuesta JSON
+        return response()->json($articulos);
+    }
 
 
     public function create()
     {
+        // Obtener operativos asociados a trabajadores en el departamento de producción
         $operativos = Operativo::with('trabajador')
             ->whereHas('trabajador', function ($query) {
                 $query->where('departamentos', Departamento::Produccion->value);
-            })->orderBy('codigo')->get();
+            })
+            ->orderBy('codigo')
+            ->get();
 
+        // Obtener todos los servicios y SDPs
         $servicios = Servicio::all();
         $sdps = SDP::with('clientes', 'articulos')->get();
 
-        return view('tiemposproduccion.create', compact('operativos', 'servicios', 'sdps'));
+        // Obtener el ID de la SDP desde la sesión
+        $sdpId = session('sdp_id');
+        $sdp = SDP::with('articulos')->findOrFail($sdpId);
+        $articulos = $sdp->articulos;
+        $articulos = Articulo::all();
+
+
+        // Inicializar variable para artículos seleccionados
+        $articulosSeleccionados = collect();
+
+        if ($sdpId) {
+            // Obtener los artículos seleccionados a través de la relación pivot
+            $articulosSeleccionados = $this->obtenerArticulosSeleccionados($sdpId);
+        }
+
+        $articulosSeleccionadosIds = $articulosSeleccionados->pluck('id')->toArray();
+
+        return view('tiemposproduccion.create', compact(
+            'operativos',
+            'articulosSeleccionadosIds',
+            'articulosSeleccionados',
+            'servicios',
+            'sdps',
+            'articulos',
+            'sdpId'
+        ));
     }
 
 
@@ -68,6 +119,8 @@ class TiemposProduccionController extends Controller
         ]);
 
         try {
+            Log::info('Iniciando creación de tiempo de producción', $request->all());
+
             // Crear el registro de Tiempos_produccion
             $tiempoProduccion = Tiempos_produccion::create([
                 'dia' => $request->dia,
@@ -85,11 +138,16 @@ class TiemposProduccionController extends Controller
                 'horas' => 0
             ]);
 
+            Log::info('Tiempo de producción creado exitosamente', ['tiempos_produccion_id' => $tiempoProduccion->id]);
+
             // Calcular el tiempo valor total para el registro creado
             $total_horas = $tiempoProduccion->Calcularvalor_total_horas();
             $horas = $tiempoProduccion->Calculartotalhoras();
 
-            if ($total_horas === null and $horas === null) {
+            Log::info('Cálculos realizados', ['total_horas' => $total_horas, 'horas' => $horas]);
+
+            if ($total_horas === null && $horas === null) {
+                Log::warning('Error al calcular valor total de horas o total de horas');
                 return redirect()->back()->withErrors('Error al calcular el tiempo valor total.');
             }
 
@@ -100,21 +158,54 @@ class TiemposProduccionController extends Controller
             $costoProduccion->cif_id = 1;
             $costoProduccion->save();
 
-            $manoObraDirecta = $costoProduccion->calcularManoObraDirecta();
+            Log::info('Costo de producción guardado', ['costo_produccion_id' => $costoProduccion->id]);
 
-            if ($manoObraDirecta !== null) {
-                $costoProduccion->mano_obra_directa = $manoObraDirecta;
-                $costoProduccion->save();
-            } else {
-                return redirect()->back()->withErrors('Error al calcular la mano de obra directa.');
+            // Procesar los artículos, si existen
+            if ($request->has('articulos')) {
+                Log::info('Procesando artículos asociados');
+                
+                $articulosData = [];
+                foreach ($request->articulos as $articuloId => $detalles) {
+                    if ($articuloId !== 'articulo_id' && isset($detalles['cantidad'])) {
+                        $articulosData[] = [
+                            'tiempos_produccion_id' => $tiempoProduccion->id,
+                            'articulo_id' => $articuloId,
+                            'cantidad' => $detalles['cantidad'],
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+                    } else {
+                        Log::error('Cantidad no definida para el artículo', ['articulo_id' => $articuloId]);
+                    }
+                }
+                
+                if (!empty($articulosData)) {
+                    $tiempoProduccion->articulos()->attach($articulosData);
+                    Log::info('Artículos asociados correctamente', ['articulos' => $articulosData]);
+                     // Calcular la mano de obra directa solo para los artículos asociados
+                $manoObraDirecta = $costoProduccion->calcularManoObraDirecta($articulosData);
+
+                if ($manoObraDirecta !== null) {
+                    $costoProduccion->mano_obra_directa = $manoObraDirecta;
+                    $costoProduccion->save();
+                    Log::info('Mano de obra directa calculada y guardada', ['mano_obra_directa' => $manoObraDirecta]);
+                } else {
+                        Log::warning('Error al calcular mano de obra directa');
+                        return redirect()->back()->withErrors('Error al calcular la mano de obra directa.');
+                    }
+                } else {
+                    Log::error('No se pudo asociar ningún artículo debido a la falta de cantidades.');
+                }
             }
 
             // Redireccionar con éxito
+            Log::info('Tiempo de producción creado exitosamente, redirigiendo');
             return redirect()->route('tiempos.group')->with([
                 'success' => 'Tiempo de producción creado exitosamente.',
                 'valor_total_horas' => 'Valor total de horas: ' . $total_horas,
                 'total_horas' => 'Total de horas: ' . $horas,
             ]);
+
         } catch (\Exception $e) {
             // Manejo de excepciones y registro de errores
             Log::error('Error al crear tiempo de producción: ' . $e->getMessage());

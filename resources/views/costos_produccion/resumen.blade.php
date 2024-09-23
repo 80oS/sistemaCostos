@@ -1,114 +1,84 @@
 @extends('adminlte::page')
 
-@section('title', 'resumen')
+@section('title', 'Resumen de Costos de Producción')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-800 leading-tight">
-    {{ __('Resumen de costos de producción de la sdp')}} {{ $sdp->numero_sdp }}
-</h2>
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        {{ __('Resumen de costos de producción de la SDP')}} {{ $sdp->numero_sdp }}
+    </h2>
 @stop
 
 @section('content')
-    <div class="p-12">
-        <div class="flex items-end justify-end mb-4 gap-5">
-            <button id="printButton" class="no-print bg-blue-700 hover:bg-blue-900 text-white  py-2 px-4 rounded">
-                <i class="fa-solid fa-print"></i>
-            </button>
-            <a href="{{ route('costos_produccion.show', $sdp->numero_sdp) }}" class="no-print btn btn-warning">volver</a>
-        </div>
-        <div class="container">
-            <div class="card">
-                <div class="card-body">
-                    <h1>RESUMEN DE COSTOS DE PRODUCCION DE LA SDP {{ $sdp->numero_sdp }}</h1>
-                    <h2>ANALISIS DE COSTOS</h2>
-                    <div class="cont">
-                        <div class="cards">
-                            <div class="card-1">
-                                <h3>* Valor de venta</h3>
-                                <p>
-                                    <strong>Articulos <br></strong> 
-                                    @foreach ($sdp->articulos as $index => $articulo)
-                                        <p>
-                                            <strong>
-                                            | {{ $index + 1 }} |
-                                            </strong> <br>
-                                            <strong>Descricion del articulo: </strong>{{ $articulo->descripcion }}
-                                            <br> <strong>Cantidad del articulo:</strong> {{ $articulo->pivot->cantidad }}
-                                            <br> <strong>valor del articulo:</strong> {{ number_format($articulo->subtotal, 2, ',', '.') }}
-                                        </p><br><br>
-                                    @endforeach
-                                    <strong>TOTAL:</strong> {{ number_format($total, 2, ',', '.') }}
-                                </p>
-                            </div>
-                            <div class="card-2">
-                                <h3>* Mano de obra directa</h3>
-                                <p>
-                                    <strong>Operarios</strong>
-                                    @foreach ($costosProduccionPorOperario as $index => $item)
-                                        <p>
-                                            <strong>
-                                                | {{ $index + 1 }} |
-                                            </strong> <br>
-                                            <strong>Nombre del operario:</strong> {{ $item['nombre_operario'] }} <br>
-                                            <strong>Horas trabajadas:</strong> {{ $item['total_horas'] }} <br>
-                                            <strong>Valor de la mano de obra:</strong> {{ number_format($item['mano_obra_directa_total'], 2, ',', '.') }} <br>
-                                        </p> <br>
-                                    @endforeach
-                                    <strong>TOTAL:</strong> {{ number_format($totalManoObra, 2, ',', '.') }}
-                                </p>
-                            </div>
-                            <div class="card-3">
-                                <h3>* Materias primas</h3>
-                                <p>
-                                    <strong>Directas</strong>
-                                    @foreach ($materiasPrimasDirectas as $index => $materiaDirecta)
-                                        <p>
-                                            <strong>
-                                                | {{ $index + 1 }} |
-                                            </strong> <br>
-                                            <strong>Descricion:</strong> {{ $materiaDirecta->descripcion }} <br>
-                                            <strong>Cantidad cantidad:</strong> {{ $materiaDirecta->pivot->cantidad }} <br>
-                                            <strong>Cantidad precio untitario:</strong> {{ number_format($materiaDirecta->precio_unit, 2, ',', '.') }} <br>
-                                            <strong>total:</strong> {{ number_format($totalDirectas, 2, ',', '.') }} <br>
-                                        </p>
-                                    @endforeach
-                                        <br>
-                                    <strong>Indirectas</strong>
-                                    @foreach ($materiasPrimasIndirectas as $index => $materiaDirecta)
-                                        <p>
-                                            <strong>
-                                                | {{ $index + 1 }} |
-                                            </strong> <br>
-                                            <strong>Descricion:</strong> {{ $materiaDirecta->descripcion }} <br>
-                                            <strong>Cantidad cantidad:</strong> {{ $materiaDirecta->pivot->cantidad }} <br>
-                                            <strong>Cantidad precio untitario:</strong> {{ number_format($materiaDirecta->precio_unit, 2, ',', '.') }} <br>
-                                            <strong>total:</strong> {{ number_format($totalIndirectas, 2, ',', '.') }} <br>
-                                        </p>
-                                    @endforeach
-                                </p>
-                            </div>
-                            <div class="card-4">
-                                <h3>* Costos indirectos de fabrica (CIF)</h3>
-                                <strong>Gasto Operativo Indirecto (GOI): </strong>{{ number_format($totalGOI, 2, ',', '.') }} <br>
-                                <strong>Mano de Obra Indirecta (MOI): </strong>{{ number_format($totalMOI, 2, ',', '.') }} <br>
-                                <strong>Otros costos indirectos (CMI): </strong>{{ number_format($totalOCI, 2, ',', '.') }} <br>
-                                <h3>* Total de horas de los operarios</h3>
-                                horas: {{ number_format($totalHorasOperarios, 2, ',', '.') }}
-                                <h3>* total CIF</h3>
-                                CIF: {{ number_format($cif, 2, ',', '.') }}
-                                <br> <br>
-                                <h2>Utilidad bruta</h2>
-                                valor: {{ number_format($utilidad_bruta, 2, ',', '.') }}
-                                <br> <br>
-                                <h2>Margen bruto</h2>
-                                valor: {{ number_format($margen_bruto, 2, ',', '.') }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="no-print">
+    <button id="printButton" class="btn btn-info">
+        <i class="fas fa-print"></i>
+    </button>
+</div>
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Resumen de SDP: {{ $sdp->numero_sdp }}</h1>
+
+    <div class="mb-6">
+        <h2 class="text-xl font-semibold">Información General</h2>
+        <p><strong>Total Mano de Obra:</strong> {{ number_format($totalManoObra, 2) }}</p>
+        <p><strong>Total Horas Operativas:</strong> {{ $totalHorasOperarios }}</p>
+        <p><strong>Total CIF:</strong> {{ number_format($totalCIF, 2) }}</p>
     </div>
+
+    <h2 class="text-xl font-semibold mb-2">Artículos</h2>
+    <table class="min-w-full border border-gray-300">
+        <thead>
+            <tr class="bg-gray-200">
+                <th class="border px-4 py-2">Descripción</th>
+                <th class="border px-4 py-2">Cantidad</th>
+                <th class="border px-4 py-2">Precio</th>
+                <th class="border px-4 py-2">Subtotal</th>
+                <th class="border px-4 py-2">Mano de Obra Directa</th>
+                <th class="border px-4 py-2">Materias Primas Directas</th>
+                <th class="border px-4 py-2">Materias Primas  Indirectas</th>
+
+                <th class="border px-4 py-2">CIF</th>
+                <th class="border px-4 py-2">Utilidad Bruta</th>
+                <th class="border px-4 py-2">Margen Bruto (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($articulosConSubtotales as $articulo)
+            <tr>
+                <td class="border px-4 py-2">{{ $articulo->descripcion }}</td>
+                <td class="border px-4 py-2">{{ $articulo->pivot->cantidad }}</td>
+                <td class="border px-4 py-2">{{ number_format($articulo->pivot->precio, 2) }}</td>
+                <td class="border px-4 py-2">{{ number_format($articulo->subtotal, 2) }}</td>
+                <td class="border px-4 py-2">{{ number_format($articulo->mano_obra_directa, 2) }}</td>
+                <td class="border px-4 py-2">{{ number_format($articulo->materias_primas_directas, 2) }}</td>
+                <td class="border px-4 py-2">{{ number_format($articulo->materias_primas_indirectas, 2) }}</td>
+                <td class="border px-4 py-2">{{ number_format($articulo->cif, 2) }}</td>
+                <td class="border px-4 py-2">{{ number_format($articulo->utilidad_bruta, 2) }}</td>
+                <td class="border px-4 py-2">{{ number_format($articulo->margen_bruto, 2) }}%</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <div class="mt-6">
+        <h2 class="text-xl font-semibold">Costos de Producción</h2>
+        <ul>
+            @foreach($costosProduccion as $costo)
+                <li>Mano de Obra Directa: {{ number_format($costo->mano_obra_directa, 2) }}</li>
+                <!-- Agrega más campos de costos según sea necesario -->
+            @endforeach
+        </ul>
+    </div>
+
+    <div class="mt-6">
+        <h2 class="text-xl font-semibold">Información Adicional</h2>
+        <p><strong>IDIMCOL:</strong> {{ implode(', ', $idimcols->pluck('nombre')->toArray()) }}</p>
+        <p><strong>CIF Totales:</strong> MOI: {{ number_format($totalMOI, 2) }}, GOI: {{ number_format($totalGOI, 2) }}, OCI: {{ number_format($totalOCI, 2) }}</p>
+    </div>
+
+    <div class="no-print mt-4">
+        <a href="{{ route('costos_produccion.index') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Volver</a>
+    </div>
+</div>
 @stop
 
 @section('css')
@@ -156,6 +126,9 @@
             @page {
                 size: landscape !important; /* Establecer la orientación en CSS también */
                 margin: 0 !important;
+            }
+            .no-print {
+                display: none ;
             }
         }
     </style>

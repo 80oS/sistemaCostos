@@ -3,7 +3,7 @@
 @section('title', 'MATERIAS PRIMAS')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-400 leading-tight">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight">
     {{ __('Materias primas') }}
 </h2>
 @stop
@@ -34,6 +34,12 @@
                     <div class="mb-4">
                         <a href="{{ route('lista.sdp.cargar') }}" class="btn btn-info">Carga de Materias Primas</a>
                     </div>
+                    <div class="mb-4">
+                        <a href="{{ route('materiaDirecta.index') }}" class="btn btn-info">lista de materias directas</a>
+                    </div>
+                    <div class="mb-4">
+                        <a href="{{ route('materiaIndirecta.index') }}" class="btn btn-info">lista de materias indirectas</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -57,32 +63,18 @@
             display: flex;
             flex-direction: row;
             justify-content: center;
+            background: #bbbbbb !important;
         }
-        table {
-            width: 100%;
-            border: #34343431 1px solid;
-            background: #a9b0ef19;
-            backdrop-filter: blur(0.4rem);
-            -webkit-backdrop-filter: blur(0.4rem);
-        }
-        thead tr th {
-            background: #a9b0ef19;
-            backdrop-filter: blur(0.4rem);
-            -webkit-backdrop-filter: blur(0.4rem);
-            border: #34343431 1px solid;
-            color: #cfcdcd;
-            text-align: center;
+        .card-body {
+            background: #bbbbbb !important;
         }
 
-        tbody tr td {
-            background: #a9b0ef19;
-            backdrop-filter: blur(0.4rem);
-            -webkit-backdrop-filter: blur(0.4rem);
-            border: #34343431 1px solid;
+        .content, .content-header {
+            background: #fff !important;
         }
 
-        th, td {
-            border: #34343431 1px solid;
+        .content {
+            height: 87vh;
         }
 
     </style>

@@ -3,7 +3,7 @@
 @section('title', 'crear materia prima directa')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-300 leading-tight">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight">
     {{ __('Formulario de la nueva materia prima directa') }}
 </h2>
 @stop
@@ -18,28 +18,28 @@
                         @csrf
     
                         <div>
-                            <label class="block mb-2 text-sm font-medium text-gray-100" for="nombre">Descripcion</label>
-                            <input type="text" name="descripcion" id="descripcion" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                            <label class="form-label" for="nombre">Descripcion</label>
+                            <input type="text" name="descripcion" id="descripcion" class="form-control" required>
                         </div>
         
                         <div>
-                            <label class="block mb-2 text-sm font-medium text-gray-100" for="nombre">proveedor</label>
-                            <input type="text" name="proveedor" id="proveedor" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                            <label class="form-label" for="nombre">proveedor</label>
+                            <input type="text" name="proveedor" id="proveedor" class="form-control" required>
                         </div>
         
                         <div>
-                            <label class="block mb-2 text-sm font-medium text-gray-100" for="nombre">Numero de Factura</label>
-                            <input type="text" name="numero_factura" id="numero_factura" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                            <label class="form-label" for="nombre">Numero de Factura</label>
+                            <input type="text" name="numero_factura" id="numero_factura" class="form-control" required>
                         </div>
         
                         <div>
-                            <label class="block mb-2 text-sm font-medium text-gray-100" for="nombre">Numero de orden de compra</label>
-                            <input type="text" name="numero_orden_compra" id="numero_orden_compra" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                            <label class="form-label" for="nombre">Numero de orden de compra</label>
+                            <input type="text" name="numero_orden_compra" id="numero_orden_compra" class="form-control" required>
                         </div>
                         
                         <div>
-                            <label class="block mb-2 text-sm font-medium text-gray-100" for="precio_unitario">Precio Unitario</label>
-                            <input type="number" name="precio_unit" id="precio_unit" class="bg-gray-900 border border-gray-300 text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                            <label class="form-label" for="precio_unitario">Precio Unitario</label>
+                            <input type="number" name="precio_unit" id="precio_unit" class="form-control" required>
                         </div>
 
                         <div class="flex items-center justify-between mt-4">
@@ -59,9 +59,26 @@
     <style>
         .card {
             padding: 10px;
+            background: #a3a1a1 !important;
         }
         .card-body {
             padding: 8px;
+            background: #a3a1a1 !important;
+            color: #000 !important;
+        }
+
+        .content, .content-header {
+            background-color: #fff !important;
+        }
+
+        h2 {
+            text-transform: uppercase;
+            font-size: 18px;
+        }
+
+        input {
+            background-color: #fff !important;
+            color: #000 !important;
         }
     </style>
 @stop

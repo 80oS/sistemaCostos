@@ -3,7 +3,7 @@
 @section('title', 'categorias')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-300 leading-tight">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight">
     {{ __('Todas las Categorias y sus Productos') }}
 </h2>
 @stop
@@ -133,7 +133,31 @@
             background-color: #f0f0f0 !important;
             max-width: 700px !important;
             max-height: 400px !important;
+            color: #000 !important;
         }
+
+    .card-body {
+        background: #bbbbbb !important;
+        color: #000 !important;
+        padding: 5px;
+    }
+
+    .content, .content-header {
+        background: #fff !important;
+    }
+
+    .content {
+        height: 87vh;
+    }
+
+    input {
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    .modal-header, .modal-body, .modal-footer {
+        background: #fff !important;
+    }
     </style>
 @stop
 

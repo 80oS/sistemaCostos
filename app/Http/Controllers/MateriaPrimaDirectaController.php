@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class MateriaPrimaDirectaController extends Controller
 {
+    public function indexDirectas()
+    {
+        $materiasPrimasDirectas = MateriaPrimaDirecta::all();
+        return view('materiasPrimasDirectas.index', compact('materiasPrimasDirectas'));
+    }
 
     public function create()
     {
@@ -29,7 +34,7 @@ class MateriaPrimaDirectaController extends Controller
             'numero_factura' => $request->input('numero_factura'),
             'numero_orden_compra' => $request->input('numero_orden_compra'),
             'precio_unit' => $request->input('precio_unit'),
-            'valor' => 0
+            'valor' => $request->input('valor')
         ]);
         $materia_Prima_directa->save();
 
@@ -61,7 +66,7 @@ class MateriaPrimaDirectaController extends Controller
             'numero_factura' => $request->input('numero_factura'),
             'numero_orden_compra' => $request->input('numero_orden_compra'),
             'precio_unit' => $request->input('precio_unit'),
-            'valor' => 0
+            'valor' => $request->input('valor')
         ]);
 
         return redirect()->route('materias_primas.index')->with('success', 'la materia prima directa actualizada exitosamente');

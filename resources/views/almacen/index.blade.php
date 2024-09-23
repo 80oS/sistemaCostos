@@ -3,14 +3,13 @@
 @section('title', 'ALMACEN')
 
 @section('content_header')
-
+<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase mb-10">
+    {{ __('Almacen') }}
+</h2>
 @stop
 
 @section('content')
 <div class="container mx-auto p-4">
-    <h2 class="font-semibold text-xl text-gray-300 leading-tight uppercase mb-10">
-        {{ __('Almacen') }}
-    </h2>
     <div class="flex justify-between items-center mb-6">
         <div class="search">
             <i class="fa-solid fa-magnifying-glass"></i>
@@ -113,7 +112,7 @@
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <style>
         .search {
-            background: #fafafa24;
+            background: #cbcaca;
             color: #000 !important;
             padding: 5px;
             border-radius: 5px;
@@ -131,39 +130,39 @@
             -webkit-backdrop-filter: blur(0.4rem);
         }
 
-        .content {
+        .content, .content-header {
             width: 100%;
-            height: 120vh;
-            background: url('https://soporte.mygestion.com/media/wp-content/uploads/beneficios-gesti%C3%B3n-de-almac%C3%A9n-700x467.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background: #fff !important;;
             color: #000;
         }
 
+        .content {
+            height: 120vh;
+        }
+
         .card {
-            background: #fafafa10 !important;
+            background: #919191 !important;
             backdrop-filter: blur(0.4rem) !important;
             -webkit-backdrop-filter: blur(0.4rem) !important;
             color: #fff !important;
         }
 
         .card-header {
-            background: #fafafa78 !important;
+            background: #9b9b9b !important;
             backdrop-filter: blur(0.4rem) !important;
             -webkit-backdrop-filter: blur(0.4rem) !important;
             color: #413e3e !important;
         }
 
         .card-body {
-            background: #fafafa78 !important;
+            background: #9a9a9a !important;
             backdrop-filter: blur(0.4rem) !important;
             -webkit-backdrop-filter: blur(0.4rem) !important;
             color: #302d2d !important;
         }
 
         table thead tr th , table tbody tr td {
-            background: #fafafa78;
+            background: #d2d1d1;
             backdrop-filter: blur(0.4rem);
             -webkit-backdrop-filter: blur(0.4rem);
             color: #292828 !important;

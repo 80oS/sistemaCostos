@@ -21,3 +21,30 @@
 @stop
 VITE_APP_URL="https://sistemacostos-production.up.railway.app/"
 NIXPACKS_BUILD_CMD="composer install && npm install && php artisan optimize && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan migrate --force"
+<tr class="border border-black odd:bg-white even:bg-gray-200">
+    <td class="border p-1">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#valor_venta">
+            Detalles
+        </button>
+    </td>
+    <td class="border p-1">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mano_obra">
+            Detalles
+        </button>
+    </td>
+    <td class="border p-1">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materias_primas">
+            Detalles
+        </button>
+    </td>
+    <td class="border p-1">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materias_primas_indirectas">
+            Detalles
+        </button>
+    </td>
+    <td class="border p-1">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#CIF">
+            Detalles
+        </button>
+    </td>
+</tr>

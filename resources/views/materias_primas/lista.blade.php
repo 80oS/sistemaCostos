@@ -3,7 +3,7 @@
 @section('title', 'lista sdp')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-400 leading-tight">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight">
     {{ __('Materias primas') }}
 </h2>
 @stop
@@ -13,8 +13,8 @@
         <div class="mb-4">
             <a href="{{ route('materias_primas.index') }}" class="btn btn-warning">volver</a>
         </div>
-        <div class="dark:bg-gray-700 shadow-sm sm:rounded-lg">
-            <div class="p-6 text-gray-900 rounded">
+        <div class="card">
+            <div class="card-body">
                 <div class="container">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
@@ -51,6 +51,22 @@
         .container {
             overflow-y: auto;
             max-height: 500px;
+        }
+        .card-body {
+            background: #bbbbbb !important;
+        }
+
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        .content {
+            height: 87vh;
+        }
+
+        h2 {
+            text-transform: uppercase;
+            font-size: 18px;
         }
     </style>
 @stop

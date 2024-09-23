@@ -3,7 +3,7 @@
 @section('title', 'Crear servicio externo')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-300 leading-tight uppercase">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
     {{ __('Formulario del nuevo servicio externo') }}
 </h2>
 @stop
@@ -19,8 +19,8 @@
             </ul>
         </div>
     @endif
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
+    <div class="card">
+        <div class="card-body">
             <form action="{{ route('serviciosExternos.store') }}" method="POST" class="max-w-sm mx-auto space-y-4">
                 @csrf
                 <div class="form-group">
@@ -48,6 +48,25 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    <style>
+        .card, .card-body {
+            background: #bbbbbb !important;
+            color: #000 !important;
+        }
+
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        .content {
+            height: 87vh;
+        }
+
+        input {
+            background: #fff !important;
+            color: #000 !important;
+        }
+    </style>
 @stop
 
 @section('js')

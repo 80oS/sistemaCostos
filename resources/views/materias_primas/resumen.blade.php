@@ -3,7 +3,7 @@
 @section('title', 'Materias primas cargadas')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-400 leading-tight">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight">
     {{ __('Materias primas cargadas') }}
 </h2>
 @stop
@@ -16,88 +16,86 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
-                <div class="card-body-1">
-                    <table>
-                        <thead>
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="8">MATERIAS PRIMAS DIRECTAS</th>
+                        </tr>
+                    </thead>
+                    <thead>
+                        <tr>
+                            <th class="px-1">#</th>
+                            <th class="px-1">CODIGO</th>
+                            <th class="px-1">DESCRIPCION</th>
+                            <th class="px-1">PROVEEDOR</th>
+                            <th class="px-1">NUMERO DE FACTURA</th>
+                            <th class="px-1">NUMERO DE ORDEN DE COMPRA</th>
+                            <th class="px-1">PRECIO UNITARIO</th>
+                            <th class="px-1">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($materiasPrimasDirectas as $index => $materiaPrimaDirecta)
                             <tr>
-                                <th colspan="8">MATERIAS PRIMAS DIRECTAS</th>
+                                <td class="px-1">{{ $index + 1 }}</td>
+                                <td class="px-1">{{ $materiaPrimaDirecta->codigo }}</td>
+                                <td class="px-1">{{ $materiaPrimaDirecta->descripcion }}</td>
+                                <td class="px-1">{{ $materiaPrimaDirecta->proveedor }}</td>
+                                <td class="px-1">{{ $materiaPrimaDirecta->numero_factura }}</td>
+                                <td class="px-1">{{ $materiaPrimaDirecta->numero_orden_compra }}</td>
+                                <td class="px-1">{{ $materiaPrimaDirecta->precio_unit }}</td>
+                                <td>
+                                    <form action="{{ route('destroyDirectas', ['numero_sdp' => $sdp->numero_sdp, 'id' => $materiaPrimaDirecta->pivot->id]) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta materia prima directa?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                                    </form>
+                                </td>
                             </tr>
-                        </thead>
-                        <thead>
+                        @endforeach
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <th colspan="8">MATERIAS PRIMAS INDIRECTAS</th>
+                        </tr>
+                    </thead>
+                    <thead>
+                        <tr>
+                            <th class="px-1">#</th>
+                            <th class="px-1">CODIGO</th>
+                            <th class="px-1">DESCRIPCION</th>
+                            <th class="px-1">PROVEEDOR</th>
+                            <th class="px-1">NUMERO DE FACTURA</th>
+                            <th class="px-1">NUMERO DE ORDEN DE COMPRA</th>
+                            <th class="px-1">PRECIO UNITARIO</th>
+                            <th class="px-1">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($materiasPrimasIndirectas as $index => $materiaPrimaIndirecta)
                             <tr>
-                                <th class="px-1">#</th>
-                                <th class="px-1">CODIGO</th>
-                                <th class="px-1">DESCRIPCION</th>
-                                <th class="px-1">PROVEEDOR</th>
-                                <th class="px-1">NUMERO DE FACTURA</th>
-                                <th class="px-1">NUMERO DE ORDEN DE COMPRA</th>
-                                <th class="px-1">PRECIO UNITARIO</th>
-                                <th class="px-1">Eliminar</th>
+                                <td class="px-1">{{ $index + 1 }}</td>
+                                <td class="px-1">{{ $materiaPrimaIndirecta->codigo }}</td>
+                                <td class="px-1">{{ $materiaPrimaIndirecta->descripcion }}</td>
+                                <td class="px-1">{{ $materiaPrimaIndirecta->proveedor }}</td>
+                                <td class="px-1">{{ $materiaPrimaIndirecta->numero_factura }}</td>
+                                <td class="px-1">{{ $materiaPrimaIndirecta->numero_orden_compra }}</td>
+                                <td class="px-1">{{ $materiaPrimaIndirecta->precio_unit }}</td>
+                                <td class="px-1">
+                                    <form action="{{ route('destroyIndirectas', [
+                                        'numero_sdp' => $sdp->numero_sdp, 
+                                        'materia_indirecta_id' => $materiaPrimaIndirecta->pivot->materia_indirecta_id,
+                                        'costos_produccion_id' => $materiaPrimaIndirecta->pivot->costos_produccion_id
+                                    ]) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta materia prima indirecta?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                                    </form>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($materiasPrimasDirectas as $index => $materiaPrimaDirecta)
-                                <tr>
-                                    <td class="px-1">{{ $index + 1 }}</td>
-                                    <td class="px-1">{{ $materiaPrimaDirecta->codigo }}</td>
-                                    <td class="px-1">{{ $materiaPrimaDirecta->descripcion }}</td>
-                                    <td class="px-1">{{ $materiaPrimaDirecta->proveedor }}</td>
-                                    <td class="px-1">{{ $materiaPrimaDirecta->numero_factura }}</td>
-                                    <td class="px-1">{{ $materiaPrimaDirecta->numero_orden_compra }}</td>
-                                    <td class="px-1">{{ $materiaPrimaDirecta->precio_unit }}</td>
-                                    <td>
-                                        <form action="{{ route('destroyDirectas', ['numero_sdp' => $sdp->numero_sdp, 'id' => $materiaPrimaDirecta->pivot->id]) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta materia prima directa?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Eliminar</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card-body-2">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th colspan="8">MATERIAS PRIMAS INDIRECTAS</th>
-                            </tr>
-                        </thead>
-                        <thead>
-                            <tr>
-                                <th class="px-1">#</th>
-                                <th class="px-1">CODIGO</th>
-                                <th class="px-1">DESCRIPCION</th>
-                                <th class="px-1">PROVEEDOR</th>
-                                <th class="px-1">NUMERO DE FACTURA</th>
-                                <th class="px-1">NUMERO DE ORDEN DE COMPRA</th>
-                                <th class="px-1">PRECIO UNITARIO</th>
-                                <th class="px-1">Eliminar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($materiasPrimasIndirectas as $index => $materiaPrimaIndirecta)
-                                <tr>
-                                    <td class="px-1">{{ $index + 1 }}</td>
-                                    <td class="px-1">{{ $materiaPrimaIndirecta->codigo }}</td>
-                                    <td class="px-1">{{ $materiaPrimaIndirecta->descripcion }}</td>
-                                    <td class="px-1">{{ $materiaPrimaIndirecta->proveedor }}</td>
-                                    <td class="px-1">{{ $materiaPrimaIndirecta->numero_factura }}</td>
-                                    <td class="px-1">{{ $materiaPrimaIndirecta->numero_orden_compra }}</td>
-                                    <td class="px-1">{{ $materiaPrimaIndirecta->precio_unit }}</td>
-                                    <td class="px-1">
-                                        <form action="{{ route('destroyIndirectas', ['numero_sdp' => $sdp->numero_sdp, 'id' => $materiaPrimaIndirecta->pivot->id]) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta materia prima directa?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Eliminar</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -109,35 +107,28 @@
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <style>
         .container {
-            width: 100%;
             overflow-y: auto;
             max-height: 600px;
         }
         table {
             width: 100%;
-            border: #34343431 1px solid;
-            background: #a9b0ef19;
-            backdrop-filter: blur(0.4rem);
-            -webkit-backdrop-filter: blur(0.4rem);
+        
         }
         thead tr th {
-            background: #a9b0ef19;
-            backdrop-filter: blur(0.4rem);
-            -webkit-backdrop-filter: blur(0.4rem);
-            border: #34343431 1px solid;
-            color: #cfcdcd;
+            background: #cacaca;
+            color: #000000 !important;
             text-align: center;
+            order: #000000 1px solid;
         }
 
         tbody tr td {
-            background: #a9b0ef19;
-            backdrop-filter: blur(0.4rem);
-            -webkit-backdrop-filter: blur(0.4rem);
-            border: #34343431 1px solid;
+            background: #c5c5c6;
+            color: #000000 !important;
+            border: #000000 1px solid;
         }
 
         th, td {
-            border: #34343431 1px solid;
+            border: #000000 1px solid;
         }
 
         .card {
@@ -146,7 +137,8 @@
         }
 
         .card-body {
-            background: #55555510;
+            background: #9c9a9a !important;
+            color: #fff !important;
             border-radius: 8px;
             display: flex;
             flex-direction: row;
@@ -155,16 +147,13 @@
             gap: 10px;
             padding: 8px;
         }
+        
+        .content, .content-header {
+            background: #fff !important;
+        }
 
-        .card-body-1, .card-body-2 {
-            background: #a9b0ef19;
-            backdrop-filter: blur(0.4rem);
-            -webkit-backdrop-filter: blur(0.4rem);
-            border-radius: 8px;
-            border: 2px #a9b0ef19 solid;
-            width: 600px;
-            max-height: 400px;
-            overflow-y: auto;
+        .content {
+            height: 87vh;
         }
     </style>
 @stop

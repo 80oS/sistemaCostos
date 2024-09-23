@@ -81,11 +81,14 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="laboral_descanso">Laboral con descansos</label>
                             <input type="checkbox" id="laboral_descanso">
-                            
-                            <label for="tiempo_a_restar">Tiempo a restar (en minutos)</label>
-                            <input type="number" min="0" step="1" placeholder="Minutos a restar" id="tiempo_restar">
+                            <label for="laboral_descanso">Laboral con descansos</label>
+                        
+                            <div class="tiempo-restar-container">
+                                <button type="button" id="decrementar">-</button>
+                                <span id="minutos_restados">0</span> minutos
+                                <button type="button" id="incrementar">+</button>
+                            </div>
                         </div>
                     </div>
         
@@ -368,6 +371,10 @@
             
         }
 
+        .content {
+            height: 86vh;
+        }
+
     </style>
 @stop
 
@@ -375,25 +382,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script>
-        flatpickr("#hora_inicio", {
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: "H:i:S",
-            time_24hr: true,
-            enableSeconds: true,
-            minuteIncrement: 1,
-        });
-    
-        flatpickr("#hora_fin", {
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: "H:i:S",
-            time_24hr: true,
-            enableSeconds: true,
-            minuteIncrement: 1,
-        });
-    </script>
 <script>
     // modal servicios
     document.addEventListener('DOMContentLoaded', function() {
@@ -515,34 +503,86 @@
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-            const horaFinInput = document.getElementById('hora_fin');
-            const tiempoRestarInput = document.getElementById('tiempo_restar');
-            const laboral_descanso = document.getElementById('laboral_descanso');
-
-            function calcularNuevaHoraFin() {
-                if (!horaFinInput.value || !tiempoRestarInput.value) return;
-
-                let [horas, minutos, segundos] = horaFinInput.value.split(':').map(Number);
-                let minutosARestar = parseInt(tiempoRestarInput.value);
-
-                if (!laboral_descanso.checked) return;
-
-                let totalSegundos = (horas * 3600) + (minutos * 60) + (segundos);
-                let segundosARestar = minutosARestar * 60;
-
-                let nuvosTotalSegundos = totalSegundos - segundosARestar;
-
-                let nuevasHoras = Math.floor(nuvosTotalSegundos / 3600);
-                let nuevosMinutos = Math.floor((nuvosTotalSegundos % 3600) / 60);
-                let nuevosSegundos = nuvosTotalSegundos % 60;
-
-                let nuevaHoraFin = `${nuevasHoras.toString().padStart(2, '0')}:${nuevosMinutos.toString().padStart(2, '0')}:${nuevosSegundos.toString().padStart(2, '0')}`;
-
-                horaFinInput.value = nuevaHoraFin;
-            }
-
-            tiempoRestarInput.addEventListener('input', calcularNuevaHoraFin);
-            laboral_descanso.addEventListener('change', calcularNuevaHoraFin);
+        // Inicialización de flatpickr para hora de inicio y fin
+        flatpickr("#hora_inicio", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i:S",
+            time_24hr: true,
+            enableSeconds: true,
+            minuteIncrement: 1,
         });
-    </script>
+        flatpickr("#hora_fin", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i:S",
+            time_24hr: true,
+            enableSeconds: true,
+            minuteIncrement: 1,
+        });
+
+        const horaFinInput = document.getElementById('hora_fin');
+        const laboralDescanso = document.getElementById('laboral_descanso');
+        const decrementarBtn = document.getElementById('decrementar');
+        const incrementarBtn = document.getElementById('incrementar');
+        const minutosRestadosSpan = document.getElementById('minutos_restados');
+
+        let tiempoOriginal = null;
+        let minutosRestados = 0;
+
+        // Guardar la hora original de fin
+        function guardarTiempoOriginal() {
+            if (!tiempoOriginal && horaFinInput.value) {
+                tiempoOriginal = horaFinInput.value;
+            }
+        }
+
+        // Función para ajustar el tiempo
+        function ajustarTiempo(incremento) {
+            if (!laboralDescanso.checked) return;  // Solo ajustar si el checkbox está marcado
+
+            guardarTiempoOriginal();
+
+            minutosRestados += incremento;
+            minutosRestados = Math.max(minutosRestados, 0);  // No permitir valores negativos
+            minutosRestadosSpan.textContent = minutosRestados;
+
+            if (!tiempoOriginal) return;
+
+            let [horas, minutos, segundos] = tiempoOriginal.split(':').map(Number);
+            let totalSegundos = (horas * 3600) + (minutos * 60) + segundos - (minutosRestados * 60);
+
+            totalSegundos = Math.max(totalSegundos, 0);  // Evitar valores negativos
+
+            let nuevasHoras = Math.floor(totalSegundos / 3600) % 24;
+            let nuevosMinutos = Math.floor((totalSegundos % 3600) / 60);
+            let nuevosSegundos = totalSegundos % 60;
+
+            let nuevaHoraFin = `${nuevasHoras.toString().padStart(2, '0')}:${nuevosMinutos.toString().padStart(2, '0')}:${nuevosSegundos.toString().padStart(2, '0')}`;
+            horaFinInput._flatpickr.setDate(nuevaHoraFin);
+        }
+
+        // Restaurar la hora original al desmarcar el checkbox
+        laboralDescanso.addEventListener('change', function() {
+            if (!this.checked) {
+                if (tiempoOriginal) {
+                    horaFinInput._flatpickr.setDate(tiempoOriginal);
+                }
+                minutosRestados = 0;
+                minutosRestadosSpan.textContent = '0';
+            }
+        });
+
+        // Listeners para los botones de incrementar y decrementar
+        decrementarBtn.addEventListener('click', function() {
+            ajustarTiempo(1);
+        });
+        
+        incrementarBtn.addEventListener('click', function() {
+            if (minutosRestados > 0) {
+                ajustarTiempo(-1);
+            }
+        });
+    });
+</script>
 @stop

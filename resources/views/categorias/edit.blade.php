@@ -3,7 +3,7 @@
 @section('title', 'editer categoria')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-300 leading-tight">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight">
     {{ __('Editar Categoria') }}
 </h2>
 @stop
@@ -28,7 +28,7 @@
                         <button type="submit" class="btn btn-primary">
                             Actualizar
                         </button>
-                        <a href="{{ route('categorias.index') }}" class="btn btn-danger">
+                        <a href="{{ route('categorias.index') }}" class="btn btn-default">
                             Cancelar
                         </a>
                     </div>
@@ -52,6 +52,30 @@
             max-height: 300px;
             overflow-y: auto;
             resize: vertical;
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+        .card, .card-body {
+            background: #bbbbbb !important;
+            color: #000 !important;
+        }
+
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        .content {
+            height: 87vh;
+        }
+
+        input {
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+        h2 {
+            text-transform: uppercase;
         }
     </style>
 @stop

@@ -60,9 +60,30 @@
     <style>
         .card {
             padding: 10px;
+            background: #a3a1a1 !important;
         }
         .card-body {
             padding: 8px;
+            background: #a3a1a1 !important;
+            color: #000 !important;
+        }
+
+        .content, .content-header {
+            background-color: #fff !important;
+        }
+        
+        .content {
+            height: 87vh;
+        }
+        
+        h2 {
+            text-transform: uppercase;
+            font-size: 18px;
+        }
+
+        input {
+            background-color: #fff !important;
+            color: #000 !important;
         }
     </style>
 @stop

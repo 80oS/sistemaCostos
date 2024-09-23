@@ -53,6 +53,13 @@ class Tiempos_produccion extends Model
         return $this->hasMany(CostosProduccion::class, 'tiempo_produccion_id');
     }
 
+    public function articulos()
+    {
+        return $this->belongsToMany(Articulo::class, 'articulo_tiempos_produccion')
+                    ->withPivot('cantidad', 'tiempos_produccion_id', 'articulo_id')
+                    ->withTimestamps();
+    }
+
     public function Calcularvalor_total_horas()
     {
         try {

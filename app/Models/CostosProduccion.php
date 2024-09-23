@@ -43,8 +43,8 @@ class CostosProduccion extends Model
     }
     public function materiasPrimasIndirectas()
     {
-        return $this->belongsToMany(MateriaPrimaIndirecta::class, 'materia_prima_indirectas_costos')
-                    ->withPivot('id','cantidad', 'materia_indirecta_id', 'costos_produccion_id',)
+        return $this->belongsToMany(MateriaPrimaIndirecta::class, 'materia_prima_indirectas_costos', 'costos_produccion_id', 'materia_indirecta_id')
+                    ->withPivot('cantidad')
                     ->withTimestamps();
     }
 
@@ -52,9 +52,13 @@ class CostosProduccion extends Model
     {
         // Obtener el tiempo de producción asociado
         $tiempoProduccion = $this->tiempo_produccion;
+        Log::info('Tiempo de producción obtenido:', ['tiempo_produccion_id' => $tiempoProduccion->id]);
 
         // Obtener el operativo asociado
         $operativo = $tiempoProduccion->operativo;
+        Log::info('Operativo obtenido:', ['operativo_id' => $operativo->id]);
+
+        // Obtener el trabajador asociado al operativo
         $trabajador = $operativo->trabajador;
 
         if (!$trabajador) {
@@ -62,21 +66,43 @@ class CostosProduccion extends Model
             return null;
         }
 
+        Log::info('Trabajador encontrado:', ['trabajador_id' => $trabajador->id]);
+
         // Obtener el sueldo más reciente del trabajador
         $sueldo = $trabajador->sueldos()->orderBy('created_at', 'desc')->first()->sueldo ?? 0;
 
+        if ($sueldo === 0) {
+            Log::warning('Sueldo no encontrado o es cero para el trabajador:', ['trabajador_id' => $trabajador->id]);
+        } else {
+            Log::info('Sueldo más reciente del trabajador obtenido:', ['sueldo' => $sueldo]);
+        }
+
         // Obtener el CIF más reciente
         $cif = Cif::orderBy('created_at', 'desc')->first();
+
+        if (!$cif) {
+            Log::error('No se encontró un CIF.');
+            return null;
+        }
+
+        Log::info('CIF más reciente obtenido:', ['cif_id' => $cif->id]);
+
         $horasMes = $cif->NMH ?? 0;
 
         if ($horasMes > 0) {
             // Calcular el costo por hora
             $costoPorHora = $sueldo / $horasMes;
+            Log::info('Costo por hora calculado:', ['costoPorHora' => $costoPorHora]);
+
             // Calcular la mano de obra directa total
             $manoObraDirecta = $costoPorHora * $tiempoProduccion->horas;
+            Log::info('Mano de obra directa calculada:', ['manoObraDirecta' => $manoObraDirecta]);
 
+            // Guardar la mano de obra directa calculada
             $this->mano_obra_directa = $manoObraDirecta;
             $this->save();
+            Log::info('Mano de obra directa guardada en la base de datos:', ['manoObraDirecta' => $this->mano_obra_directa]);
+
             return $manoObraDirecta;
         } else {
             Log::warning('Horas mes es cero o no está definido para el CIF:', ['cif' => $cif]);

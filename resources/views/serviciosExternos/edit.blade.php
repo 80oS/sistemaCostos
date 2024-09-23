@@ -19,8 +19,8 @@
             </ul>
         </div>
     @endif
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
+    <div class="card">
+        <div class="card-body">
             <form action="{{ route('serviciosExternos.update', $serviciosExternos->id) }}" method="POST" class="max-w-sm mx-auto space-y-4">
                 @csrf
                 @method('PUT')
@@ -49,6 +49,25 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    <style>
+        .card, .card-body {
+            background: #bbbbbb !important;
+            color: #000 !important;
+        }
+
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        .content {
+            height: 87vh;
+        }
+
+        input {
+            background: #fff !important;
+            color: #000 !important;
+        }
+    </style>
 @stop
 
 @section('js')

@@ -10,9 +10,10 @@ class MateriaPrimaIndirectaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function indexIndirectas()
     {
-        //
+        $materiasPrimasIndirectas = MateriaPrimaIndirecta::all();
+        return view('materiasPrimasIndirectas.index', compact('materiasPrimasIndirectas'));
     }
 
     public function create()
@@ -36,7 +37,7 @@ class MateriaPrimaIndirectaController extends Controller
             'numero_factura' => $request->input('numero_factura'),
             'numero_orden_compra' => $request->input('numero_orden_compra'),
             'precio_unit' => $request->input('precio_unit'),
-            'valor' => 0
+            'valor' => $request->input('valor')
         ]);
         $materia_Prima_indirecta->save();
 
@@ -68,7 +69,7 @@ class MateriaPrimaIndirectaController extends Controller
             'numero_factura' => $request->input('numero_factura'),
             'numero_orden_compra' => $request->input('numero_orden_compra'),
             'precio_unit' => $request->input('precio_unit'),
-            'valor' => 0
+            'valor' => $request->input('valor')
         ]);
         
 

@@ -30,4 +30,11 @@ class Articulo extends Model
                     ->withPivot('cantidad', 'precio', 's_d_p_id', 'articulo_id')
                     ->withTimestamps();
     }
+
+    public function articulo_tiempos_produccion()
+    {
+        return $this->belongsToMany(Tiempos_produccion::class, 'articulo_tiempos_produccion')
+                    ->withPivot('cantidad', 'tiempos_produccion_id', 'articulo_id')
+                    ->withTimestamps();
+    }
 }

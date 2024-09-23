@@ -3,7 +3,7 @@
 @section('title', 'Crear Producto')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-300 leading-tight">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight">
     {{ __('Formulario de la nuevo producto') }}
 </h2>
 @stop
@@ -47,7 +47,29 @@
 @stop
 
 @section('css')
-    
+    <style>
+        .card, .card-body {
+            background: #bbbbbb !important;
+            color: #000 !important;
+        }
+
+        .content, .content-header {
+            background: #fff !important;
+        }
+
+        .content {
+            height: 87vh;
+        }
+
+        input, textarea, select {
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+        h2 {
+            text-transform: uppercase;
+        }
+    </style>
 @stop
 
 @section('js')

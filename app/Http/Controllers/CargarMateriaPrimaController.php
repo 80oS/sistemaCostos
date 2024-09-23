@@ -63,11 +63,11 @@ class CargarMateriaPrimaController extends Controller
             ]);
         } elseif (str_starts_with($validatedData['codigo'], 'MPI')) {
             // Buscar la materia prima indirecta por su código
-            $materiaPrimaIndirecta = MateriaPrimaIndirecta::where('codigo', $validatedData['codigo'])->firstOrFail();
+            $materiaIndirecta = MateriaPrimaIndirecta::where('codigo', $validatedData['codigo'])->firstOrFail();
 
             // Agregar materia prima indirecta al costo de producción
-            $costoProduccion->materiasPrimasIndirectas()->attach($materiaPrimaIndirecta->id,[
-                'materia_indirecta_id' => $materiaPrimaIndirecta->id,
+            $costoProduccion->materiasPrimasIndirectas()->attach($materiaIndirecta->id,[
+                'materia_indirecta_id' => $materiaIndirecta->id,
                 'costos_produccion_id' => $costoProduccion->id,
                 'cantidad' => $validatedData['cantidad']
             ]);
@@ -91,7 +91,7 @@ class CargarMateriaPrimaController extends Controller
 
         // Obtener las materias primas indirectas asociadas a la SDP
         $materiasPrimasIndirectas = $costoProduccion->materiasPrimasIndirectas()
-            ->withPivot('cantidad', 'materia_indirecta_id', 'costos_produccion_id',)
+            ->withPivot('cantidad', 'materia_indirecta_id', 'costos_produccion_id')
             ->get();
 
         // Pasar los datos a la vista
@@ -134,14 +134,16 @@ class CargarMateriaPrimaController extends Controller
         return redirect()->back()->with('success', 'Materia prima directa eliminada exitosamente.');
     }
 
-    public function destroyIndirectas($id, $numero_sdp)
+    public function destroyIndirectas($numero_sdp, $materia_indirecta_id, $costos_produccion_id)
     {
         Log::info('Numero SDP: ' . $numero_sdp);
-        Log::info('ID: ' . $id);
-        // Buscar la SDP por su número
+        Log::info('Materia Indirecta ID: ' . $materia_indirecta_id);
+        Log::info('Costos Produccion ID: ' . $costos_produccion_id);
+
         DB::table('materia_prima_indirectas_costos')
-        ->where('id', $id)
-        ->delete();
+            ->where('materia_indirecta_id', $materia_indirecta_id)
+            ->where('costos_produccion_id', $costos_produccion_id)
+            ->delete();
 
         return redirect()->back()->with('success', 'Carga de materia prima indirecta eliminada correctamente.');
     }

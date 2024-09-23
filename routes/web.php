@@ -76,6 +76,8 @@ Route::get('/listar-operativos', [OperativoController::class, 'listarOperativos'
 // Tiempos de Producción
 Route::resource('tiempos-produccion', TiemposProduccionController::class);
 Route::put('/tiempos_produccion/recalcular/{id}', [TiemposProduccionController::class, 'recalcular'])->name('tiempos_produccion.recalcular');
+Route::get('/sdp/{id}/articulos-seleccionados', [TiemposProduccionController::class, 'mostrarArticulosSeleccionados'])
+    ->name('sdp.articulos-seleccionados');
 
 // operarios
 Route::get('grupos', [TiemposProduccionController::class, 'groupByOperario'])->name('tiempos.group');
@@ -114,6 +116,10 @@ Route::get('/ADD_Clientes_servicios', [ADD_Clientes_servicios_Controller::class,
 Route::resource('sdp', SDPController::class);
 Route::get('/sdp-paquetes', [SDPController::class, 'indexPaquetes'])->name('sdp.paquetes');
 Route::get('/sdp-ver/{id}', [SDPController::class, 'ver'])->name('sdp.ver');
+Route::get('/api/getArticulos/{sdpId}', [TiemposProduccionController::class, 'getArticulos']);
+Route::post('/tiemposproduccion/select-sdp', [TiemposProduccionController::class, 'selectSdp'])
+    ->name('tiemposproduccion.selectSdp');
+
 
 // Artículos
 Route::get('articulos', [ArticuloController::class, 'index'])->name('articulos.index');
@@ -151,6 +157,8 @@ Route::get('/almacen', [AlmacenController::class, 'index'])->name('almacen');
 
 // MATERIAS PRIMAS
 Route::resource('materias_primas', MateriaPrimasController::class);
+Route::get('listaMateriasDirectas', [MateriaPrimaDirectaController::class, 'indexDirectas'])->name('materiaDirecta.index');
+Route::get('listaMateriasIndirectas', [MateriaPrimaIndirectaController::class, 'indexIndirectas'])->name('materiaIndirecta.index');
 
 // materias primas directas
 Route::get('materiasPrimasDirectas/create', [MateriaPrimaDirectaController::class, 'create'])->name('materiasPrimasDirectas.create');
@@ -174,7 +182,8 @@ Route::get('/api/buscar-materias', [CargarMateriaPrimaController::class, 'buscar
 Route::get('/ver-materias-primas-cragada/{numero_sdp}', [CargarMateriaPrimaController::class, 'verMateriasPrimas'])->name('verMateriasPrimas');
 Route::delete('/directas/{numero_sdp}/{id}/delete', [CargarMateriaPrimaController::class, 'destroyDirectas'])
     ->name('destroyDirectas');
-Route::delete('/indirectas/{numero_sdp}/{id}/delete', [CargarMateriaPrimaController::class, 'destroyIndirectas'])->name('destroyIndirectas');
+Route::delete('indirectas/{numero_sdp}/{materia_indirecta_id}/{costos_produccion_id}', [CargarMateriaPrimaController::class, 'destroyIndirectas'])->name('destroyIndirectas');
+
 
 // proveedor
 Route::resource('proveedor', ProveedorController::class);
