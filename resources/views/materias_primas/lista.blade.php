@@ -29,10 +29,10 @@
                                 <tr class="dark:bg-gray-300 text-gray-700">
                                     <td class="px-6 py-4 border-b">{{ $sdp->numero_sdp }}</td>
                                     <td class="px-6 py-4 border-b">
-                                        <a href="{{ route('cargar.materias.form', ['numero_sdp' => $sdp->numero_sdp]) }}" class="btn btn-info">Cargar Materias Primas</a>
+                                        <a href="{{ route('cargar.materias.form', ['numero_sdp' => $sdp->numero_sdp]) }}" class="btn btn-primary">Cargar Materias Primas</a>
                                     </td>
                                     <td class="px-6 py-4 border-b">
-                                        <a href="{{ route('verMateriasPrimas', ['numero_sdp' => $sdp->numero_sdp]) }}" class="btn btn-warning">ver lista</a>
+                                        <a href="{{ route('verMateriasPrimas', ['numero_sdp' => $sdp->numero_sdp]) }}" class="btn btn-info">ver lista</a>
                                     </td>
                                 </tr>
                             @endforeach

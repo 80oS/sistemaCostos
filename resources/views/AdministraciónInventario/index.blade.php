@@ -36,11 +36,6 @@
         body {
             height: 100vh;
         }
-
-        .navl {
-            background: linear-gradient(90deg, #f06161, #2b0101) no-repeat;
-        }
-
         .link {
             font-size: 20px;
             color: #000;

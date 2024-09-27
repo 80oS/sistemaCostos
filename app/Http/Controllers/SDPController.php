@@ -63,7 +63,8 @@ class SDPController extends Controller
 
     public function numero_sdp()
     {
-        $ultimoSDP = SDP::latest('id')->first();
+        // Bloquear la fila del último SDP para evitar condiciones de carrera
+        $ultimoSDP = SDP::lockForUpdate()->latest('id')->first();
         $nuevoNumeroSDP = $ultimoSDP ? $ultimoSDP->numero_sdp + 1 : 1;
         return $nuevoNumeroSDP;
     }
@@ -90,10 +91,10 @@ class SDPController extends Controller
                 'articulos.*.precio' => 'required|numeric|min:0',
             ]);
 
-            $nuevoNumeroSDP = $this->numero_sdp();
-
             // Iniciar una transacción
             DB::beginTransaction();
+
+            $nuevoNumeroSDP = $this->numero_sdp();
 
             // Crear el nuevo SDP
             $sdp = Sdp::create([

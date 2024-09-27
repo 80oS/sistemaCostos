@@ -9,7 +9,7 @@
 @stop
 @section('content')
 <div class="buttons">
-    <a href="{{ route('sdp.paquetes') }}" id="volver" class="no-print bg-yellow-700 hover:bg-yellow-900 text-white  py-2 px-4 rounded mb-4">volver</a>
+    <a href="{{ route('sdp.paquetes') }}" id="volver" class="no-print btn btn-primary mb-4">volver</a>
     <button id="printButton" class="no-print bg-blue-700 hover:bg-blue-900 text-white  py-2 px-4 rounded mb-4">
         <i class="fa-solid fa-print"></i>
     </button>

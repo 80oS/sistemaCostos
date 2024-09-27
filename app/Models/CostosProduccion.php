@@ -38,13 +38,28 @@ class CostosProduccion extends Model
     public function materiasPrimasDirectas()
     {
         return $this->belongsToMany(MateriaPrimaDirecta::class, 'materia_prima_directas_costos')
-                    ->withPivot('id','cantidad', 'materia_prima_directa_id', 'costos_produccion_id',)
+                    ->withPivot('cantidad')
                     ->withTimestamps();
     }
     public function materiasPrimasIndirectas()
     {
         return $this->belongsToMany(MateriaPrimaIndirecta::class, 'materia_prima_indirectas_costos', 'costos_produccion_id', 'materia_indirecta_id')
                     ->withPivot('cantidad')
+                    ->withTimestamps();
+    }
+
+    public function servicios()
+    {
+        return $this->belongsToMany(Servicio::class, 'servicios_costos')
+                    ->withPivot('valor_servicio')
+                    ->withTimestamps();
+    }
+
+    
+    public function articulo_tiempos_produccion()
+    {
+        return $this->belongsToMany(Tiempos_produccion::class, 'articulo_tiempos_produccion')
+                    ->withPivot('cantidad', 'tiempos_produccion_id', 'articulo_id')
                     ->withTimestamps();
     }
 
@@ -100,7 +115,7 @@ class CostosProduccion extends Model
 
             // Guardar la mano de obra directa calculada
             $this->mano_obra_directa = $manoObraDirecta;
-            $this->save();
+            $this->update();
             Log::info('Mano de obra directa guardada en la base de datos:', ['manoObraDirecta' => $this->mano_obra_directa]);
 
             return $manoObraDirecta;

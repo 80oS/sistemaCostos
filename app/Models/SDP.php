@@ -56,4 +56,11 @@ class SDP extends Model
         $nuevoNumeroSDP = $ultimoSDP ? $ultimoSDP->numero_sdp + 1 : 1;
         return $nuevoNumeroSDP;
     }
+
+    public function servivios()
+    {
+        return $this->belongsToMany(Servicio::class, 'servicios_costos')
+                    ->withPivot('valor_servicio')
+                    ->withTimestamps();
+    }
 }

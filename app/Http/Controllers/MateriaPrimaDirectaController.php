@@ -34,7 +34,7 @@ class MateriaPrimaDirectaController extends Controller
             'numero_factura' => $request->input('numero_factura'),
             'numero_orden_compra' => $request->input('numero_orden_compra'),
             'precio_unit' => $request->input('precio_unit'),
-            'valor' => $request->input('valor')
+            'valor' => 0
         ]);
         $materia_Prima_directa->save();
 
@@ -66,7 +66,7 @@ class MateriaPrimaDirectaController extends Controller
             'numero_factura' => $request->input('numero_factura'),
             'numero_orden_compra' => $request->input('numero_orden_compra'),
             'precio_unit' => $request->input('precio_unit'),
-            'valor' => $request->input('valor')
+            'valor' => 0
         ]);
 
         return redirect()->route('materias_primas.index')->with('success', 'la materia prima directa actualizada exitosamente');

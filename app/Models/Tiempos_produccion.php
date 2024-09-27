@@ -55,8 +55,8 @@ class Tiempos_produccion extends Model
 
     public function articulos()
     {
-        return $this->belongsToMany(Articulo::class, 'articulo_tiempos_produccion')
-                    ->withPivot('cantidad', 'tiempos_produccion_id', 'articulo_id')
+        return $this->belongsToMany(Articulo::class, 'articulo_tiempos_produccion', 'tiempos_produccion_id', 'articulo_id')
+                    ->withPivot('utilidad_bruta', 'margen_bruto', 'costos_produccion_id')
                     ->withTimestamps();
     }
 

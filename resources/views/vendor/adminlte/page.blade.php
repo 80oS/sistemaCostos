@@ -6,6 +6,7 @@
 @section('adminlte_css')
     @stack('css')
     @yield('css')
+    @livewireStyles
 @stop
 
 @section('classes_body', $layoutHelper->makeBodyClasses())
@@ -55,4 +56,5 @@
 @section('adminlte_js')
     @stack('js')
     @yield('js')
+    @livewireScripts
 @stop

@@ -37,7 +37,7 @@ class MateriaPrimaIndirectaController extends Controller
             'numero_factura' => $request->input('numero_factura'),
             'numero_orden_compra' => $request->input('numero_orden_compra'),
             'precio_unit' => $request->input('precio_unit'),
-            'valor' => $request->input('valor')
+            'valor' => 0
         ]);
         $materia_Prima_indirecta->save();
 
@@ -69,7 +69,7 @@ class MateriaPrimaIndirectaController extends Controller
             'numero_factura' => $request->input('numero_factura'),
             'numero_orden_compra' => $request->input('numero_orden_compra'),
             'precio_unit' => $request->input('precio_unit'),
-            'valor' => $request->input('valor')
+            'valor' => 0
         ]);
         
 

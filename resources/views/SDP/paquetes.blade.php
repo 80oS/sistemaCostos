@@ -10,7 +10,7 @@
 
 @section('content')
 <div class="p">
-    <a href="{{ route('ADD_C_S') }}" class="btn btn-warning">volver</a>
+    <a href="{{ route('ADD_C_S') }}" class="btn btn-primary">volver</a>
 </div>
 @if (session('success'))
 <div id="success-message" class="success-message" role="alert">

@@ -19,7 +19,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th colspan="8">MATERIAS PRIMAS DIRECTAS</th>
+                            <th colspan="9">MATERIAS PRIMAS DIRECTAS</th>
                         </tr>
                     </thead>
                     <thead>
@@ -31,7 +31,8 @@
                             <th class="px-1">NUMERO DE FACTURA</th>
                             <th class="px-1">NUMERO DE ORDEN DE COMPRA</th>
                             <th class="px-1">PRECIO UNITARIO</th>
-                            <th class="px-1">Eliminar</th>
+                            <th class="px-1">CANTIDAD</th>
+                            <th class="px-1">ARTICULO</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,19 +45,16 @@
                                 <td class="px-1">{{ $materiaPrimaDirecta->numero_factura }}</td>
                                 <td class="px-1">{{ $materiaPrimaDirecta->numero_orden_compra }}</td>
                                 <td class="px-1">{{ $materiaPrimaDirecta->precio_unit }}</td>
-                                <td>
-                                    <form action="{{ route('destroyDirectas', ['numero_sdp' => $sdp->numero_sdp, 'id' => $materiaPrimaDirecta->pivot->id]) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta materia prima directa?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                                    </form>
+                                <td class="px-1">
+                                    {{ $materiaPrimaDirecta->pivot->cantidad }}
                                 </td>
+                                <td class="px-1">{{ $materiaPrimaDirecta->pivot->articulo_descripcion }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                     <thead>
                         <tr>
-                            <th colspan="8">MATERIAS PRIMAS INDIRECTAS</th>
+                            <th colspan="9">MATERIAS PRIMAS INDIRECTAS</th>
                         </tr>
                     </thead>
                     <thead>
@@ -68,7 +66,8 @@
                             <th class="px-1">NUMERO DE FACTURA</th>
                             <th class="px-1">NUMERO DE ORDEN DE COMPRA</th>
                             <th class="px-1">PRECIO UNITARIO</th>
-                            <th class="px-1">Eliminar</th>
+                            <th class="px-1">CANTIDAD</th>
+                            <th class="px-1">ARTICULO</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,16 +81,9 @@
                                 <td class="px-1">{{ $materiaPrimaIndirecta->numero_orden_compra }}</td>
                                 <td class="px-1">{{ $materiaPrimaIndirecta->precio_unit }}</td>
                                 <td class="px-1">
-                                    <form action="{{ route('destroyIndirectas', [
-                                        'numero_sdp' => $sdp->numero_sdp, 
-                                        'materia_indirecta_id' => $materiaPrimaIndirecta->pivot->materia_indirecta_id,
-                                        'costos_produccion_id' => $materiaPrimaIndirecta->pivot->costos_produccion_id
-                                    ]) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta materia prima indirecta?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                                    </form>
+                                    {{ $materiaPrimaIndirecta->pivot->cantidad }}
                                 </td>
+                                <td class="px-1">{{ $materiaPrimaIndirecta->pivot->articulo_descripcion }}</td>
                             </tr>
                         @endforeach
                     </tbody>

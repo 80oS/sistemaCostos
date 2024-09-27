@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class ArticuloTiempoProduccion extends Model
 {
@@ -19,5 +20,10 @@ class ArticuloTiempoProduccion extends Model
     public function tiempoProduccion()
     {
         return $this->belongsTo(Tiempos_produccion::class);
+    }
+
+    public function costosProduccion()
+    {
+        return $this->belongsTo(CostosProduccion::class);
     }
 }

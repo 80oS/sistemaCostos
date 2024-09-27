@@ -25,3 +25,10 @@
     </div>
 
 </aside>
+
+<style>
+    .main-sidebar {
+        background: #1a3aa4 !important;
+        color: #fff !important;
+    }
+</style>

@@ -1,9 +1,9 @@
-<nav class="main-header navbar
+<nav class="main-header navbar text-white
     {{ config('adminlte.classes_topnav_nav', 'navbar-expand') }}
     {{ config('adminlte.classes_topnav', 'navbar-white navbar-light') }}">
 
     {{-- Navbar left links --}}
-    <ul class="navbar-nav">
+    <ul class="navbar-nav text-white">
         {{-- Left sidebar toggler link --}}
         @include('adminlte::partials.navbar.menu-item-left-sidebar-toggler')
 
@@ -15,7 +15,7 @@
     </ul>
 
     {{-- Navbar right links --}}
-    <ul class="navbar-nav ml-auto">
+    <ul class="navbar-nav ml-auto text-white">
         {{-- Custom right links --}}
         @yield('content_top_nav_right')
 
@@ -38,10 +38,9 @@
     </ul>
 
 </nav>
-
 <style>
-    .navbar-nav {
-        
-        color: #000 !important;
+    nav.main-header {
+        color: #fff !important;
+        background: #58a4f0 !important;
     }
 </style>

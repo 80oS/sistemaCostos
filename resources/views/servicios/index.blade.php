@@ -10,6 +10,9 @@
 
 @section('content')
 <div class="py-12 tg">
+    <div class="">
+        <a href="{{ route('servicio.index') }}" class="btn btn-info">ver sdp</a>
+    </div>
     <div class="tg max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-gray-400 overflow-hidden shadow-xl sm:rounded-lg p-6 tg">
             @if (session('success'))
@@ -58,7 +61,7 @@
         </div>
     </div>
     <div class="col-12 p">
-        <a href="{{ route('servicio') }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-3 rounded">volver</a>
+        <a href="{{ route('servicio') }}" class="btn btn-primary">volver</a>
     </div>
 </div>
 @stop

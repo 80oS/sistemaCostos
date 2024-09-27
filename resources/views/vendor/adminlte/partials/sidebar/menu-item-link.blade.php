@@ -21,3 +21,12 @@
     </a>
 
 </li>
+
+<style>
+    .nav-link {
+        color: #fff !important;
+    }
+    .nav-link:hover {
+        color: #ffffff50 !important;
+    }
+</style>

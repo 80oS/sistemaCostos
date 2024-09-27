@@ -43,23 +43,18 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified'
-])->group(function (){
+Route::middleware(['auth'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
+Auth::routes();
 
-Route::get('home/gestion-humana', [TalentoHConroller::class, 'index'])->name('gestion-humana');
-// Ruta para mostrar el formulario de registro
-Route::get('/register', [UsersController::class, 'create'])->name('register');
+Route::get('register', function () {
+    return view('auth.register');
+})->name('register');
 
-// Ruta para manejar la solicitud de registro
-Route::post('/register', [UsersController::class, 'store']);
-// trabajadores
+Route::get('/gestion-humana', [TalentoHConroller::class, 'index'])->name('gestion-humana');
+
 Route::resource('trabajadores', TrabajadoresController::class);
 Route::get('/butons', [TrabajadoresController::class, 'butons'])->name('trabajador.butons');
 Route::get('/activos', [TrabajadoresController::class, 'activos'])->name('trabajadores.activos');
@@ -151,6 +146,9 @@ Route::resource('remiciones', RemicionesController::class);
 // servicios
 route::get('/servicio', [ServicioController::class, 'mainS'])->name('servicio');
 Route::resource('servicios', ServicioController::class);
+Route::get('/servicios-sdps', [ ServicioController::class, 'indexSdp'])->name('servicio.index');
+Route::get('/servicios/{numero_sdp}', [ServicioController::class, 'show'])->name('servicio.ver-servicios');
+Route::post('/sdps/{sdp_id}/servicios', [ ServicioController::class, 'actualizarPrecioServicio'])->name('servicio.actualizar-precio-servicio');
 
 // almacen
 Route::get('/almacen', [AlmacenController::class, 'index'])->name('almacen');
@@ -180,9 +178,7 @@ Route::get('cargar-materias/{numero_sdp}', [CargarMateriaPrimaController::class,
 Route::post('cargar-materias/{numero_sdp}', [CargarMateriaPrimaController::class, 'store'])->name('materias.store');
 Route::get('/api/buscar-materias', [CargarMateriaPrimaController::class, 'buscarMaterias']);
 Route::get('/ver-materias-primas-cragada/{numero_sdp}', [CargarMateriaPrimaController::class, 'verMateriasPrimas'])->name('verMateriasPrimas');
-Route::delete('/directas/{numero_sdp}/{id}/delete', [CargarMateriaPrimaController::class, 'destroyDirectas'])
-    ->name('destroyDirectas');
-Route::delete('indirectas/{numero_sdp}/{materia_indirecta_id}/{costos_produccion_id}', [CargarMateriaPrimaController::class, 'destroyIndirectas'])->name('destroyIndirectas');
+
 
 
 // proveedor
@@ -232,6 +228,3 @@ Route::get('AdministraciónInventario', [AdministraciónInventarioController::cl
 // servocios Externos 
 
 Route::resource('serviciosExternos', servicioExternoController::class);
-
-
-

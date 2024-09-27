@@ -3,7 +3,7 @@
 @section('title', 'editar materia prima directa')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-300 leading-tight">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
     {{ __('Editar materia prima directa') }}
 </h2>
 @stop

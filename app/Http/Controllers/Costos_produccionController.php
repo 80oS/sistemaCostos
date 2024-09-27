@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Articulo;
 use App\Models\Cif;
 use App\Models\Cliente;
 use App\Models\CostosProduccion;
 use App\Models\idimcol;
+use App\Models\MateriaPrimaDirecta;
+use App\Models\MateriaPrimaIndirecta;
 use App\Models\Operativo;
 use App\Models\SDP;
 use App\Models\Tiempos_produccion;
+use App\Models\Trabajador;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,307 +30,174 @@ class Costos_produccionController extends Controller
     }
 
     public function show($id)
-{
-    // Obtener el SDP junto con las relaciones necesarias
-    $sdp = SDP::where('numero_sdp', $id)->with('articulos')->firstOrFail();
-    Log::info('SDP obtenido:', ['sdp' => $sdp]);
+    {
+        // Obtener el SDP junto con las relaciones necesarias
+        $sdp = SDP::with('articulos', 'costosProduccion')->where('numero_sdp', $id)->firstOrFail();
+        Log::info('SDP obtenido:', ['sdp' => $sdp]);
+        $costoProduccion = $sdp->costosProduccion()->first();
 
-    $articulosSdp = $sdp->articulos;
+        $materiasPrimasDirectas = $costoProduccion->materiasPrimasDirectas()
+            ->withPivot('cantidad', 'articulo_id', 'articulo_descripcion', 'materia_prima_directa_id', 'costos_produccion_id',)
+            ->get();
 
-    // Obtener todos los artículos de la SDP
-    $total = 0;
+        // Obtener las materias primas indirectas asociadas a la SDP
+        $materiasPrimasIndirectas = $costoProduccion->materiasPrimasIndirectas()
+            ->withPivot('cantidad', 'articulo_id', 'articulo_descripcion', 'materia_indirecta_id', 'costos_produccion_id')
+            ->get();
 
-    // Calcular el subtotal para cada artículo y el total general
-    foreach ($articulosSdp as $articulo) {
-        $subtotal = $articulo->pivot->cantidad * $articulo->pivot->precio;
-        $articulo->setAttribute('subtotal', $subtotal);
-        $total += $subtotal;
+        $total= 0;
+
+        $articulosConSubtotales = $sdp->articulos->map(function ($articulo) use (&$total) {
+            // Calcular el subtotal del artículo
+            $subtotal = $articulo->pivot->cantidad * $articulo->pivot->precio;
+            // Acumulando el subtotal al total general
+            $total += $subtotal;
+            // Agregar el subtotal al artículo
+            return $articulo->setAttribute('subtotal', $subtotal);
+        });
+
+         // Obtener los artículos que están asociados a tiempos de producción para esta SDP // Filtrar por sdp_id en la tabla pivot
+        $articulosConTiempos = $articulosConSubtotales->filter(function ($articulo) use ($sdp) {
+            return Articulo::whereHas('tiemposProduccion', function ($query) use ($sdp, $articulo) {
+                // Especificar correctamente la tabla para evitar ambigüedad
+                $query->where('tiempos_produccions.sdp_id', $sdp->numero_sdp) // Asegúrate de que 'tiempos_produccions' es correcto
+                    ->where('articulo_tiempos_produccion.articulo_id', $articulo->id);
+            })->exists();
+        });
+
+        $totalManoObra = 0;
+
+        $articulosConManoDeObra = $articulosConTiempos->map(function ($articulo) use ($sdp, &$totalManoObra) {
+            // Obtener el tiempo de producción asociado a este artículo
+            $tiemposProduccion = $articulo->tiemposProduccion()->where('articulo_tiempos_produccion.sdp_id', $sdp->numero_sdp)->get();
+
+            $operarios = [];
+
+            foreach ($tiemposProduccion as $tiempo) {
+                
+                $operario = $tiempo->operativo; // Asegúrate de que aquí tienes el operario correcto
+                $servicio = $tiempo->servicio;
+                if ($operario) {
+                    // Obtener el trabajador asociado al operario
+                    $trabajador = $operario->trabajador;
+        
+                    if ($trabajador) {
+                        // Obtener el último sueldo del trabajador
+                        $sueldo = $trabajador->sueldos()->orderBy('created_at', 'desc')->first()->sueldo ?? 0; // Asegúrate de que esto se ajusta a tu lógica para obtener el sueldo
+
+                        $valor_servicio = $servicio->orderBy('created_at', 'desc')->first()->valor_hora ?? 0;
+                        $servicio_nombre = $servicio->orderBy('created_at', 'desc')->first()->nombre;
+        
+                        // Guardar el sueldo y operario
+                        $operarios[] = [
+                            'codigo' => $operario->codigo,
+                            'nombre' => $operario->operario,
+                            'sueldo' => $sueldo, 
+                            'valor_servicio' => $valor_servicio,
+                            'servicio_nombre' => $servicio_nombre
+                        ];
+                    }
+                }
+
+                $costoProduccion = CostosProduccion::where('tiempo_produccion_id', $tiempo->id)
+                    ->where('sdp_id', $sdp->numero_sdp)
+                    ->first();
+
+                if ($costoProduccion) {
+                    $manoDeObraDirecta = $costoProduccion->mano_obra_directa;
+                    $totalManoObra += $manoDeObraDirecta;
+                    $articulo->setAttribute('mano_de_obra_directa', $manoDeObraDirecta);
+                }
+            }
+            $articulo->setAttribute('operarios', $operarios);
+            return $articulo;
+        });
+
+        // Obtener otros datos adicionales (IDIMCOL en tu caso, si es necesario)
+        $idimcols = Idimcol::all();
+
+        // Retornar la vista con los datos calculados
+        return view('costos_produccion.show', compact('sdp', 'totalManoObra', 'articulosConManoDeObra', 'articulosConTiempos', 'total', 'articulosConSubtotales', 'idimcols'));
     }
+public function resumen($id)
+    {
+        // Obtener el SDP junto con las relaciones necesarias
+        $sdp = SDP::where('numero_sdp', $id)->firstOrFail();
+        Log::info('SDP obtenido:', ['sdp' => $sdp]);
 
-    // Inicializar el total y otros valores globales
-    $totalMOI = Cif::sum('MOI');
-    $totalGOI = Cif::sum('GOI');
-    $totalOCI = Cif::sum('OCI');
-    $totalCIF = $totalMOI + $totalGOI + $totalOCI;
-
-
-    // Obtener costos de producción y calcular la mano de obra total
-    $costosProduccion = CostosProduccion::where('sdp_id', $sdp->numero_sdp)->first();
-    $totalManoObra = $costosProduccion->mano_obra_directa ?? 0; // Usar coalescencia nula
-
-    $tiemposProduccion = Tiempos_produccion::where('sdp_id', $sdp->numero_sdp)->get();
-    $manoObraTotal = 0;
-    $manoObraPorOperario = [];
-
-    foreach ($tiemposProduccion as $tiempo) {
-        // Calcular la diferencia de horas entre la hora_inicio y hora_fin
-        $horaInicio = Carbon::parse($tiempo->hora_inicio);
-        $horaFin = Carbon::parse($tiempo->hora_fin);
-        $horasTrabajadas = $horaInicio->diffInHours($horaFin);
-
-        // Obtener el valor del servicio seleccionado
-        $valorServicio = $tiempo->servicio->valor_hora; // Asumiendo que tienes una relación con el modelo Servicio
-
-        // Calcular la mano de obra para este tiempo
-        $manoObra = $sdp->mano_obra_directa + $valorServicio + 
-                    ($totalMOI * $horasTrabajadas) + 
-                    ($totalGOI * $horasTrabajadas) + 
-                    ($totalOCI * $horasTrabajadas);
-
-        // Sumar la mano de obra al total
-        $manoObraTotal += $manoObra;
-
-        $manoObraPorOperario[] = [
-            'nombre_operario' => $tiempo->nombre_operario,
-            'servicio' => $tiempo->nombre_servicio,
-            'horas_trabajadas' => $horasTrabajadas,
-            'valor_servicio' => $valorServicio,
-            'mano_obra' => $manoObra
-        ];
-    }
-
-    // Obtener el total de horas operativas asociadas al SDP
-    $totalHorasOperarios = Tiempos_produccion::where('sdp_id', $sdp->numero_sdp)->sum('horas');
-    Log::info('Total horas operarios:', ['totalHorasOperarios' => $totalHorasOperarios]);
-
-    // Obtener artículos filtrados (ajusta los criterios según sea necesario)
-    $articulosFiltrados = $sdp->articulos()->whereHas('articulo_tiempos_produccion')->get();
-
-    // Mapear los artículos filtrados y calcular los valores relacionados
-    $articulosConSubtotales = $articulosFiltrados->map(function ($articulo) use (&$sdp, $costosProduccion) {
-        // Calcular el subtotal del artículo
-        $subtotal = $articulo->pivot->cantidad * $articulo->pivot->precio;
-
-        // Obtener costos de producción para el artículo
-        $totalManoObraArticulo = $costosProduccion ? $costosProduccion->mano_obra_directa / $sdp->articulos->count() : 0;
-        $totalDirectasArticulo = $costosProduccion ? $costosProduccion->materiasPrimasDirectas->sum(function ($materiaPrima) {
-            return $materiaPrima->pivot->cantidad * $materiaPrima->precio_unit;
-        }) / $sdp->articulos->count() : 0;
-
-        // Costos Indirectos
+        // Inicializar el total y otros valores globales
+        $total = 0;
         $totalMOI = Cif::sum('MOI');
         $totalGOI = Cif::sum('GOI');
         $totalOCI = Cif::sum('OCI');
-        $cifPorArticulo = ($totalMOI + $totalGOI + $totalOCI) / $sdp->articulos->count();
+        $totalCIF = $totalMOI + $totalGOI + $totalOCI;
 
-        // Calcular la utilidad bruta por artículo
-        $utilidadBrutaArticulo = $subtotal - $totalManoObraArticulo - $totalDirectasArticulo - $cifPorArticulo;
+        // Obtener costos de producción y calcular la mano de obra total
+        $costosProduccion = CostosProduccion::where('sdp_id', $sdp->numero_sdp)->first();
+        $totalManoObra = $costosProduccion->mano_obra_directa ?? 0; // Usar coalescencia nula
 
-        // Calcular el margen bruto por artículo
-        $margenBrutoArticulo = ($utilidadBrutaArticulo / $subtotal) * 100;
+        // Obtener el total de horas operativas asociadas al SDP
+        $totalHorasOperarios = Tiempos_produccion::where('sdp_id', $sdp->numero_sdp)->sum('horas');
+        Log::info('Total horas operarios:', ['totalHorasOperarios' => $totalHorasOperarios]);
 
-        // Retornar el artículo con nuevos atributos
-        return $articulo->setAttribute('subtotal', $subtotal)
+        $articulosSeleccionados = $sdp->articulos()
+            ->whereHas('articulo_tiempos_produccion')
+            ->get();
+
+        // Mapear los artículos y calcular los valores relacionados
+        $articulosConSubtotales = $articulosSeleccionados->map(function ($articulo) use (&$total, $sdp, $costosProduccion) {
+            // Calcular el subtotal del artículo
+            $subtotal = $articulo->pivot->cantidad * $articulo->pivot->precio;
+            $total += $subtotal;
+
+
+            // Obtener costos de producción para el artículo
+            $costosProduccion = CostosProduccion::where('sdp_id', $sdp->numero_sdp)->first();
+
+            // Calcular los costos de producción relacionados
+            $totalManoObraArticulo = $costosProduccion ? $costosProduccion->mano_obra_directa / $sdp->articulos->count() : 0;
+            $totalDirectasArticulo = $costosProduccion ? $costosProduccion->materiasPrimasDirectas->sum(function ($materiaPrima) {
+                return $materiaPrima->pivot->cantidad * $materiaPrima->precio_unit;
+            }) / $sdp->articulos->count() : 0;
+
+            // Costos Indirectos
+            $totalMOI = Cif::sum('MOI');
+            $totalGOI = Cif::sum('GOI');
+            $totalOCI = Cif::sum('OCI');
+            $cifPorArticulo = ($totalMOI + $totalGOI + $totalOCI) / $sdp->articulos->count();
+
+            // Cálculos adicionales si es necesario
+            $materiasPrimasIndirectas = $costosProduccion ? $costosProduccion->materiasPrimasIndirectas->sum(function ($materiaPrima) {
+                return $materiaPrima->pivot->cantidad * $materiaPrima->precio_unit;
+            }) / $sdp->articulos->count() : 0; // Define según tu lógica si hay materias primas indirectas
+
+            // Calcular la utilidad bruta por artículo
+            $utilidadBrutaArticulo = $subtotal - $totalManoObraArticulo - $totalDirectasArticulo - $cifPorArticulo;
+            
+            // Calcular el margen bruto por artículo
+            $margenBrutoArticulo = ($utilidadBrutaArticulo / $subtotal) * 100;
+
+            // Retornar el artículo con nuevos atributos
+            return $articulo->setAttribute('subtotal', $subtotal)
                             ->setAttribute('mano_obra_directa', $totalManoObraArticulo)
                             ->setAttribute('materias_primas_directas', $totalDirectasArticulo)
+                            ->setAttribute('materias_primas_indirectas', $materiasPrimasIndirectas) // Defínelo si es aplicable
                             ->setAttribute('cif', $cifPorArticulo)
                             ->setAttribute('utilidad_bruta', $utilidadBrutaArticulo)
                             ->setAttribute('margen_bruto', $margenBrutoArticulo);
-    });
-
-    // Obtener información adicional
-    $idimcols = idimcol::all();
-    $cifs = Cif::all();
-
-    // Log de los CIFs totales
-    Log::info('Totales CIFs:', ['MOI' => $totalMOI, 'GOI' => $totalGOI, 'OCI' => $totalOCI]);
-    
-    // Retornar la vista con toda la información calculada
-    return view('costos_produccion.show', compact('sdp', 'totalHorasOperarios', 'totalMOI','totalGOI', 'totalOCI', 'manoObraPorOperario','manoObraTotal', 'articulosSdp', 'total', 'idimcols', 'costosProduccion', 'cifs', 'totalHorasOperarios', 'totalManoObra', 'articulosConSubtotales'));
-}
-
-    private function listarManoObraDirectaPorOperario($sdpId)
-    {
-        // Obtener los tiempos de producción agrupados por operario
-        $tiemposProduccionAgrupados = Tiempos_produccion::where('sdp_id', $sdpId)
-            ->with('operativo.trabajador.sueldos')
-            ->select('operativo_id', DB::raw('SUM(horas) as total_horas'))
-            ->groupBy('operativo_id')
-            ->get();
-        Log::info('Tiempos de producción agrupados:', ['tiemposProduccionAgrupados' => $tiemposProduccionAgrupados]);
-
-        $resultados = [];
-
-        // Recorrer cada agrupación de tiempos de producción
-        foreach ($tiemposProduccionAgrupados as $tiempoProduccion) {
-            $operativo = $tiempoProduccion->operativo;
-            $trabajador = $operativo->trabajador;
-
-            if ($trabajador) {
-                // Obtener el sueldo más reciente del trabajador
-                $sueldo = $trabajador->sueldos()->orderBy('created_at', 'desc')->first()->sueldo ?? 0;
-
-                // Obtener el número de horas laborales al mes desde el CIF más reciente
-                $cif = Cif::orderBy('created_at', 'desc')->first();
-                $horasMes = $cif->NMH ?? 0;
-
-                // Verificar que las horas por mes no sean cero para evitar división por cero
-                if ($horasMes > 0) {
-                    // Calcular el costo por hora
-                    $costoPorHora = $sueldo / $horasMes;
-                    Log::info('Costo por hora calculado:', [
-                        'sueldo' => $sueldo,
-                        'horasMes' => $horasMes,
-                        'costoPorHora' => $costoPorHora
-                    ]);
-
-                    // Calcular la mano de obra directa total para el operario
-                    $manoObraDirectaTotal = $costoPorHora * $tiempoProduccion->total_horas;
-                    Log::info('Mano de obra directa total para el operario:', [
-                        'operativo_id' => $tiempoProduccion->operativo_id,
-                        'total_horas' => $tiempoProduccion->total_horas,
-                        'manoObraDirectaTotal' => $manoObraDirectaTotal
-                    ]);
-
-                    // Almacenar los resultados
-                    $resultados[] = [
-                        'operativo_id' => $tiempoProduccion->operativo_id,
-                        'nombre_operario' => $trabajador->nombre, // Asumiendo que el modelo Trabajador tiene el atributo 'nombre'
-                        'sueldo' => $sueldo,
-                        'total_horas' => $tiempoProduccion->total_horas,
-                        'mano_obra_directa_total' => $manoObraDirectaTotal
-                    ];
-                } else {
-                    Log::warning('Horas mes es cero o no está definido para el CIF:', ['cif' => $cif]);
-                }
-            } else {
-                Log::warning('Trabajador no encontrado para el operativo:', ['operativo_id' => $tiempoProduccion->operativo_id]);
-            }
-        }
-
-        return $resultados;
-    }
-
-    public function actualizarManoObraDirecta($sdpId)
-    {
-        // Obtener todos los tiempos de producción asociados al SDP
-        $tiemposProduccionAgrupados = Tiempos_produccion::where('sdp_id', $sdpId)
-            ->with('operativo.trabajador.sueldos')
-            ->select('operativo_id', DB::raw('SUM(horas) as total_horas'))
-            ->groupBy('operativo_id')
-            ->get();
-
-        Log::info('Tiempos de producción agrupados para actualización:', ['tiemposProduccionAgrupados' => $tiemposProduccionAgrupados]);
-
-        // Obtener el CIF más reciente
-        $cif = Cif::orderBy('created_at', 'desc')->first();
-        $horasMes = $cif->NMH ?? 0;
-
-        // Recorre cada agrupación de tiempos de producción
-        foreach ($tiemposProduccionAgrupados as $tiempoProduccion) {
-            $operativo = $tiempoProduccion->operativo;
-            $trabajador = $operativo->trabajador;
-
-            if ($trabajador) {
-                // Obtener el sueldo más reciente del trabajador
-                $sueldo = $trabajador->sueldos()->orderBy('created_at', 'desc')->first()->sueldo ?? 0;
-
-                if ($horasMes > 0) {
-                    // Calcular el costo por hora
-                    $costoPorHora = $sueldo / $horasMes;
-
-                    // Calcular la mano de obra directa total para el operario
-                    $manoObraDirectaTotal = $costoPorHora * $tiempoProduccion->total_horas;
-                    Log::info('Mano de obra directa calculada para el operario:', [
-                        'operativo_id' => $tiempoProduccion->operativo_id,
-                        'total_horas' => $tiempoProduccion->total_horas,
-                        'manoObraDirectaTotal' => $manoObraDirectaTotal
-                    ]);
-
-                    // Actualizar el campo mano_obra_directa en la tabla costos_produccion
-                    CostosProduccion::where('sdp_id', $sdpId)
-                        ->where('operativo_id', $tiempoProduccion->operativo_id)
-                        ->update(['mano_obra_directa' => $manoObraDirectaTotal]);
-                } else {
-                    Log::warning('Horas mes es cero o no está definido para el CIF:', ['cif' => $cif]);
-                }
-            } else {
-                Log::warning('Trabajador no encontrado para el operativo:', ['operativo_id' => $tiempoProduccion->operativo_id]);
-            }
-        }
-
-        Log::info('Actualización de mano de obra directa completada para SDP:', ['sdp_id' => $sdpId]);
-    }
-
-    public function resumen($id)
-{
-    // Obtener el SDP junto con las relaciones necesarias
-    $sdp = SDP::where('numero_sdp', $id)->firstOrFail();
-    Log::info('SDP obtenido:', ['sdp' => $sdp]);
-
-    // Inicializar el total y otros valores globales
-    $total = 0;
-    $totalMOI = Cif::sum('MOI');
-    $totalGOI = Cif::sum('GOI');
-    $totalOCI = Cif::sum('OCI');
-    $totalCIF = $totalMOI + $totalGOI + $totalOCI;
-
-    // Obtener costos de producción y calcular la mano de obra total
-    $costosProduccion = CostosProduccion::where('sdp_id', $sdp->numero_sdp)->first();
-    $totalManoObra = $costosProduccion->mano_obra_directa ?? 0; // Usar coalescencia nula
-
-    // Obtener el total de horas operativas asociadas al SDP
-    $totalHorasOperarios = Tiempos_produccion::where('sdp_id', $sdp->numero_sdp)->sum('horas');
-    Log::info('Total horas operarios:', ['totalHorasOperarios' => $totalHorasOperarios]);
-
-    $articulosSeleccionados = $sdp->articulos()
-        ->whereHas('articulo_tiempos_produccion')
-        ->get();
-
-    // Mapear los artículos y calcular los valores relacionados
-    $articulosConSubtotales = $articulosSeleccionados->map(function ($articulo) use (&$total, $sdp, $costosProduccion) {
-        // Calcular el subtotal del artículo
-        $subtotal = $articulo->pivot->cantidad * $articulo->pivot->precio;
-        $total += $subtotal;
-
-
-        // Obtener costos de producción para el artículo
-        $costosProduccion = CostosProduccion::where('sdp_id', $sdp->numero_sdp)->first();
-
-        // Calcular los costos de producción relacionados
-        $totalManoObraArticulo = $costosProduccion ? $costosProduccion->mano_obra_directa / $sdp->articulos->count() : 0;
-        $totalDirectasArticulo = $costosProduccion ? $costosProduccion->materiasPrimasDirectas->sum(function ($materiaPrima) {
-            return $materiaPrima->pivot->cantidad * $materiaPrima->precio_unit;
-        }) / $sdp->articulos->count() : 0;
-
-        // Costos Indirectos
-        $totalMOI = Cif::sum('MOI');
-        $totalGOI = Cif::sum('GOI');
-        $totalOCI = Cif::sum('OCI');
-        $cifPorArticulo = ($totalMOI + $totalGOI + $totalOCI) / $sdp->articulos->count();
-
-        // Cálculos adicionales si es necesario
-        $materiasPrimasIndirectas = $costosProduccion ? $costosProduccion->materiasPrimasIndirectas->sum(function ($materiaPrima) {
-            return $materiaPrima->pivot->cantidad * $materiaPrima->precio_unit;
-        }) / $sdp->articulos->count() : 0; // Define según tu lógica si hay materias primas indirectas
-
-        // Calcular la utilidad bruta por artículo
-        $utilidadBrutaArticulo = $subtotal - $totalManoObraArticulo - $totalDirectasArticulo - $cifPorArticulo;
-        
-        // Calcular el margen bruto por artículo
-        $margenBrutoArticulo = ($utilidadBrutaArticulo / $subtotal) * 100;
-
-        // Retornar el artículo con nuevos atributos
-        return $articulo->setAttribute('subtotal', $subtotal)
-                        ->setAttribute('mano_obra_directa', $totalManoObraArticulo)
-                        ->setAttribute('materias_primas_directas', $totalDirectasArticulo)
-                        ->setAttribute('materias_primas_indirectas', $materiasPrimasIndirectas) // Defínelo si es aplicable
-                        ->setAttribute('cif', $cifPorArticulo)
-                        ->setAttribute('utilidad_bruta', $utilidadBrutaArticulo)
-                        ->setAttribute('margen_bruto', $margenBrutoArticulo);
-    });
+        });
 
     // Obtener costos de producción específicos para el SDP
-    $costosProduccion = CostosProduccion::where('sdp_id', $sdp->numero_sdp)->get();
-    Log::info('Costos de producción obtenidos:', ['costosProduccion' => $costosProduccion]);
+        $costosProduccion = CostosProduccion::where('sdp_id', $sdp->numero_sdp)->get();
+        Log::info('Costos de producción obtenidos:', ['costosProduccion' => $costosProduccion]);
 
-    // Obtener información adicional
-    $idimcols = idimcol::all();
-    $cifs = Cif::all();
+        // Obtener información adicional
+        $idimcols = idimcol::all();
+        $cifs = Cif::all();
 
-    // Log de los CIFs totales
-    Log::info('Totales CIFs:', ['MOI' => $totalMOI, 'GOI' => $totalGOI, 'OCI' => $totalOCI]);
+        // Log de los CIFs totales
+        Log::info('Totales CIFs:', ['MOI' => $totalMOI, 'GOI' => $totalGOI, 'OCI' => $totalOCI]);
 
-    return view('costos_produccion.resumen', compact('sdp', 'totalMOI', 'totalGOI', 'total', 'totalOCI', 'idimcols', 'costosProduccion', 'cifs', 'totalHorasOperarios', 'totalManoObra', 'articulosConSubtotales', 'totalCIF'));
-}
+        return view('costos_produccion.resumen', compact('sdp', 'totalMOI', 'totalGOI', 'total', 'totalOCI', 'idimcols', 'costosProduccion', 'cifs', 'totalHorasOperarios', 'totalManoObra', 'articulosConSubtotales', 'totalCIF'));
+    }
 }

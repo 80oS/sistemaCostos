@@ -222,23 +222,7 @@
             padding: 0.625rem /* 10px */;
         }
 
-        .card-body button {
-            --tw-bg-opacity: 1;
-            background-color: rgb(59 130 246 / var(--tw-bg-opacity)) /* #3b82f6 */;
-            --tw-text-opacity: 1;
-            color: rgb(255 255 255 / var(--tw-text-opacity)) /* #ffffff */;
-            font-weight: 700;
-            padding-top: 0.5rem /* 8px */;
-            padding-bottom: 0.5rem /* 8px */;
-            padding-left: 1rem /* 16px */;
-            padding-right: 1rem /* 16px */;
-            border-radius: 0.25rem /* 4px */;
-        }
-
-        .card-body button.hover\:bg-blue-700:hover {
-            --tw-bg-opacity: 1;
-            background-color: rgb(29 78 216 / var(--tw-bg-opacity)) /* #1d4ed8 */;
-        }
+        
 
         .suggestions-list {
             list-style-type: none; /* Elimina las viñetas de la lista */

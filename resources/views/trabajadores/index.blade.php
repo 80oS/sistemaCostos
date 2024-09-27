@@ -16,10 +16,10 @@
         </div>
     @endif
     <div class="col-12 px-20 mb-4">
-        <a href="{{ route('trabajador.butons') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-3 rounded">volver</a>
+        <a href="{{ route('trabajador.butons') }}" class="btn btn-primary">volver</a>
     </div>
     <div class="flext">
-        <a href="{{ route('listar.operarios') }}" class="btn btn-warning">Lista de operarios</a>
+        <a href="{{ route('listar.operarios') }}" class="btn btn-info">Lista de operarios</a>
     </div>
     <div class="container">
             <div class="">
@@ -78,11 +78,11 @@
                                 <td class=" v">{{ $trabajador->cuenta_bancaria }}</td>
                                 <td class=" v">{{ $trabajador->banco }}</td>
                                 <td class=" v">
-                                    <a href="{{ route('trabajadores.edit', $trabajador->id) }}" class="btn-yellow">Actualizar</a>
+                                    <a href="{{ route('trabajadores.edit', $trabajador->id) }}" class="btn btn-success">Actualizar</a>
                                 </td>
                                 <td class=" v">
                                     @if($trabajador->sueldos->isNotEmpty())
-                                    <a href="{{ route('sueldos.edit', $trabajador->sueldos->first()->id) }}" class="btn-yellow">Actualizar_Sueldo</a>
+                                    <a href="{{ route('sueldos.edit', $trabajador->sueldos->first()->id) }}" class="btn btn-success">Actualizar_Sueldo</a>
                                     @else
                                         <a href="{{ route('sueldos.create', $trabajador->id) }}" class="btn-blue">Crear_Sueldo</a>
                                     @endif

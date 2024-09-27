@@ -28,8 +28,10 @@ class CargarMateriaPrimaController extends Controller
         $materiasPrimasDirectas = MateriaPrimaDirecta::all();
         $materiasPrimasIndirectas = MateriaPrimaIndirecta::all();
 
+        $articulos = $sdp->articulos;
+
         // Retornar la vista con los datos necesarios
-        return view('materias_primas.cargar', compact('sdp', 'materiasPrimasDirectas', 'materiasPrimasIndirectas', 'numero_sdp'));
+        return view('materias_primas.cargar', compact('sdp', 'articulos', 'materiasPrimasDirectas', 'materiasPrimasIndirectas', 'numero_sdp'));
     }
 
     public function store(Request $request, $numero_sdp)
@@ -38,6 +40,8 @@ class CargarMateriaPrimaController extends Controller
         $validatedData = $request->validate([
             'codigo' => 'required|string',
             'cantidad' => 'required|numeric|min:1',
+            'articulo_id' => 'required|exists:articulos,id',
+            'articulo_descripcion' => 'required|exists:articulos,descripcion'
         ]);
 
         // Buscar la SDP por su número
@@ -59,7 +63,9 @@ class CargarMateriaPrimaController extends Controller
             $costoProduccion->materiasPrimasDirectas()->attach($materiaPrimaDirecta->id,[
                 'materia_prima_directa_id' => $materiaPrimaDirecta->id,
                 'costos_produccion_id' => $costoProduccion->id,
-                'cantidad' => $validatedData['cantidad']
+                'cantidad' => $validatedData['cantidad'],
+                'articulo_id' => $validatedData['articulo_id'],
+                'articulo_descripcion' => $validatedData['articulo_descripcion']
             ]);
         } elseif (str_starts_with($validatedData['codigo'], 'MPI')) {
             // Buscar la materia prima indirecta por su código
@@ -69,7 +75,9 @@ class CargarMateriaPrimaController extends Controller
             $costoProduccion->materiasPrimasIndirectas()->attach($materiaIndirecta->id,[
                 'materia_indirecta_id' => $materiaIndirecta->id,
                 'costos_produccion_id' => $costoProduccion->id,
-                'cantidad' => $validatedData['cantidad']
+                'cantidad' => $validatedData['cantidad'],
+                'articulo_id' => $validatedData['articulo_id'],
+                'articulo_descripcion' => $validatedData['articulo_descripcion']
             ]);
         } else {
             return redirect()->back()->withErrors(['codigo' => 'Código de materia prima no válido.']);
@@ -86,12 +94,12 @@ class CargarMateriaPrimaController extends Controller
 
         // Obtener las materias primas directas asociadas a la SDP
         $materiasPrimasDirectas = $costoProduccion->materiasPrimasDirectas()
-            ->withPivot('cantidad', 'materia_prima_directa_id', 'costos_produccion_id',)
+            ->withPivot('cantidad', 'articulo_id', 'articulo_descripcion', 'materia_prima_directa_id', 'costos_produccion_id',)
             ->get();
 
         // Obtener las materias primas indirectas asociadas a la SDP
         $materiasPrimasIndirectas = $costoProduccion->materiasPrimasIndirectas()
-            ->withPivot('cantidad', 'materia_indirecta_id', 'costos_produccion_id')
+            ->withPivot('cantidad', 'articulo_id', 'articulo_descripcion', 'materia_indirecta_id', 'costos_produccion_id')
             ->get();
 
         // Pasar los datos a la vista
@@ -119,32 +127,5 @@ class CargarMateriaPrimaController extends Controller
         $materias = $materiasPrimasDirectas->merge($materiasPrimasIndirectas);
 
         return response()->json($materias);
-    }
-
-
-    public function destroyDirectas($numero_sdp, $id)
-    {
-        Log::info('Numero SDP: ' . $numero_sdp);
-        Log::info('ID: ' . $id);
-        // Buscar la SDP por su número
-        DB::table('materia_prima_directas_costos')
-        ->where('id', $id)
-        ->delete();
-
-        return redirect()->back()->with('success', 'Materia prima directa eliminada exitosamente.');
-    }
-
-    public function destroyIndirectas($numero_sdp, $materia_indirecta_id, $costos_produccion_id)
-    {
-        Log::info('Numero SDP: ' . $numero_sdp);
-        Log::info('Materia Indirecta ID: ' . $materia_indirecta_id);
-        Log::info('Costos Produccion ID: ' . $costos_produccion_id);
-
-        DB::table('materia_prima_indirectas_costos')
-            ->where('materia_indirecta_id', $materia_indirecta_id)
-            ->where('costos_produccion_id', $costos_produccion_id)
-            ->delete();
-
-        return redirect()->back()->with('success', 'Carga de materia prima indirecta eliminada correctamente.');
     }
 }

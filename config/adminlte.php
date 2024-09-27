@@ -30,8 +30,8 @@ return [
     |
     */
 
-    'use_ico_only' => false,
-    'use_full_favicon' => false,
+    'use_ico_only' => true,
+    'use_full_favicon' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -89,8 +89,8 @@ return [
             'path' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsVpDdEZpcQyL21RirrUW88r-ATjStR6UG7X4GjWd2PQ&s',
             'alt' => 'Auth Logo',
             'class' => '',
-            'width' => 50,
-            'height' => 50,
+            'width' => 60,
+            'height' => 60,
         ],
     ],
 
@@ -157,7 +157,7 @@ return [
     'layout_fixed_sidebar' => true,
     'layout_fixed_navbar' => true,
     'layout_fixed_footer' => null,
-    'layout_dark_mode' => true,
+    'layout_dark_mode' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -175,8 +175,8 @@ return [
     'classes_auth_header' => '',
     'classes_auth_body' => 'bg-gradient-dark',
     'classes_auth_footer' => '',
-    'classes_auth_icon' => '',
-    'classes_auth_btn' => 'btn-flat btn-primary',
+    'classes_auth_icon' => 'text-white',
+    'classes_auth_btn' => 'btn-flat',
 
     /*
     |--------------------------------------------------------------------------
@@ -191,15 +191,15 @@ return [
     */
 
     'classes_body' => 'bg-white',
-    'classes_brand' => '',
-    'classes_brand_text' => '',
-    'classes_content_wrapper' => '',
-    'classes_content_header' => 'bg-white',
+    'classes_brand' => 'text-white',
+    'classes_brand_text' => 'text-white',
+    'classes_content_wrapper' => 'text-white',
+    'classes_content_header' => 'text-white',
     'classes_content' => 'bg-white',
-    'classes_sidebar' => 'sidebar-dark-primary elevation-4',
-    'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-darl navbar-dark',
-    'classes_topnav_nav' => 'navbar-expand',
+    'classes_sidebar' => 'elevation-4',
+    'classes_sidebar_nav' => 'text-white',
+    'classes_topnav' => 'text-white',
+    'classes_topnav_nav' => 'navbar-expand text-white',
     'classes_topnav_container' => 'container',
 
     /*
@@ -215,13 +215,13 @@ return [
     */
 
     'sidebar_mini' => 'lg',
-    'sidebar_collapse' => true,
-    'sidebar_collapse_auto_size' => true,
-    'sidebar_collapse_remember' => false,
-    'sidebar_collapse_remember_no_transition' => false,
+    'sidebar_collapse' => false,
+    'sidebar_collapse_auto_size' => false,
+    'sidebar_collapse_remember' => true,
+    'sidebar_collapse_remember_no_transition' => true,
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => '',
-    'sidebar_nav_accordion' => false,
+    'sidebar_nav_accordion' => true,
     'sidebar_nav_animation_speed' => 300,
 
     /*
@@ -301,31 +301,30 @@ return [
         ],
         // Sidebar items:
         [
-            'text' => 'Gestion Humana',
+            'text' => 'Gestíon Humana',
             'route' => 'gestion-humana',
             'icon' => 'fas fa-fw fa-city',
-            'role' => 'Administrador'
         ],
         [
-            'text' => 'servicios',
+            'text' => ' Gestíon Operacional',
             'route' => 'servicio',
             'icon' => 'fas fa-w fa-wrench',
             
         ],
         [
-            'text' => 'Gestion de clientes',
+            'text' => 'Gestion Comercial',
             'route' => 'ADD_C_S',
             'icon' => 'fas fa-fw fa-handshake',
             
         ],
         [
-            'text' => 'ANALISIS DE COSTOS',
+            'text' => 'Gestion De Costos',
             'route' => 'cif.index',
             'icon' => 'fas fa-fw fa-dollar-sign',
             
         ],
         [
-            'text' => 'ADMINISTRACIÓN DE INVENTARIO ',
+            'text' => 'Gestion Logistica',
             'route' => 'AdministraciónInventario',
             'icon' => 'fas fa-fw fa-boxes',
             

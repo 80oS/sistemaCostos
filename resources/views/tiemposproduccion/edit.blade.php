@@ -10,6 +10,7 @@
 
 @section('content')
 <div class="box">
+    <a href="{{ route('tiempos.group') }}" class="btn btn-primary">volver</a>
     <div class="container">
         <div class="card">
             <div class="card-body">
@@ -112,12 +113,18 @@
                                 <button id="abrirModalSDP" type="button" class="btn btn-info">ver SDP</button>
                             <input type="text" id="sdp_id" name="sdp_id" value="{{ old('sdp_id', $tiempo_produccion->sdp_id) }}" required placeholder="Número del SDP">
                             </div>
+                            
+                            <label for="articulos_sdp">Artículos de SDP</label>
+                            <div id="articulosContainer">
+                                <select name="articulos[articulo_id][]" id="articulos_sdp"  class="form-select" multiple>
+                                    
+                                </select>
+                            </div>
                         </div>
                     </div>
         
                     <div class="buttons">
                         <button type="submit" class="btn btn-primary">Guardar</button>
-                        <a href="{{ route('tiempos.group') }}" class="btn btn-default">Cancelar</a>
                     </div>
                 </form>
             </div>
@@ -211,6 +218,9 @@
 @stop
 
 @section('css')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         .modal {
@@ -220,7 +230,7 @@
             left: 0;
             top: 0;
             width: 20rem;
-            height: 100%;
+            height: 300px;
             overflow: auto;
             background-color: rgba(0,0,0,0.4);
         }
@@ -258,7 +268,7 @@
 
         .table {
             background: #cccdce;
-            max-height: 400px;
+            max-height: 300px;
             overflow-y: auto; 
             padding: 10px;
             border-radius: 10px;
@@ -289,8 +299,6 @@
             color: #000;
         }
     </style>
-    {{-- Add here extra stylesheets --}}
-    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         .box {
@@ -338,18 +346,17 @@
             align-items: flex-end;
             justify-content: flex-end;
         }
-        
-        .btn {
-            background: #c4c10b;
-            color: #000;
-        }
 
-        .btn:hover {
-            background: #5c5a05;
+        .btn {
+            color: #fff !important;
         }
 
         .content, .content-header {
             background: #fff !important;
+        }
+
+        .content{
+            height: 86vh;
         }
 
         .operario {
@@ -371,17 +378,82 @@
             
         }
 
-        .content {
-            height: 86vh;
+        .tiempo-restar-container {
+            display: flex;
+            align-items: center;
         }
 
+        .tiempo-restar-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .tiempo-restar-container button {
+            padding: 5px 10px;
+            margin: 0 5px;
+        }
+
+        select#articulos_sdp {
+            color: #000 !important; /* Color del texto */
+            background: #fff !important; /* Fondo del select */
+        }
+
+        .select2-container--default .select2-selection--multiple {
+            background-color: #fff; /* Fondo del select múltiple */
+            border: 1px solid #ccc; /* Borde */
+            border-radius: 4px; /* Bordes redondeados */
+            padding: 5px; /* Espaciado interno */
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+            background-color: #007bff; /* Color de fondo de las opciones seleccionadas */
+            color: #fff; /* Color del texto de las opciones seleccionadas */
+            padding: 0 5px; /* Espaciado interno */
+            border-radius: 3px; /* Bordes redondeados */
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+            color: #fff; /* Color del botón de eliminar */
+            margin-left: 5px; /* Espaciado a la izquierda del botón de eliminar */
+        }
+</style>
     </style>
 @stop
 
 @section('js')
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+<script>
+    // modal operarios
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalOperarios = document.getElementById('modalOperarios');
+        const btnSeleccionarOperario = document.getElementById('seleccionarOperario');
+        const btnCerrarModal = modalOperarios.querySelector('.cerrarModal');
+        const inputCodigoOperario = document.getElementById('codigo_operario');
+        const inputNombreOperario = document.getElementById('nombre_operario');
+
+        btnSeleccionarOperario.addEventListener('click', function() {
+            const selectedOperario = document.querySelector('input[name="operativo_id"]:checked');
+            if (selectedOperario) {
+                const codigo = selectedOperario.dataset.codigo;
+                const nombre = selectedOperario.dataset.nombre;
+                
+                inputCodigoOperario.value = codigo;
+                inputNombreOperario.value = nombre;
+                
+                modalOperarios.style.display = 'none';
+            } else {
+                alert('Por favor, seleccione un operario.');
+            }
+        });
+
+        btnCerrarModal.addEventListener('click', function() {
+            modalOperarios.style.display = 'none';
+        });
+    });
+</script>
 <script>
     // modal servicios
     document.addEventListener('DOMContentLoaded', function() {
@@ -412,29 +484,111 @@
     });
 </script>
 <script>
-    // modal sdp
-    document.addEventListener('DOMContentLoaded', function() {
-        const modalServicios = document.getElementById('modalSDP');
-        const btnSelectSDP = document.getElementById('SDP_select');
-        const btnCerrarModal = modalSDP.querySelector('.cerrarModal');
-        const inputNumero_sdp = document.getElementById('sdp_id');
+    $(document).ready(function() {
+        const baseUrl = '{{ url('/') }}';
+        const modalSdp = $('#modalSDP');
+        const btnAbrirModalSDP = $('#abrirModalSDP');
+        const btnSelectSDP = $('#selectSDP');
+        const btnCerrarModal = modalSdp.find('.cerrarModal');
+        const inputNumero_sdp = $('#sdp_id');
+        const articulosSelect = $('#articulos_sdp');
+        const articulosSeleccionadosContainer = $('#articulosSeleccionados');
 
-        btnSelectSDP.addEventListener('click', function() {
-            const SDPSelect = document.querySelector('input[name="SDP_select"]:checked');
-            if (SDPSelect) {
-                const codigo = SDP_select.dataset.codigo;
-                
-                inputNumero_sdp.value = codigo;
-                
-                modalServicios.style.display = 'none';
+        // Asumimos que articulosSeleccionadosIds está definido globalmente
+        // let articulosSeleccionadosIds = [];
+        let articulosSeleccionadosIds = @json($articulosSeleccionadosIds);
+
+        // Inicializar Select2 para selección múltiple
+        articulosSelect.select2({
+            placeholder: "Seleccione un artículo",
+            allowClear: true,
+            tags: true
+        });
+
+        btnAbrirModalSDP.on('click', function() {
+            modalSdp.show();
+        });
+
+        btnSelectSDP.on('click', function() {
+            const SDPSelect = $('input[name="SDP_select"]:checked');
+            if (SDPSelect.length) {
+                const codigo = SDPSelect.data('codigo');
+                inputNumero_sdp.val(codigo);
+                cargarArticulosSDP(SDPSelect.val());
+                modalSdp.hide();
             } else {
-                alert('Por favor, seleccione un servicio.');
+                alert('Por favor, seleccione un SDP.');
             }
         });
 
-        btnCerrarModal.addEventListener('click', function() {
-            modalServicios.style.display = 'none';
+        btnCerrarModal.on('click', function() {
+            modalSdp.hide();
         });
+
+        function cargarArticulosSDP(sdpId) {
+            articulosSelect.empty().append(new Option("Cargando artículos...", "", false, false));
+            articulosSelect.prop('disabled', true);
+
+            fetch(`${baseUrl}/api/getArticulos/${sdpId}`)
+                .then(response => response.json())
+                .then(articulos => {
+                    articulosSelect.empty().append(new Option("Seleccione un artículo", "", false, false));
+
+                    if (articulos.length === 0) {
+                        articulosSelect.append(new Option("No hay artículos disponibles", "", false, false));
+                    } else {
+                        articulos.forEach(articulo => {
+                            const isSelected = articulo.ya_seleccionado;
+                            const option = new Option(`${articulo.codigo} - ${articulo.descripcion}`, articulo.id, isSelected, isSelected);
+                            option.dataset.material = articulo.material;
+                            option.dataset.plano = articulo.plano;
+                            option.dataset.cantidad = articulo.pivot.cantidad;
+                            option.dataset.precio = articulo.pivot.precio;
+                            articulosSelect.append(option);
+                        });
+                    }
+                    articulosSelect.prop('disabled', false);
+                    articulosSelect.trigger('change');
+                })
+                .catch(error => {
+                    console.error('Error al cargar artículos:', error);
+                    articulosSelect.empty().append(new Option("Error al cargar artículos", "", false, false));
+                });
+        }
+
+        articulosSelect.on('change', function() {
+            actualizarArticulosSeleccionados();
+            // Actualizar articulosSeleccionadosIds con los IDs de los artículos seleccionados actualmente
+            articulosSeleccionadosIds = $(this).val() || [];
+        });
+
+        function actualizarArticulosSeleccionados() {
+            const selectedOptions = articulosSelect.find('option:selected');
+            articulosSeleccionadosContainer.empty();
+
+            if (selectedOptions.length > 0) {
+                const ul = $('<ul>');
+                selectedOptions.each(function() {
+                    const option = $(this);
+                    const li = $('<li>').text(`${option.text()} - Cantidad: ${option.data('cantidad')}`);
+                    ul.append(li);
+                });
+                articulosSeleccionadosContainer.append('<h3>Artículos Seleccionados:</h3>').append(ul);
+            } else {
+                articulosSeleccionadosContainer.append('<p>No hay artículos seleccionados para esta SDP.</p>');
+            }
+        }
+
+        $(window).on('click', function(event) {
+            if ($(event.target).is(modalSdp)) {
+                modalSdp.hide();
+            }
+        });
+
+        // Inicializar la lista de artículos seleccionados si ya hay una SDP cargada
+        if (inputNumero_sdp.val()) {
+            cargarArticulosSDP(inputNumero_sdp.val());
+        }
     });
 </script>
 <script>
@@ -461,8 +615,15 @@
         }
 
         // Configurar modales
+        setupModal("modalOperarios", "abrirModalOperarios");
         setupModal("modalServicios", "abrirModalServicios");
         setupModal("modalSDP", "abrirModalSDP");
+    });
+</script>
+<script>
+    const btnAbrirModalOperarios = document.getElementById('abrirModalOperarios');
+    btnAbrirModalOperarios.addEventListener('click', function() {
+        modalOperarios.style.display = 'block';
     });
 </script>
 <script>
@@ -501,88 +662,92 @@
         filterTable('searchSDP', 'sdpTableBody');
     });
 </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Inicialización de flatpickr para hora de inicio y fin
-        flatpickr("#hora_inicio", {
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: "H:i:S",
-            time_24hr: true,
-            enableSeconds: true,
-            minuteIncrement: 1,
-        });
-        flatpickr("#hora_fin", {
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: "H:i:S",
-            time_24hr: true,
-            enableSeconds: true,
-            minuteIncrement: 1,
-        });
-
-        const horaFinInput = document.getElementById('hora_fin');
-        const laboralDescanso = document.getElementById('laboral_descanso');
-        const decrementarBtn = document.getElementById('decrementar');
-        const incrementarBtn = document.getElementById('incrementar');
-        const minutosRestadosSpan = document.getElementById('minutos_restados');
-
-        let tiempoOriginal = null;
-        let minutosRestados = 0;
-
-        // Guardar la hora original de fin
-        function guardarTiempoOriginal() {
-            if (!tiempoOriginal && horaFinInput.value) {
-                tiempoOriginal = horaFinInput.value;
-            }
-        }
-
-        // Función para ajustar el tiempo
-        function ajustarTiempo(incremento) {
-            if (!laboralDescanso.checked) return;  // Solo ajustar si el checkbox está marcado
-
-            guardarTiempoOriginal();
-
-            minutosRestados += incremento;
-            minutosRestados = Math.max(minutosRestados, 0);  // No permitir valores negativos
-            minutosRestadosSpan.textContent = minutosRestados;
-
-            if (!tiempoOriginal) return;
-
-            let [horas, minutos, segundos] = tiempoOriginal.split(':').map(Number);
-            let totalSegundos = (horas * 3600) + (minutos * 60) + segundos - (minutosRestados * 60);
-
-            totalSegundos = Math.max(totalSegundos, 0);  // Evitar valores negativos
-
-            let nuevasHoras = Math.floor(totalSegundos / 3600) % 24;
-            let nuevosMinutos = Math.floor((totalSegundos % 3600) / 60);
-            let nuevosSegundos = totalSegundos % 60;
-
-            let nuevaHoraFin = `${nuevasHoras.toString().padStart(2, '0')}:${nuevosMinutos.toString().padStart(2, '0')}:${nuevosSegundos.toString().padStart(2, '0')}`;
-            horaFinInput._flatpickr.setDate(nuevaHoraFin);
-        }
-
-        // Restaurar la hora original al desmarcar el checkbox
-        laboralDescanso.addEventListener('change', function() {
-            if (!this.checked) {
-                if (tiempoOriginal) {
-                    horaFinInput._flatpickr.setDate(tiempoOriginal);
+    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicialización de flatpickr para hora de inicio y fin
+            flatpickr("#hora_inicio", {
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i:S",
+                time_24hr: true,
+                enableSeconds: true,
+                minuteIncrement: 1,
+            });
+            flatpickr("#hora_fin", {
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i:S",
+                time_24hr: true,
+                enableSeconds: true,
+                minuteIncrement: 1,
+            });
+    
+            const horaFinInput = document.getElementById('hora_fin');
+            const laboralDescanso = document.getElementById('laboral_descanso');
+            const decrementarBtn = document.getElementById('decrementar');
+            const incrementarBtn = document.getElementById('incrementar');
+            const minutosRestadosSpan = document.getElementById('minutos_restados');
+    
+            let tiempoOriginal = null;
+            let minutosRestados = 0;
+    
+            // Guardar la hora original de fin
+            function guardarTiempoOriginal() {
+                if (!tiempoOriginal && horaFinInput.value) {
+                    tiempoOriginal = horaFinInput.value;
                 }
-                minutosRestados = 0;
-                minutosRestadosSpan.textContent = '0';
             }
-        });
-
-        // Listeners para los botones de incrementar y decrementar
-        decrementarBtn.addEventListener('click', function() {
-            ajustarTiempo(1);
-        });
-        
-        incrementarBtn.addEventListener('click', function() {
-            if (minutosRestados > 0) {
-                ajustarTiempo(-1);
+    
+            // Función para ajustar el tiempo
+            function ajustarTiempo(incremento) {
+                if (!laboralDescanso.checked) return;  // Solo ajustar si el checkbox está marcado
+    
+                guardarTiempoOriginal();
+    
+                minutosRestados += incremento;
+                minutosRestados = Math.max(minutosRestados, 0);  // No permitir valores negativos
+                minutosRestadosSpan.textContent = minutosRestados;
+    
+                if (!tiempoOriginal) return;
+    
+                let [horas, minutos, segundos] = tiempoOriginal.split(':').map(Number);
+                let totalSegundos = (horas * 3600) + (minutos * 60) + segundos - (minutosRestados * 60);
+    
+                totalSegundos = Math.max(totalSegundos, 0);  // Evitar valores negativos
+    
+                let nuevasHoras = Math.floor(totalSegundos / 3600) % 24;
+                let nuevosMinutos = Math.floor((totalSegundos % 3600) / 60);
+                let nuevosSegundos = totalSegundos % 60;
+    
+                let nuevaHoraFin = `${nuevasHoras.toString().padStart(2, '0')}:${nuevosMinutos.toString().padStart(2, '0')}:${nuevosSegundos.toString().padStart(2, '0')}`;
+                horaFinInput._flatpickr.setDate(nuevaHoraFin);
             }
+    
+            // Restaurar la hora original al desmarcar el checkbox
+            laboralDescanso.addEventListener('change', function() {
+                if (!this.checked) {
+                    if (tiempoOriginal) {
+                        horaFinInput._flatpickr.setDate(tiempoOriginal);
+                    }
+                    minutosRestados = 0;
+                    minutosRestadosSpan.textContent = '0';
+                }
+            });
+    
+            // Listeners para los botones de incrementar y decrementar
+            decrementarBtn.addEventListener('click', function() {
+                ajustarTiempo(1);
+            });
+            
+            incrementarBtn.addEventListener('click', function() {
+                if (minutosRestados > 0) {
+                    ajustarTiempo(-1);
+                }
+            });
         });
-    });
-</script>
+    </script>
 @stop

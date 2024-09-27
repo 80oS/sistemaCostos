@@ -3,16 +3,19 @@
 @section('title', 'home')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-800 leading-tight">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
     {{ __('lista de materias primas directas') }}
 </h2>
 @stop
 
 @section('content')
 <div class="container">
+    <div class="mb-4">
+        <a href="{{ route('materias_primas.index') }}" class="btn btn-primary">volver</a>
+    </div>
     <div class="card">
         <div class="card-body">
-            <table>
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th colspan="8">MATERIAS PRIMAS DIRECTAS</th>

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('tiempos_produccion_id');
             $table->foreignId('articulo_id');
-            $table->integer('cantidad')->nullable();
             $table->timestamps();
 
             $table->foreign('tiempos_produccion_id')->references('id')->on('tiempos_produccions')->onDelete('cascade');

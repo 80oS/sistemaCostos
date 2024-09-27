@@ -10,10 +10,10 @@
 
 @section('content')
 <div class="flex items-end justify-end col-12 px-20">
-    <a href="{{ route('gestion-humana') }}" class="btn btn-success">volver</a>
+    <a href="{{ route('gestion-humana') }}" class="btn btn-primary">volver</a>
 </div>
 <div class="ver">
-    <a href="{{ route('tiempos.group') }}" class="btn">ver tiempos</a>
+    <a href="{{ route('tiempos.group') }}" class="btn btn-info">ver tiempos</a>
 </div>
 <div class="box">
     <div class="container">
@@ -114,23 +114,10 @@
                         
                             <label for="articulos_sdp">Artículos de SDP</label>
                             <div id="articulosContainer">
-                                <select name="articulos[articulo_id][]" id="articulos_sdp" class="form-select" multiple>
-                                    <!-- Las opciones se cargarán dinámicamente -->
+                                <select name="articulos[articulo_id][]" id="articulos_sdp"  class="form-select" multiple>
+                                    
                                 </select>
-                        
-                                <div>
-                                    <h3>Artículos Relacionados</h3>
-                                    @if ($articulosSeleccionados->isEmpty())
-                                        <p>No hay artículos asociados a la SDP seleccionada.</p>
-                                    @else
-                                        <ul>
-                                            @foreach ($articulosSeleccionados as $articulo)
-                                                <li>{{ $articulo->descripcion }} - Cantidad: {{ $articulo->pivot->cantidad }} - Precio: {{ $articulo->pivot->precio }}</li>
-                                            @endforeach
-                                        </ul>
-                                    @endif
-                                </div>
-                        </div>
+                            </div>
                     </div>
                     <div class="col">
                         <button type="submit" class="btn btn-primary">Guardar</button>
@@ -394,14 +381,9 @@
             align-items: flex-end;
             justify-content: flex-end;
         }
-        
-        .btn {
-            background: #c4c10b;
-            color: #000;
-        }
 
-        .btn:hover {
-            background: #5c5a05;
+        .btn {
+            color: #fff !important;
         }
 
         .content, .content-header {
@@ -548,7 +530,8 @@
         const articulosSeleccionadosContainer = $('#articulosSeleccionados');
 
         // Asumimos que articulosSeleccionadosIds está definido globalmente
-        let articulosSeleccionadosIds = [];
+        // let articulosSeleccionadosIds = [];
+        let articulosSeleccionadosIds = @json($articulosSeleccionadosIds);
 
         // Inicializar Select2 para selección múltiple
         articulosSelect.select2({
@@ -590,7 +573,7 @@
                         articulosSelect.append(new Option("No hay artículos disponibles", "", false, false));
                     } else {
                         articulos.forEach(articulo => {
-                            const isSelected = articulosSeleccionadosIds.includes(articulo.id);
+                            const isSelected = articulo.ya_seleccionado;
                             const option = new Option(`${articulo.codigo} - ${articulo.descripcion}`, articulo.id, isSelected, isSelected);
                             option.dataset.material = articulo.material;
                             option.dataset.plano = articulo.plano;

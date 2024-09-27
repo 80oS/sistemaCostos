@@ -12,7 +12,7 @@
     <div class="py-12">
         <div class="container">
             <div class="flex items-end justify-end mb-4">
-                <a href="{{ route('cif.index') }}" class="btn btn-warning">volver</a>
+                <a href="{{ route('cif.index') }}" class="btn btn-primary">volver</a>
             </div>
             <div class="card">
                 <div class="card-body">

@@ -32,8 +32,6 @@
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <style>
-
-
         a.link {
             color: #030303;
             font-size: 22px;

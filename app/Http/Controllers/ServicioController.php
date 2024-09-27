@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CostosProduccion;
+use App\Models\SDP;
 use Illuminate\Http\Request;
 use App\Models\Servicio;
+use App\Models\ServicioCostos;
 use Illuminate\Support\Facades\Log;
 use App\Traits\codigoAlf;
 
@@ -23,6 +26,56 @@ class ServicioController extends Controller
     {
         $servicios = Servicio::all();
         return view('servicios.index', compact('servicios'));
+    }
+
+    public function indexSdp()
+    {
+        $sdps = SDP::all(); // Obtener todas las SDPs
+        return view('servicios.indexSdp', compact('sdps')); 
+    }
+
+    public function show($numero_sdp)
+    {
+        // Buscar la SDP por su ID o código
+        $sdp = Sdp::findOrFail($numero_sdp);
+
+        // Obtener todos los servicios
+        $servicios = Servicio::all();
+
+
+        // Si ya existen costos de producción para la SDP
+        $costosProduccion = CostosProduccion::where('sdp_id', $sdp->numero_sdp)->first();
+
+        dd($sdp->numero_sdp);
+
+        return view('servicios.verServicios', compact('sdp', 'servicios', 'costosProduccion'));
+    }
+
+    public function actualizarPrecioServicio(Request $request, $id)
+    {
+        // Validar el formulario
+        $request->validate([
+            'servicio_id' => 'required|exists:servicios,codigo',
+            'valor_servicio' => 'required|numeric|min:0',
+        ]);
+
+        // Buscar o crear el costo de producción relacionado con la SDP
+        $costoProduccion = CostosProduccion::firstOrCreate([
+            'sdp_id' => $id,
+        ]);
+
+        // Actualizar o crear el registro en servicio_costos
+        $servicioCosto = ServicioCostos::updateOrCreate(
+            [
+                'costos_id' => $costoProduccion->id,
+                'servicio_id' => $request->servicio_id,
+                'sdp_id' => $id
+            ],
+            ['valor_servicio' => $request->precio]
+        );
+
+        return redirect()->route('servicio.ver-servicios', $id)
+            ->with('success', 'Precio del servicio actualizado correctamente');
     }
 
     public function create()

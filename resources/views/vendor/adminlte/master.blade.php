@@ -17,6 +17,7 @@
 
     {{-- Custom Meta Tags --}}
     @yield('meta_tags')
+    @livewireStyles
 
     {{-- Title --}}
     <title>
@@ -110,6 +111,7 @@
 
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
+    @livewireScripts
 
 </body>
 

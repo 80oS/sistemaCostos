@@ -9,7 +9,7 @@
 @section('content')
     <div class="cont">
         <div class="p-5">
-            <a href="{{ route('gestion-humana') }}" class="button btn btn-warning">volver</a>
+            <a href="{{ route('gestion-humana') }}" class="button btn btn-primary">volver</a>
         </div>
         <div class="container">
             <div class="center">
