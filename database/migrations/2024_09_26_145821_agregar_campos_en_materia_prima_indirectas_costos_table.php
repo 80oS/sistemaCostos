@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('materia_prima_indirectas_costos', function (Blueprint $table) {
             $table->unsignedBigInteger('articulo_id');
+            $table->string('articulo_descripcion');
             $table->foreign('articulo_id')->references('id')->on('articulos')->onDelete('cascade');
         });
     }
@@ -24,7 +25,7 @@ return new class extends Migration
     {
         Schema::table('materia_prima_indirectas_costos', function (Blueprint $table) {
             $table->dropForeign('materia_prima_directas_costos_articulo_id_foreign');
-            $table->dropColumn('articulo_id');
+            $table->dropColumn(['articulo_id', 'articulo_descripcion']);
         });
     }
 };

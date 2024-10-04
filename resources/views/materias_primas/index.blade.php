@@ -16,7 +16,7 @@
         </div>
     @endif
     <div class="flex items-end justify-end p-10">
-        <a href="{{ route('AdministraciónInventario') }}" class="bg-yellow-600 hover:bg-yellow-400 px-3 py-2 rounded">volver</a>
+        <a href="{{ route('AdministraciónInventario') }}" class="btn btn-primary">volver</a>
     </div>
     <div class="container">
         <div class="card px-8">

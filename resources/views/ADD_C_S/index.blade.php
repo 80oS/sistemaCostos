@@ -17,7 +17,7 @@
                     <a class="nav-link link" href="{{ route('sdp.paquetes') }}">solicitud de produccion</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link link" href="{{ route('remiciones.index') }}">remiciones</a>
+                    <a class="nav-link link" href="{{ route('remiciones.index') }}">remisiones</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link link" href="{{ route('vendedor.index') }}">vendedores</a>

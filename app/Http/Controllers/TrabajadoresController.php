@@ -40,10 +40,7 @@ class TrabajadoresController extends Controller
 
     public function activos() 
     {
-        $trabajadores = Trabajador::where('estado', 'activo')->with(['hijos', 'sueldos' => function($query) {$query->latest();}])->orderBy('apellido')->get();
-        $maxHijos = $trabajadores->max(function ($trabajador) {
-            return $trabajador->hijos->count();
-        });
+        $trabajadores = Trabajador::where('estado', 'activo')->with(['sueldos' => function($query) {$query->latest();}])->orderBy('apellido')->get();
         
         return view('trabajadores.activos', compact('trabajadores'));
     }
@@ -51,9 +48,6 @@ class TrabajadoresController extends Controller
     public function inactivos()
     {
         $trabajadores = Trabajador::where('estado', 'inactivo')->with(['sueldos' => function($query) {$query->latest();}])->orderBy('apellido')->get();
-        $maxHijos = $trabajadores->max(function ($trabajador) {
-            return $trabajador->hijos->count();
-        });
         
         return view('trabajadores.inactivos', compact('trabajadores'));
     }

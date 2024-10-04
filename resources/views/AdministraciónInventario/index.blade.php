@@ -18,7 +18,7 @@
                     <a class="nav-link link" href="{{ route('materias_primas.index') }}">CARGUE DE MATERIAS PRIMAS</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link link" href="{{ route('materias_primas.index') }}">ORDENES DE COMPRA</a>
+                    <a class="nav-link link" href="{{ route('Ordencompras.index') }}">ORDENES DE COMPRA</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link link" href="{{ route('almacen') }}">ALMACEN</a>

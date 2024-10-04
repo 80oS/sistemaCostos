@@ -114,10 +114,14 @@
                             <input type="text" id="sdp_id" name="sdp_id" value="{{ old('sdp_id', $tiempo_produccion->sdp_id) }}" required placeholder="Número del SDP">
                             </div>
                             
-                            <label for="articulos_sdp">Artículos de SDP</label>
+                            <label for="articulos_sdp">Items de SDP</label>
                             <div id="articulosContainer">
                                 <select name="articulos[articulo_id][]" id="articulos_sdp"  class="form-select" multiple>
-                                    
+                                    @foreach ($tiempo_produccion->articulos as $articulo)
+                                        <option value="{{ $articulo->id }}" selected>
+                                            {{ $articulo->codigo }} - {{ $articulo->descripcion }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -492,11 +496,6 @@
         const btnCerrarModal = modalSdp.find('.cerrarModal');
         const inputNumero_sdp = $('#sdp_id');
         const articulosSelect = $('#articulos_sdp');
-        const articulosSeleccionadosContainer = $('#articulosSeleccionados');
-
-        // Asumimos que articulosSeleccionadosIds está definido globalmente
-        // let articulosSeleccionadosIds = [];
-        let articulosSeleccionadosIds = @json($articulosSeleccionadosIds);
 
         // Inicializar Select2 para selección múltiple
         articulosSelect.select2({
@@ -538,7 +537,7 @@
                         articulosSelect.append(new Option("No hay artículos disponibles", "", false, false));
                     } else {
                         articulos.forEach(articulo => {
-                            const isSelected = articulo.ya_seleccionado;
+                            const isSelected = {!! json_encode($tiempo_produccion->articulos->pluck('id')->toArray()) !!}.includes(articulo.id);
                             const option = new Option(`${articulo.codigo} - ${articulo.descripcion}`, articulo.id, isSelected, isSelected);
                             option.dataset.material = articulo.material;
                             option.dataset.plano = articulo.plano;
@@ -554,29 +553,6 @@
                     console.error('Error al cargar artículos:', error);
                     articulosSelect.empty().append(new Option("Error al cargar artículos", "", false, false));
                 });
-        }
-
-        articulosSelect.on('change', function() {
-            actualizarArticulosSeleccionados();
-            // Actualizar articulosSeleccionadosIds con los IDs de los artículos seleccionados actualmente
-            articulosSeleccionadosIds = $(this).val() || [];
-        });
-
-        function actualizarArticulosSeleccionados() {
-            const selectedOptions = articulosSelect.find('option:selected');
-            articulosSeleccionadosContainer.empty();
-
-            if (selectedOptions.length > 0) {
-                const ul = $('<ul>');
-                selectedOptions.each(function() {
-                    const option = $(this);
-                    const li = $('<li>').text(`${option.text()} - Cantidad: ${option.data('cantidad')}`);
-                    ul.append(li);
-                });
-                articulosSeleccionadosContainer.append('<h3>Artículos Seleccionados:</h3>').append(ul);
-            } else {
-                articulosSeleccionadosContainer.append('<p>No hay artículos seleccionados para esta SDP.</p>');
-            }
         }
 
         $(window).on('click', function(event) {

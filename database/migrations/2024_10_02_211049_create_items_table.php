@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('servicios_costos', function (Blueprint $table) {
-            $table->foreignId('tiempos_produccion_id')->constrained('tiempos_produccions')->onDelete('cascade');
+        Schema::create('items', function (Blueprint $table) {
+            $table->id();
+            $table->string('codigo')->unique();
+            $table->string('descripcion');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('servicios_costos', function (Blueprint $table) {
-            $table->dropForeign('servicios_costos_tiempos_produccion_id_foreign');
-        });
+        Schema::dropIfExists('items');
     }
 };

@@ -26,18 +26,14 @@ class Servicio extends Model
     {
         return $this->hasMany(Tiempos_produccion::class, 'proseso_id', 'codigo');
     }
-
-    public function costos()
-    {
-        return $this->belongsToMany(CostosProduccion::class, 'servicios_costos')
-                    ->withPivot('valor_servicio')
-                    ->withTimestamps();
+    
+    public function serviciosCostos() {
+        return $this->hasMany(ServicioCostos::class);
     }
 
-    public function sdp()
-    {
-        return $this->belongsToMany(SDP::class, 'servicios_costos')
-                    ->withPivot('valor_servicio')
-                    ->withTimestamps();
+    public function costosProduccion() {
+        return $this->belongsToMany(CostosProduccion::class, 'servicios_costos', 'servicio_id', 'costos_produccion_id')
+            ->withPivot('valor_servicio', 'sdp_id');
     }
+
 }

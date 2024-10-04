@@ -1,9 +1,11 @@
 @extends('adminlte::page')
 
-@section('title', 'home')
+@section('title', 'Crear orden de compra')
 
 @section('content_header')
-    
+<h2 class="font-semibold text-xl text-gray-800 leading-tight">
+    {{ __('Crear orden de compra') }}
+</h2>
 @stop
 
 @section('content')

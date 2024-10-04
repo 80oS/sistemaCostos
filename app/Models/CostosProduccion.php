@@ -48,11 +48,10 @@ class CostosProduccion extends Model
                     ->withTimestamps();
     }
 
-    public function servicios()
+    public function servicios() 
     {
-        return $this->belongsToMany(Servicio::class, 'servicios_costos')
-                    ->withPivot('valor_servicio')
-                    ->withTimestamps();
+        return $this->belongsToMany(Servicio::class, 'servicios_costos', 'costos_produccion_id', 'servicio_id')
+            ->withPivot('valor_servicio', 'sdp_id');
     }
 
     

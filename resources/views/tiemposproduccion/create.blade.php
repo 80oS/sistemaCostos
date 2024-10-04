@@ -112,7 +112,7 @@
                                 <input type="text" id="sdp_id" name="sdp_id" required placeholder="Número del SDP" readonly>
                             </div>
                         
-                            <label for="articulos_sdp">Artículos de SDP</label>
+                            <label for="articulos_sdp">Items de SDP</label>
                             <div id="articulosContainer">
                                 <select name="articulos[articulo_id][]" id="articulos_sdp"  class="form-select" multiple>
                                     
@@ -234,7 +234,7 @@
                         @foreach ($sdps as $sdp)
                         <tr>
                             <td>
-                                <input type="radio" name="SDP_select" value="{{ $sdp->id }}" data-codigo="{{ $sdp->numero_sdp }}" data-id="{{ $sdp->id }}">
+                                <input type="radio" name="SDP_select" value="{{ $sdp->numero_sdp }}" data-codigo="{{ $sdp->numero_sdp }}">
                             </td>
                             <td>{{ $sdp->numero_sdp }}</td>
                             <td>{{ $sdp->articulos->first()->descripcion }}</td>
@@ -527,11 +527,9 @@
         const btnCerrarModal = modalSdp.find('.cerrarModal');
         const inputNumero_sdp = $('#sdp_id');
         const articulosSelect = $('#articulos_sdp');
-        const articulosSeleccionadosContainer = $('#articulosSeleccionados');
 
         // Asumimos que articulosSeleccionadosIds está definido globalmente
         // let articulosSeleccionadosIds = [];
-        let articulosSeleccionadosIds = @json($articulosSeleccionadosIds);
 
         // Inicializar Select2 para selección múltiple
         articulosSelect.select2({
@@ -572,14 +570,23 @@
                     if (articulos.length === 0) {
                         articulosSelect.append(new Option("No hay artículos disponibles", "", false, false));
                     } else {
+                        let index = 1;
                         articulos.forEach(articulo => {
-                            const isSelected = articulo.ya_seleccionado;
-                            const option = new Option(`${articulo.codigo} - ${articulo.descripcion}`, articulo.id, isSelected, isSelected);
+                            console.log('Artículos cargados:', articulos);
+                            const isSelected = articulo.select || articulo.selected;
+                            const option = new Option(`${index}-${articulo.codigo} - ${articulo.descripcion}`, articulo.id, isSelected, isSelected);
+                            option.dataset.index = index;
                             option.dataset.material = articulo.material;
                             option.dataset.plano = articulo.plano;
                             option.dataset.cantidad = articulo.pivot.cantidad;
                             option.dataset.precio = articulo.pivot.precio;
                             articulosSelect.append(option);
+                            
+                            if (isSelected) {
+                                agregarCampoIndice(articulo.id, index);
+                            }
+
+                            index++;
                         });
                     }
                     articulosSelect.prop('disabled', false);
@@ -589,29 +596,6 @@
                     console.error('Error al cargar artículos:', error);
                     articulosSelect.empty().append(new Option("Error al cargar artículos", "", false, false));
                 });
-        }
-
-        articulosSelect.on('change', function() {
-            actualizarArticulosSeleccionados();
-            // Actualizar articulosSeleccionadosIds con los IDs de los artículos seleccionados actualmente
-            articulosSeleccionadosIds = $(this).val() || [];
-        });
-
-        function actualizarArticulosSeleccionados() {
-            const selectedOptions = articulosSelect.find('option:selected');
-            articulosSeleccionadosContainer.empty();
-
-            if (selectedOptions.length > 0) {
-                const ul = $('<ul>');
-                selectedOptions.each(function() {
-                    const option = $(this);
-                    const li = $('<li>').text(`${option.text()} - Cantidad: ${option.data('cantidad')}`);
-                    ul.append(li);
-                });
-                articulosSeleccionadosContainer.append('<h3>Artículos Seleccionados:</h3>').append(ul);
-            } else {
-                articulosSeleccionadosContainer.append('<p>No hay artículos seleccionados para esta SDP.</p>');
-            }
         }
 
         $(window).on('click', function(event) {

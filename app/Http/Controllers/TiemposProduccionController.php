@@ -76,24 +76,29 @@ class TiemposProduccionController extends Controller
         $sdps = SDP::with('clientes', 'articulos')->get();
         
         // Obtener el ID de la SDP desde la sesión
-        $sdpId = session('sdp_id');
+        $operarioId = session('operario_id');
 
         // Verificar que el SDP está seleccionado
-        if ($sdpId) {
+        if ($operarioId) {
             // Obtener la SDP seleccionada con sus artículos
-            $sdpSeleccionada = SDP::with('articulos')->findOrFail($sdpId);
 
-            // Filtrar los artículos relacionados a la SDP
-            $articulosSeleccionados = $sdpSeleccionada->articulos;
+            $tiemposProduccion = Tiempos_produccion::with('articulos')
+            ->where('operativo_id', $operarioId)
+            ->get();
 
-            Log::info('SDP seleccionada con artículos:', ['sdp_id' => $sdpId, 'articulos' => $articulosSeleccionados]);
+            $articulosSeleccionados = collect();
+            foreach ($tiemposProduccion as $tiempo) {
+                $articulosSeleccionados = $articulosSeleccionados->merge($tiempo->articulos);
+            }
+
+            Log::info('Artículos seleccionados para el operario:', ['operario_id' => $operarioId, 'articulos' => $articulosSeleccionados]);
 
             // Depurar artículos con pivot
             foreach ($articulosSeleccionados as $articulo) {
-                Log::info('Artículo relacionado:', [
+                Log::info('Artículo relacionado con tiempo de producción:', [
                     'articulo_id' => $articulo->id,
-                    'cantidad' => $articulo->pivot->cantidad,
-                    'precio' => $articulo->pivot->precio
+                    'cantidad' => $articulo->pivot->sdp_id, // Suponiendo que tienes campos en la tabla pivote
+                    'created_at' => $articulo->pivot->created_at
                 ]);
             }
         } else {
@@ -109,7 +114,7 @@ class TiemposProduccionController extends Controller
             'sdps',
             'articulosSeleccionados',
             'articulosSeleccionadosIds',
-            'sdpId'
+            'operarioId'
         ));
     }
 
@@ -174,13 +179,13 @@ class TiemposProduccionController extends Controller
             $costoProduccion->save();
 
             Log::info('Costo de producción guardado', ['costo_produccion_id' => $costoProduccion->id]);
-
+            
             $costoProduccion->servicios()->attach($costoProduccion->id, [
                 'servicio_id' => $tiempoProduccion->proseso_id,
-                'tiempos_produccion_id' => $tiempoProduccion->id,
+                'tiempo_produccion_id' => $tiempoProduccion->id,
                 'costos_produccion_id' => $costoProduccion->id,
                 'sdp_id' => $tiempoProduccion->sdp_id,
-                'valor_servicio' => 0
+                'valor_servicio' => $tiempoProduccion->valorSercicio()
             ]);
 
             // Procesar los artículos, si existen
@@ -257,40 +262,12 @@ class TiemposProduccionController extends Controller
 
     public function edit(string $id)
     {
-        $tiempo_produccion = Tiempos_produccion::findOrFail($id);
+        $tiempo_produccion = Tiempos_produccion::with('articulos', 'sdp')->findOrFail($id);
         $servicios = Servicio::all();
-
         $sdps = SDP::with('clientes', 'articulos')->get();
-        
-        // Obtener el ID de la SDP desde la sesión
-        $sdpId = session('sdp_id');
+        $operarioId = session('operativo_id');
 
-        // Verificar que el SDP está seleccionado
-        if ($sdpId) {
-            // Obtener la SDP seleccionada con sus artículos
-            $sdpSeleccionada = SDP::with('articulos')->findOrFail($sdpId);
-
-            // Filtrar los artículos relacionados a la SDP
-            $articulosSeleccionados = $sdpSeleccionada->articulos;
-
-            Log::info('SDP seleccionada con artículos:', ['sdp_id' => $sdpId, 'articulos' => $articulosSeleccionados]);
-
-            // Depurar artículos con pivot
-            foreach ($articulosSeleccionados as $articulo) {
-                Log::info('Artículo relacionado:', [
-                    'articulo_id' => $articulo->id,
-                    'cantidad' => $articulo->pivot->cantidad,
-                    'precio' => $articulo->pivot->precio
-                ]);
-            }
-        } else {
-            // Si no hay SDP seleccionada, inicializar un array vacío
-            $articulosSeleccionados = collect();
-        }
-
-        $articulosSeleccionadosIds = ArticuloTiempoProduccion::pluck('articulo_id')->toArray();
-
-        return view('tiemposproduccion.edit', compact('tiempo_produccion', 'servicios', 'sdps', 'articulosSeleccionados', 'articulosSeleccionadosIds'));
+        return view('tiemposproduccion.edit', compact('tiempo_produccion', 'servicios', 'sdps'));
     }
 
     public function update(Request $request, $id)
@@ -358,10 +335,11 @@ class TiemposProduccionController extends Controller
             // Actualizar los servicios asociados
             $costoProduccion->servicios()->sync([
                 $tiempoProduccion->proseso_id => [
-                    'servicio_cod' => $tiempoProduccion->proseso_id,
-                    'costos_id' => $costoProduccion->id,
-                    'sdp_num' => $tiempoProduccion->sdp_id,
-                    'valor_servicio' => 0  // Aquí puedes asignar el valor real
+                    'servicio_id' => $tiempoProduccion->proseso_id,
+                    'tiempo_produccion_id' => $tiempoProduccion->id,
+                    'costos_produccion_id' => $costoProduccion->id,
+                    'sdp_id' => $tiempoProduccion->sdp_id,
+                    'valor_servicio' => $tiempoProduccion->valorSercicio()
                 ]
             ]);
     
@@ -372,7 +350,9 @@ class TiemposProduccionController extends Controller
                 $articulosData = [];
                 foreach ($request->articulos['articulo_id'] as $articuloId) {
                     $articulosData[] = [
+                        'tiempos_produccion_id' => $tiempoProduccion->id,
                         'articulo_id' => $articuloId,
+                        'sdp_id'=> $tiempoProduccion->sdp_id,
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];

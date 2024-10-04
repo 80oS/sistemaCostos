@@ -9,74 +9,86 @@
 @stop
 
 @section('content')
-<div class="no-print">
-    <button id="printButton" class="btn btn-info">
-        <i class="fas fa-print"></i>
-    </button>
-</div>
-<div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Resumen de SDP: {{ $sdp->numero_sdp }}</h1>
-
-    <div class="mb-6">
-        <h2 class="text-xl font-semibold">Información General</h2>
-        <p><strong>Total Mano de Obra:</strong> {{ number_format($totalManoObra, 2) }}</p>
-        <p><strong>Total Horas Operativas:</strong> {{ $totalHorasOperarios }}</p>
-        <p><strong>Total CIF:</strong> {{ number_format($totalCIF, 2) }}</p>
+<div class="p-12">
+    <div class="flex items-end justify-end mb-4 gap-5">
+        <button id="printButton" class="no-print btn btn-success">
+            <i class="fa-solid fa-print"></i>
+        </button>
+        <a href="{{ route('costos_produccion.show', $sdp->numero_sdp) }}" class="no-print btn btn-primary">Volver</a>
     </div>
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="text-center">RESUMEN DE COSTOS DE PRODUCCIÓN DE LA SDP {{ $sdp->numero_sdp }}</h1>
+                <h2>ANÁLISIS DE COSTOS</h2>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div class="card p-4 border rounded">
+                        <h3>* Valor de venta</h3>
+                        <strong>Artículos</strong>
+                        @foreach ($articulosTiemposConSubtotales as $index => $articulo)
+                            <p>
+                                <strong>| {{ $index + 1 }} |</strong><br>
+                                <strong>Descripción del artículo:</strong> {{ $articulo->descripcion }}<br>
+                                <strong>Cantidad del artículo:</strong> {{ $articulo->pivot->cantidad }}<br>
+                                <strong>Valor del artículo:</strong> {{ number_format($articulo->subtotal, 2, ',', '.') }}<br>
+                            </p>
+                        @endforeach
+                        <strong>TOTAL:</strong> {{ number_format($total, 2, ',', '.') }}
+                    </div>
 
-    <h2 class="text-xl font-semibold mb-2">Artículos</h2>
-    <table class="min-w-full border border-gray-300">
-        <thead>
-            <tr class="bg-gray-200">
-                <th class="border px-4 py-2">Descripción</th>
-                <th class="border px-4 py-2">Cantidad</th>
-                <th class="border px-4 py-2">Precio</th>
-                <th class="border px-4 py-2">Subtotal</th>
-                <th class="border px-4 py-2">Mano de Obra Directa</th>
-                <th class="border px-4 py-2">Materias Primas Directas</th>
-                <th class="border px-4 py-2">Materias Primas  Indirectas</th>
+                    <div class="card p-4 border rounded">
+                        <h3>* Mano de obra directa</h3>
+                        @foreach ($operariosConTiempos as $index => $item)
+                            <p>
+                                <strong>| {{ $index + 1 }} |</strong><br>
+                                <strong>Nombre del operario:</strong> {{ $item['nombre'] }}<br>
+                                <strong>Horas trabajadas:</strong> {{ $item['horas'] }}<br>
+                                <strong>Valor de la mano de obra:</strong> {{ number_format($item['mano_obra_servicio'], 2, ',', '.') }}<br>
+                            </p>
+                        @endforeach
+                        <strong>TOTAL:</strong> {{ number_format($totalManoObra, 2, ',', '.') }}
+                    </div>
+                    <div class="card p-4 border rounded">
+                        <h3>* Materias primas</h3>
+                        <strong>Directas</strong>
+                        @foreach ($materiasPrimasDirectas as $index => $materiaDirecta)
+                            <p>
+                                <strong>| {{ $index + 1 }} |</strong><br>
+                                <strong>Descripción:</strong> {{ $materiaDirecta->descripcion }}<br>
+                                <strong>Cantidad:</strong> {{ $materiaDirecta->pivot->cantidad }}<br>
+                                <strong>Precio unitario:</strong> {{ number_format($materiaDirecta->precio_unit, 2, ',', '.') }}<br>
+                                <strong>Total:</strong> {{ number_format($totalDirectas, 2, ',', '.') }}<br>
+                            </p>
+                        @endforeach
+                        <strong>Indirectas</strong>
+                        @foreach ($materiasPrimasIndirectas as $index => $materiaIndirecta)
+                            <p>
+                                <strong>| {{ $index + 1 }} |</strong><br>
+                                <strong>Descripción:</strong> {{ $materiaIndirecta->descripcion }}<br>
+                                <strong>Cantidad:</strong> {{ $materiaIndirecta->pivot->cantidad }}<br>
+                                <strong>Precio unitario:</strong> {{ number_format($materiaIndirecta->precio_unit, 2, ',', '.') }}<br>
+                                <strong>Total:</strong> {{ number_format($totalIndirectas, 2, ',', '.') }}<br>
+                            </p>
+                        @endforeach
+                    </div>
 
-                <th class="border px-4 py-2">CIF</th>
-                <th class="border px-4 py-2">Utilidad Bruta</th>
-                <th class="border px-4 py-2">Margen Bruto (%)</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($articulosConSubtotales as $articulo)
-            <tr>
-                <td class="border px-4 py-2">{{ $articulo->descripcion }}</td>
-                <td class="border px-4 py-2">{{ $articulo->pivot->cantidad }}</td>
-                <td class="border px-4 py-2">{{ number_format($articulo->pivot->precio, 2) }}</td>
-                <td class="border px-4 py-2">{{ number_format($articulo->subtotal, 2) }}</td>
-                <td class="border px-4 py-2">{{ number_format($articulo->mano_obra_directa, 2) }}</td>
-                <td class="border px-4 py-2">{{ number_format($articulo->materias_primas_directas, 2) }}</td>
-                <td class="border px-4 py-2">{{ number_format($articulo->materias_primas_indirectas, 2) }}</td>
-                <td class="border px-4 py-2">{{ number_format($articulo->cif, 2) }}</td>
-                <td class="border px-4 py-2">{{ number_format($articulo->utilidad_bruta, 2) }}</td>
-                <td class="border px-4 py-2">{{ number_format($articulo->margen_bruto, 2) }}%</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    <div class="mt-6">
-        <h2 class="text-xl font-semibold">Costos de Producción</h2>
-        <ul>
-            @foreach($costosProduccion as $costo)
-                <li>Mano de Obra Directa: {{ number_format($costo->mano_obra_directa, 2) }}</li>
-                <!-- Agrega más campos de costos según sea necesario -->
-            @endforeach
-        </ul>
-    </div>
-
-    <div class="mt-6">
-        <h2 class="text-xl font-semibold">Información Adicional</h2>
-        <p><strong>IDIMCOL:</strong> {{ implode(', ', $idimcols->pluck('nombre')->toArray()) }}</p>
-        <p><strong>CIF Totales:</strong> MOI: {{ number_format($totalMOI, 2) }}, GOI: {{ number_format($totalGOI, 2) }}, OCI: {{ number_format($totalOCI, 2) }}</p>
-    </div>
-
-    <div class="no-print mt-4">
-        <a href="{{ route('costos_produccion.index') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Volver</a>
+                    <div class="card p-4 border rounded">
+                        <h3>* Costos indirectos de fábrica (CIF)</h3>
+                        <strong>Gasto Operativo Indirecto (GOI):</strong> {{ number_format($GOI, 2, ',', '.') }}<br>
+                        <strong>Mano de Obra Indirecta (MOI):</strong> {{ number_format($MOI, 2, ',', '.') }}<br>
+                        <strong>Otros costos indirectos (CMI):</strong> {{ number_format($OCI, 2, ',', '.') }}<br>
+                        <h3>* Total de horas de los operarios</h3>
+                        horas: {{ number_format($totalHoras, 2, ',', '.') }}<br>
+                        <h3>* Total CIF</h3>
+                        CIF: {{ number_format($totalCIF, 2, ',', '.') }}<br>
+                        <h2>Utilidad bruta</h2>
+                        valor: {{ number_format($utilidadBruta, 2, ',', '.') }}<br>
+                        <h2>Margen bruto</h2>
+                        valor: {{ number_format($margenBruto, 2, ',', '.') }}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @stop

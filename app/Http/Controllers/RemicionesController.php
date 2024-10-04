@@ -6,18 +6,26 @@ use Illuminate\Http\Request;
 use App\Models\Remiciones;
 use App\Models\Cliente;
 use App\Models\Remicion;
+use App\Models\RemisionIngreso;
 
 class RemicionesController extends Controller
 {
 
     public function index()
     {
-        $remiciones = Remicion::with('cliente')->get();
-        $clientes = Cliente::with(['remiciones' => function ($query) {
-            $query->orderBy('created_at', 'desc');
-        }])->get();
+        return view('remiciones.index');
+    }
 
-        return view('remiciones.index', compact('remiciones', 'clientes'));
+    public function Despacho()
+    {
+        $remicionesDespacho = Remicion::all();
+        return view('remiciones.despacho', compact('remicionesDespacho'));
+    }
+
+    public function Ingreso()
+    {
+        $remisionesIngreso = RemisionIngreso::all();
+        return view('remiciones.ingreso', compact('remisionesIngreso'));
     }
 
     public function create(Request $request)

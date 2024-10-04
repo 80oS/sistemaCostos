@@ -10,6 +10,11 @@
 <div class="">
     <a href="{{ route('servicios.index') }}" class="btn btn-primary">volver</a>
 </div>
+@if (session('success'))
+        <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+@endif
 <div class="container">
     <div class="card">
         <div class="card-body">
@@ -29,7 +34,7 @@
                             <td>{{ $sdp->clientes->nombre }}</td>
                             <td>{{ $sdp->fecha }}</td>
                             <td>
-                                <a href="{{ route('servicio.ver-servicios', $sdp->numero_sdp) }}" class="btn btn-info">Ver Servicios</a>
+                                <a href="{{ route('serviciosCostos.indexServicios', $sdp->numero_sdp) }}" class="btn btn-info">Ver Servicios</a>
                             </td>
                         </tr>
                     @endforeach
@@ -84,5 +89,13 @@
         scrollX: true,
         scrollY: '50vh',
     });
+</script>
+<script>
+    setTimeout(function() {
+        var successMessage = document.getElementById('success-message');
+        if (successMessage) {
+            successMessage.style.display = 'none';
+        }
+    }, 5000);
 </script>
 @stop

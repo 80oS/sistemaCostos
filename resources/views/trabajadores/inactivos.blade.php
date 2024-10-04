@@ -125,7 +125,7 @@
     }
 
     .container {
-        width: 900rem;
+        width: 70rem;
         max-height: 900px;
         background: #a9a9a9;
         border-radius: 10px;
@@ -143,7 +143,7 @@
     .table_wrapper {
         background: #d6d6d6;
         border-radius: 10px;
-        max-height: 700px;
+        max-height: 500px;
         overflow-x: auto;
     }
 

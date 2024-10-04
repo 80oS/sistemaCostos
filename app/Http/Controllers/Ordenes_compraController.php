@@ -11,12 +11,12 @@ class Ordenes_compraController extends Controller
 {
     public function index()
     {
-        
+        return view('ordenesCompra.index');
     }
 
     public function create()
     {   
-    
+        return view('ordenesCompra.create');
     }
 
     public function store(Request $request)

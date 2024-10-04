@@ -14,6 +14,8 @@ class MateriaPrimaDirectasCostos extends Model
     protected $fillable = [
         'materia_prima_directa_id',
         'costos_produccion_id',
-        'cantidad'
+        'cantidad',
+        'articulo_id',
+        'articulo_descripcion'
     ];
 }

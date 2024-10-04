@@ -16,6 +16,11 @@
     <a href="{{ route('resumen.costos', $sdp->numero_sdp) }}" class="btn btn-success">ver resumen</a>
     <a href="{{ route('costos_produccion.index') }}" class="btn btn-primary">volver</a>
 </div>
+{{-- @if (!$tiemposProduccionCargados)
+    <div class="alert alert-warning">
+        Esta SDP no tiene tiempos de producción cargados.
+    </div>
+@endif --}}
 <div class="p-12">
     <div class="sdp-content">
         <div class="sdp max-w-4x1 mx-auto bg-white p-8 shadow-lg mb-8" id="SdpContent">
@@ -64,12 +69,12 @@
                     </div>
                 </div>
             </div>
-        
             <!-- Tabla de productos -->
             <table id="sdp-table" class="w-full mb-6 border border-black rounded">
                 <thead>
                     <tr class="bg-gray-400 border border-black">
-                        <th class="border p-1">Código</th>
+                        <th class="border p-4">item</th>
+                        <th class="border p-2">Código</th>
                         <th class="border p-1">Descripción</th>
                         <th class="border p-1">Material</th>
                         <th class="border p-1">Fecha Despacho Comercial</th>
@@ -81,8 +86,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($articulosConSubtotales as $articulo)
-                        <tr class="border border-black odd:bg-white even:bg-gray-200">
+                    @foreach ($articulosConSubtotales as $index => $articulo)
+                        <tr class="border border-black odd:bg-white even:bg-gray-200" data-index="{{ $index + 1 }}">
+                            <td class="border p-1 text-center">{{ $index + 1 }}</td>
                             <td class="border p-1 text-center">{{ $articulo->codigo }}</td>
                             <td class="border p-1 text-left">{{ $articulo->descripcion }}</td>
                             <td class="border p-1 text-left">{{ $articulo->material }}</td>
@@ -97,7 +103,7 @@
                 </tbody>
                 <tfoot>
                     <tr class="bg-gray-100 border border-black">
-                        <td colspan="8" class="border p-1 text-right font-semibold">Total: </td>
+                        <td colspan="9" class="border p-1 text-right font-semibold">Total: </td>
                         <td class="border p-1 text-right font-semibold">
                             {{ number_format($total, 2, ',', '.') }}
                         </td>
@@ -107,11 +113,10 @@
 
         <!-- Tabla de análisis de costos -->
         <div class="border border-gray-300 p-4 mb-6">
-            @foreach($articulosConManoDeObra as $articulo)
                 <table class="w-full mb-6 border border-black rounded">
                     <thead>
                         <tr class="bg-gray-400 border border-black">
-                            <th class="border p-1" colspan="6">ANÁLISIS DE COSTOS DEL ARTÍCULO = {{ $articulo->descripcion }}</th>
+                            <th class="border p-1" colspan="6">ANÁLISIS DE COSTOS</th>
                         </tr>
                     </thead>
                     <thead>
@@ -128,34 +133,36 @@
                         <tr class="border border-black odd:bg-white even:bg-gray-200">
 
                             <td class="border px-1">
-                                {{ number_format($articulo->subtotal, 2, ',', '.') }}
+                                {{ number_format($totalTiempos, 2, ',', '.') }}
+                                <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#articuloTiempos">
+                                    Detalles
+                                </button>
                             </td>
                             
                             <td class="border px-1">
-                                
-                                <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#mano_obra">
-                                    Detalles
-                                </button>
+                                {{ number_format($totalManoObraServicio, 2, ',', '.') }}
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mano_obra" data-index="{{ $index + 1 }}">Detalles</button>
                             </td>
                             <td class="border px-1">
                                 {{ number_format($totalManoObra, 2, ',', '.') }}
-                                <button type="button" data-bs-toggle="modal" class="btn btn-primary" data-bs-target="#operariosModal">
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#operariosModal">
                                     Detalles
                                 </button>
                             </td>
                             <td class="border px-1">
-                                
+                                {{ number_format($totaldirectas, 2, ',', '.') }}
                                 <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#materias_primas">
                                     Detalles
                                 </button>
                             </td>
                             <td class="border px-1">
+                                {{ number_format($totalIndeirectas, 2, ',', '.') }}
                                 <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#materias_primas_indirectas">
                                     Detalles
                                 </button>
                             </td>
                             <td class="border px-1">
-                                
+                                {{ number_format($totalCIF, 2, ',', '.') }}
                                 <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#CIF">
                                     Detalles
                                 </button>
@@ -166,60 +173,111 @@
                     <tfoot>
                         <tr class="bg-gray-400 border border-gray-400">
                             <td class="border p-1">Utilidad Bruta</td>
-                            {{-- <td class="border p-1 text-right">{{ number_format($articulo->utilidad_bruta, 2, ',', '.') }}</td> --}}
+                            <td class="border p-1 text-right">{{ number_format($utilidadBruta, 2, ',', '.') }}</td>
                         </tr>
                         <tr class="bg-gray-400 border border-gray-400">
                             <td class="border p-1">MARGEN BRUTO</td>
                             <td class="border p-1 text-right">
-                                {{-- {{ number_format($articulo->margen_bruto, 2, ',', '.') }}% --}}
+                                {{ number_format($margenBruto, 2, ',', '.') }}%
                             </td>
                         </tr>
                     </tfoot>
-                    </table>
-                @endforeach
+                </table>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="mano_obra" tabindex="-1" aria-labelledby="mano_obraLabel" aria-hidden="true">
+<div class="modal fade" id="articuloTiempos" tabindex="-1"  aria-labelledby="articuloTiemposLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="articuloTiemposLabel">ARTICULOS</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Articulo</th>
+                                    <th>subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($articulosTiemposConSubtotales as $articuloTiempo)
+                                    <tr>
+                                        <td>{{ $articuloTiempo->descripcion }}</td>
+                                        <td>{{ number_format($articuloTiempo->subtotal, 2, ',', '.') }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td>total</td>
+                                    <td>{{ number_format($totalTiempos, 2, ',', '.') }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mano_obra" tabindex="-1"  aria-labelledby="mano_obraLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content op">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="mano_obraLabel">MANO DE OBRA DIRECTA</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Operario</th>
-                            <th>Servicio</th>
-                            <th>Horas Trabajadas</th>
-                            <th>Valor del Servicio</th>
-                            <th>valor del servio por horas</th>
-                            <th>Mano de Obra Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($articulo->operarios as $operario)
-                            <tr>
-                                <td>{{ $operario['nombre'] }}</td>
-                                <td>{{ $operario['servicio_nombre'] }}</td>
-                                <td></td>
-                                <td>{{ number_format($operario['valor_servicio'], 2, ',', '.') }}</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="5">total de mano de obra</td>
-                            <td></td>
-                        </tr>
-                    </tfoot>
-                </table>
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Operario</th>
+                                    <th>Servicio</th>
+                                    <th>Horas Trabajadas</th>
+                                    <th>Valor del Servicio</th>
+                                    <th>servio por horas</th>
+                                    <th>Mano de Obra Total</th>
+                                    <th>Articulo</th>
+                                    <th>numero de item</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($operariosConTiempos as $operario)
+                                    <tr>
+                                        <td>{{ $operario['nombre'] }}</td>
+                                        <td>{{ $operario['servicio_nombre'] }}</td>
+                                        <td>{{ $operario['horas'] }}</td>
+                                        <td>{{ number_format($operario['valor_servicio'], 2, ',', '.') }}</td>
+                                        <td>{{ number_format($operario['servicio_horas'], 2, ',', '.') }}</td>
+                                        <td>{{ number_format($operario['mano_obra_servicio'], 2, ',', '.') }}</td>
+                                        <td>{{ $operario['articulo'] }}</td>
+                                        <td>
+                                            {{ $operario['index_articulo'] }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="7">total de mano de obra</td>
+                                    <td>{{ number_format($totalManoObraServicio, 2, ',', '.') }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -245,19 +303,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- @foreach ($costosProduccion->materiasPrimasDirectas as $materiaDirecta)
+                        @foreach ($articulo->materiasPrimasDirectas as $materiaDirecta)
                             <tr>
                                 <td>{{ $materiaDirecta->codigo }}</td>
                                 <td>{{ $materiaDirecta->descripcion }}</td>
                                 <td>{{ $materiaDirecta->pivot->cantidad }}</td>
                                 <td>{{ number_format($materiaDirecta->precio_unit, 2, ',', '.') }}</td>
                             </tr>
-                        @endforeach --}}
+                        @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
                             <td colspan="3">total</td>
-                            <td></td>
+                            <td>
+                                
+                            </td>
                         </tr>
                     </tfoot>
                 </table>
@@ -272,22 +332,45 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="operariosModalLabel">OPERARIOS</h1>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" id="operariosModalLabel">Operarios</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <ul>
-                    @forelse ($articulo->operarios as $operario)
-                        <li>{{ $operario['codigo'] }} - {{ $operario['nombre'] }} - {{ $operario['sueldo'] }}</li> <!-- Asegúrate de que 'nombre' es el atributo correcto -->
-                    @empty
-                        <li>No hay operarios asignados a este artículo.</li>
-                    @endforelse
-                </ul>
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Operario</th>
+                                    <th>Sueldo</th>
+                                    <th>Horas Trabajadas</th>
+                                    <th>Horas Mes</th>
+                                    <th>Mano de Obra Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($operariosConTiempos as $operario)
+                                    <tr>
+                                        <td>{{ $operario['nombre'] }}</td>
+                                        <td>{{ $operario['sueldo'] }}</td>
+                                        <td>{{ $operario['horas'] }}</td>
+                                        <td>{{ $NMH }}</td>
+                                        <td>{{ number_format($operario['mano_obra_directa'], 2, ',', '.') }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4">total de mano de obra nomina</td>
+                                    <td>{{ number_format($totalManoObra, 2, ',', '.') }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
@@ -310,19 +393,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- @foreach ($costosProduccion->materiasPrimasIndirectas as $materiaIndirecta)
+                        @foreach ($articulo->materiasPrimasIndirectas as $materiaIndirecta)
                             <tr>
                                 <td>{{ $materiaIndirecta->codigo }}</td>
                                 <td>{{ $materiaIndirecta->descripcion }}</td>
                                 <td>{{ $materiaIndirecta->pivot->cantidad }}</td>
                                 <td>{{ number_format($materiaIndirecta->precio_unit, 2, ',', '.') }}</td>
                             </tr>
-                        @endforeach --}}
+                        @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
                             <td colspan="3">total</td>
-                            <td></td>
+                            <td>
+                                
+                            </td>
                         </tr>
                     </tfoot>
                 </table>
@@ -354,21 +439,21 @@
                             <td>
                                 <ol>
                                     <li>
-                                        MOI: 
+                                        MOI: {{ number_format($MOI, 2, ',', '.') }}
                                     </li>
                                     <li>
-                                        GOI: 
+                                        GOI: {{ number_format($GOI, 2, ',', '.') }}
                                     </li>
                                     <li>
-                                        OCI: 
+                                        OCI: {{ number_format($OCI, 2, ',', '.') }}
                                     </li>
                                 </ol>
                             </td>
                             <td>
-                                
+                                {{ $totalHoras }}
                             </td>
                             <td>
-                                
+                                {{ number_format($totalCIF, 2, ',', '.') }}
                             </td>
                         </tr>
                     </tbody>
@@ -409,7 +494,12 @@
         }
 
         .modal-content {
-            width: 600px !important;
+            width: 700px !important;
+        }
+
+        .op {
+            width: 900px !important;
+            position: relative;
         }
         
         .contentt {
@@ -438,6 +528,11 @@
             gap: 10px;
         }
 
+        input.form-control {
+            border: #000 1px solid;
+            text-align: center;
+        }
+
         .print button {
             width: 70px;
             height: 70px;
@@ -460,6 +555,12 @@
 
         .modal-header, .modal-body, .modal-footer {
             background: #dcdbdb !important;
+        }
+
+        .card-body {
+            width: 100%;
+            max-height: 300px !important;
+            overflow-y: auto !important;
         }
     </style>
 @stop
@@ -485,5 +586,23 @@
                 successMessage.style.display = 'none';
             }
         }, 5000);
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Escuchar el evento cuando se abre el modal
+            var manoObraModal = document.getElementById('mano_obra');
+            manoObraModal.addEventListener('show.bs.modal', function (event) {
+                // Obtener el botón que activó el modal
+                var button = event.relatedTarget; 
+                // Extraer información de los atributos de datos
+                var index = button.getAttribute('data-index'); 
+                
+                // Aquí puedes buscar el índice correcto basado en el artículo
+                var articleInput = manoObraModal.querySelector('input[id="index_' + (index - 1) + '"]');
+                if (articleInput) {
+                    articleInput.value = index; // Asignar el índice al campo de entrada
+                }
+            });
+        });
     </script>
 @stop

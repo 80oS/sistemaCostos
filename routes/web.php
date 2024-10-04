@@ -29,6 +29,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\SDPController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\ServicioCostosController;
 use App\Http\Controllers\SueldoController;
 use App\Http\Controllers\TalentoHConroller;
 use App\Http\Controllers\TiemposProduccionController;
@@ -36,6 +37,7 @@ use App\Http\Controllers\TrabajadoresController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VendedorController;
 use App\Http\Controllers\servicioExternoController;
+use App\Http\Controllers\SolicitudServicioExternoController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -142,13 +144,21 @@ Route::post('/municipios', [MunicipioController::class, 'store']);
 
 // remiciones
 Route::resource('remiciones', RemicionesController::class);
+Route::get('remisiones/despacho', [RemicionesController::class, 'Despacho'])->name('remision.despacho');
+Route::get('remisiones/ingreso', [RemicionesController::class, 'Ingreso'])->name('remision.ingreso');
+
+// solicitud servicio Externo
+Route::resource('SSE', SolicitudServicioExternoController::class);
 
 // servicios
 route::get('/servicio', [ServicioController::class, 'mainS'])->name('servicio');
 Route::resource('servicios', ServicioController::class);
 Route::get('/servicios-sdps', [ ServicioController::class, 'indexSdp'])->name('servicio.index');
-Route::get('/servicios/{numero_sdp}', [ServicioController::class, 'show'])->name('servicio.ver-servicios');
-Route::post('/sdps/{sdp_id}/servicios', [ ServicioController::class, 'actualizarPrecioServicio'])->name('servicio.actualizar-precio-servicio');
+
+// servicios costos
+Route::get('/sdp/{numero_sdp}/servicios', [ServicioCostosController::class, 'indexServicios'])->name('serviciosCostos.indexServicios');
+Route::get('/servicioCosto/{servicio_id}/show', [ServicioCostosController::class, 'show'])->name('serviciosCostos.show');
+Route::put('/sdps/{id}/update', [ServicioCostosController::class, 'actualizarPrecioServicio'])->name('servicioCosto.actualizar');
 
 // almacen
 Route::get('/almacen', [AlmacenController::class, 'index'])->name('almacen');
@@ -185,7 +195,7 @@ Route::get('/ver-materias-primas-cragada/{numero_sdp}', [CargarMateriaPrimaContr
 Route::resource('proveedor', ProveedorController::class);
 
 // compras
-Route::resource('compras', Ordenes_compraController::class);
+Route::resource('Ordencompras', Ordenes_compraController::class);
 
 // inventario
 Route::resource('inventario', InventoryController::class);

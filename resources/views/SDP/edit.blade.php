@@ -21,7 +21,7 @@
     @endif
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('sdp.update', $sdp->id) }}" method="POST"  class="max-w-sm mx-auto space-y-4">
+            <form action="{{ route('sdp.update', $sdp->numero_sdp) }}" method="POST"  class="max-w-sm mx-auto space-y-4">
                 @csrf
                 @method('PUT')
             
@@ -116,10 +116,10 @@
                 </div>
             
                 <div class="buttons">
-                    <button type="submit"  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <button type="submit"  class="btn btn-primary">
                         Guardar
                     </button>
-                    <a href="{{ route('sdp.paquetes') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">Cancelar</a>
+                    <a href="{{ route('sdp.paquetes') }}" class="btn btn-secondary">Cancelar</a>
                 </div>
             </form>
         </div>
@@ -182,12 +182,6 @@
 
         }
 
-        .relatives button {
-            width: 400px;
-            height: 60px;
-            text-align: center;
-            padding: 10px;
-        }
 
         .buttons {
             display: flex;
@@ -239,23 +233,9 @@
             padding: 0.625rem /* 10px */;
         }
 
-        .card-body button {
-            --tw-bg-opacity: 1;
-            background-color: rgb(59 130 246 / var(--tw-bg-opacity)) /* #3b82f6 */;
-            --tw-text-opacity: 1;
-            color: rgb(255 255 255 / var(--tw-text-opacity)) /* #ffffff */;
-            font-weight: 700;
-            padding-top: 0.5rem /* 8px */;
-            padding-bottom: 0.5rem /* 8px */;
-            padding-left: 1rem /* 16px */;
-            padding-right: 1rem /* 16px */;
-            border-radius: 0.25rem /* 4px */;
-        }
+        
 
-        .card-body button.hover\:bg-blue-700:hover {
-            --tw-bg-opacity: 1;
-            background-color: rgb(29 78 216 / var(--tw-bg-opacity)) /* #1d4ed8 */;
-        }
+        
 
         input.form-control::placeholder {
             color: #6b6a6a;

@@ -12,6 +12,8 @@ class Tiempos_produccion extends Model
 {
     use HasFactory;
 
+    protected $table = 'tiempos_produccions';
+
     protected $fillable = [
         'dia',
         'mes',
@@ -56,8 +58,30 @@ class Tiempos_produccion extends Model
     public function articulos()
     {
         return $this->belongsToMany(Articulo::class, 'articulo_tiempos_produccion', 'tiempos_produccion_id', 'articulo_id')
-                    ->withPivot('utilidad_bruta', 'margen_bruto', 'costos_produccion_id')
+                    ->withPivot('articulo_id', 'sdp_id')
                     ->withTimestamps();
+    }
+
+    public function trabajador()
+    {
+        return $this->hasOneThrough(Trabajador::class, Operativo::class);
+    } 
+
+    public function servicios_costos()
+    {
+        return $this->hasMany(ServicioCostos::class, 'tiempo_produccion_id');
+    }
+
+    public function valorSercicio()
+    {
+        $servicio = $this->servicio;
+        Log::info('servicioCost obtenido', [$servicio->pluck('id')->toArray()]);
+
+        $servicioRelacionado = Servicio::where('codigo', $this->proseso_id)->first();
+
+        $valor_servicio = $servicioRelacionado->valor_hora;
+
+        return $valor_servicio;
     }
 
     public function Calcularvalor_total_horas()

@@ -11,6 +11,12 @@ class SDP extends Model
 
     protected $table = 'sdps';
 
+    protected $primaryKey = 'numero_sdp';
+
+    public $incrementing = false;
+
+    protected $keyType = 'int';
+
     protected $fillable = [
         'numero_sdp', 
         'cliente_nit', 
@@ -40,9 +46,8 @@ class SDP extends Model
 
     public function articulos()
     {
-        return $this->belongsToMany(Articulo::class, 'articulo_sdp')
-                    ->withPivot('cantidad', 'precio', 's_d_p_id', 'articulo_id')
-                    ->withTimestamps();
+        return $this->belongsToMany(Articulo::class, 'articulo_sdp', 's_d_p_id', 'articulo_id')
+                    ->withPivot('cantidad', 'precio');
     }
 
     public function costosProduccion()
@@ -57,10 +62,8 @@ class SDP extends Model
         return $nuevoNumeroSDP;
     }
 
-    public function servivios()
+    public function serviciosCostos()
     {
-        return $this->belongsToMany(Servicio::class, 'servicios_costos')
-                    ->withPivot('valor_servicio')
-                    ->withTimestamps();
+        return $this->hasMany(ServicioCostos::class, 'sdp_id', 'numero_sdp'); // Asegúrate de que 'numero_sdp' es la clave primaria de SDP
     }
 }

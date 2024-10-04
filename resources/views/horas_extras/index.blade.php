@@ -19,16 +19,16 @@
                 <span class="block sm:inline">{{ session('success') }}</span>
             </div>
         @endif
-        <div class="col-12">
-            <a href="{{ route('horas-extras.create') }}" class="btn btn-info">crear bono</a>
-        </div>
         <div class="flex flex-col items-end justify-end col-12 mb-4">
-            <a href="{{ route('listar.operarios') }}" class="bg-yellow-700 hover:bg-yellow-400 px-3 py-2 text-white rounded">volver</a>
+            <a href="{{ route('listar.operarios') }}" class="btn btn-primary">volver</a>
         </div>
         <div class="card">
             <div class="card-body">
+                <div class="col-12 mb-4">
+                    <a href="{{ route('horas-extras.create') }}" class="btn btn-info">crear bono</a>
+                </div>
                 <div class="overflow-y-auto">
-                    <table class="table table-bodered">
+                    <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -92,9 +92,13 @@
         }
 
         table thead tr th, tbody tbody tr td {
-            background: #fff !important;
+            background: #9c9a9a !important;
             color: #000 !important;
-            border: #000 1px solid;
+            border: #bdbbbb 1px solid;
+        }
+
+        th {
+            text-transform: uppercase;
         }
         
         .card, .card-body {

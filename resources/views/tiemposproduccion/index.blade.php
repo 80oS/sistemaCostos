@@ -22,35 +22,33 @@
                     crear tiempo de produccion
                 </a>
             </div>
-            <div class="overflow-x-auto">
-                <div class="inline-block min-w-full py-2 align-middle container">
-                    <table class="table">
-                        <thead>
-                            <tr class="bg-gray-700 text-gray-200">
-                                <th class="px-4 py-2 border">#</th>
-                                <th class="px-4 py-2 border">codigo del operario</th>
-                                <th class="px-4 py-2 border">nombre del operario</th>
-                                <th class="px-4 py-2 border">numero de tiempos de produccion</th>
-                                <th class="px-4 py-2 border">ver lista</th>
+            <div class="inline-block min-w-full py-2 align-middle container">
+                <table class="table">
+                    <thead>
+                        <tr class="bg-gray-700 text-gray-200">
+                            <th class="px-4 py-2 border">#</th>
+                            <th class="px-4 py-2 border">codigo del operario</th>
+                            <th class="px-4 py-2 border">nombre del operario</th>
+                            <th class="px-4 py-2 border">numero de tiempos de produccion</th>
+                            <th class="px-4 py-2 border">ver lista</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($tiempos_produccion as $operativo_id => $tiempo)
+                            <tr class="bg-gray-300 text-gray-800 border border-black">
+                                <td class="px-4 py-2 border">{{ $loop->iteration }}</td>
+                                <td class="px-4 py-2 border">{{ $tiempo->first()->operativo_id }}</td>
+                                <td class="px-4 py-2 border">{{ $tiempo->first()->nombre_operario}}</td>
+                                <td class="px-4 py-2 border">{{ $tiempo->count() }}</td>
+                                <td class="px-4 py-2 border">
+                                    <a href="{{ route('tiempos-produccion.operario', $operativo_id) }}" class="bg-blue-600 hover:bg-blue-900 text-white px-3 py-2 rounded">
+                                        Ver Lista
+                                    </a>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($tiempos_produccion as $operativo_id => $tiempo)
-                                <tr class="bg-gray-300 text-gray-800 border border-black">
-                                    <td class="px-4 py-2 border">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-2 border">{{ $tiempo->first()->operativo_id }}</td>
-                                    <td class="px-4 py-2 border">{{ $tiempo->first()->nombre_operario}}</td>
-                                    <td class="px-4 py-2 border">{{ $tiempo->count() }}</td>
-                                    <td class="px-4 py-2 border">
-                                        <a href="{{ route('tiempos-produccion.operario', $operativo_id) }}" class="bg-blue-600 hover:bg-blue-900 text-white px-3 py-2 rounded">
-                                            Ver Lista
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -66,6 +64,10 @@
         }
         .content{
             height: 87vh;
+        }
+        .container {
+            max-height: 500px !important;
+            overflow-y: auto !important;
         }
     </style>
 @stop

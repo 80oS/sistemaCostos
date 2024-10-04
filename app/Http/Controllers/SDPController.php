@@ -25,7 +25,9 @@ class SDPController extends Controller
 
     public function ver($id)
     {
-        $sdp = SDP::with('clientes', 'articulos', 'vendedores')->findOrFail($id);
+        $sdp = SDP::with('clientes', 'articulos', 'vendedores')
+        ->where('numero_sdp', $id) // Busca el SDP por su número
+        ->firstOrFail();
         
         $total = 0;
         
@@ -130,7 +132,7 @@ class SDPController extends Controller
             // Confirmar la transacción
             DB::commit();
 
-            return redirect()->route('sdp.ver', $sdp->id)->with('success', 'SDP creado exitosamente');
+            return redirect()->route('sdp.ver', $sdp->numero_sdp)->with('success', 'SDP creado exitosamente');
             
         } catch (\Throwable $e) {
             // Revertir la transacción en caso de error
@@ -163,9 +165,10 @@ class SDPController extends Controller
     try {
         Log::info('Llegó la solicitud de actualización', $request->all());
 
+        $sdp = Sdp::findOrFail($id);
         // Validaciones
         $request->validate([
-            'numero_sdp' => 'required|unique:sdps,numero_sdp,' . $id,
+            'numero_sdp' => 'required|unique:sdps,numero_sdp,' . $sdp->id,
             'cliente_nit' => 'required|exists:clientes,nit',
             'vendedor_id' => 'required|exists:vendedores,id',
             'fecha_despacho_comercial' => 'required|date',
@@ -186,7 +189,6 @@ class SDPController extends Controller
         DB::beginTransaction();
 
         // Encontrar el SDP existente
-        $sdp = Sdp::findOrFail($id);
 
         // Actualizar los campos del SDP
         $sdp->update([
@@ -225,7 +227,7 @@ class SDPController extends Controller
         // Confirmar la transacción
         DB::commit();
 
-        return redirect()->route('sdp.ver', $sdp->id)->with('success', 'SDP actualizado exitosamente');
+        return redirect()->route('sdp.ver', $sdp->numero_sdp)->with('success', 'SDP actualizado exitosamente');
         
     } catch (\Throwable $e) {
         // Revertir la transacción en caso de error

@@ -3,36 +3,72 @@
 @section('title', 'servicios')
 
 @section('content_header')
-    
+<h2 class="font-semibold text-xl text-gray-800 leading-tight">
+    {{ __('actualizar servicios para la sdp') }} {{ $sdp->numero_sdp }}
+</h2>
 @stop
 
 @section('content')
-<form action="{{ route('servicio.actualizar-precio-servicio', $sdp->numero_sdp) }}" method="POST">
-    @csrf
-    @foreach($servicios as $servicio)
-        <div class="service-row">
-            <label>{{ $servicio->nombre }}</label>
-
-            <!-- Mostrar el precio predeterminado de la tabla servicios si no tiene precio asignado aún -->
-            @php
-                $precioActual = $costosProduccion ? $costosProduccion->servicios->where('codigo', $servicio->codigo)->first()->pivot->valor_servicio ?? $servicio->valor_hora : $servicio->valor_hora;
-            @endphp
-
-            <input type="hidden" name="servicio_id" value="{{ $servicio->codigo }}">
-            <input type="number" name="valor_servicio" value="{{ old('valor_servicio', $precioActual) }}" step="0.01" required>
-
-            <button type="submit">Actualizar Precio</button>
+<div class="container">
+    <div class="">
+        <a href="{{ route('servicio.index') }}" class="btn btn-info mb-4">volver</a>
+    </div>
+    @if (session('success'))
+        <div id="success-message" class="success-message" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
         </div>
-    @endforeach
-</form>
+    @endif
+    <div class="card">
+        <div class="card-body">
+            <table id="servicios" class="table table-striped">
+                <thead class="">
+                    <tr>
+                        <th>codigo</th>
+                        <th>servicio</th>
+                        <th>valor actual</th>
+                        <th>editar</th>
+                    </tr>
+                </thead>
+                <tbody class="">
+                    @foreach($serviciosCostos as $serviciosCosto)
+                        <tr>
+                            <td>{{  $serviciosCosto->servicio_id }}</td>
+                            <td>{{  $serviciosCosto->servicio->nombre }}</td>
+                            <td>{{ number_format($serviciosCosto->valor_servicio, 2, ',', '.') }}</td>
+                            <td>
+                                <a href="{{ route('serviciosCostos.show', $serviciosCosto->id) }}" class="btn btn-primary">Actualizar</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>            
 @stop
 
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    <style>
+        .container{
+            padding: 20px;
+        }
+        .card, .card-body {
+            background: #c7bfbf;
+        }
+    </style>
 @stop
 
 @section('js')
     <script src="https://cdn.tailwindcss.com"></script>
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+    <script>
+        setTimeout(function() {
+            var successMessage = document.getElementById('success-message');
+            if (successMessage) {
+                successMessage.style.display = 'none';
+            }
+        }, 5000);
+    </script>
 @stop

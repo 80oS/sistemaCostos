@@ -13,9 +13,9 @@
     <a href="{{ route('ADD_C_S') }}" class="btn btn-primary">volver</a>
 </div>
 @if (session('success'))
-<div id="success-message" class="success-message" role="alert">
-    <span class="block sm:inline">{{ session('success') }}</span>
-</div>
+    <div id="success-message" class="success-message" role="alert">
+        <span class="block sm:inline">{{ session('success') }}</span>
+    </div>
 @endif
 <div class="container">
     <div class="card">
@@ -43,18 +43,18 @@
                         <td>{{ $sdp->created_at->format('d-m-Y') }}</td>
                         <td>{{ $sdp->clientes->nit }}</td>
                         <td>
-                            <a href="{{ route('sdp.ver', $sdp->id) }}" class="btn btn-info">
+                            <a href="{{ route('sdp.ver', $sdp->numero_sdp) }}" class="btn btn-info">
                                 ver sdp
                             </a>
                         </td>
                         <td>
                             <div class="col-4">
-                                <a href="{{ route('sdp.edit', $sdp->id) }}" class="btn btn-warning">Editar</a>
+                                <a href="{{ route('sdp.edit', $sdp->numero_sdp) }}" class="btn btn-warning">Editar</a>
                             </div>
                         </td>
                         <td>
                             <div class="COL-4">
-                                <form action="{{ route('sdp.destroy', $sdp->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este SDP?');">
+                                <form action="{{ route('sdp.destroy', $sdp->numero_sdp) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este SDP?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger">Eliminar</button>
