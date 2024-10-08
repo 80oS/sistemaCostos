@@ -5,15 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Traits\codigoItem;
 
 class Item extends Model
 {
     use HasFactory;
+    use codigoItem;
 
     protected $fillable = [
         'codigo',
         'descripcion'
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+        self::bootCodigoItem();
+    }
 
     public function remicionesDespacho()
     {

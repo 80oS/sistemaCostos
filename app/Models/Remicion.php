@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\codigoREM_DES;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -9,6 +10,7 @@ use Illuminate\Support\Str;
 class Remicion extends Model
 {
     use HasFactory;
+    use codigoREM_DES;
 
     protected $table = 'remisiones_despacho';
 
@@ -22,6 +24,12 @@ class Remicion extends Model
         'departamento',
         'recibido'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        self::bootCodigoREM_DES();
+    }
     
     public function cliente()
     {

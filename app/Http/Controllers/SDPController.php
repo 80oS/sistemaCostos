@@ -182,9 +182,6 @@ class SDPController extends Controller
             'articulos.*.cantidad' => 'required|integer|min:1',
             'articulos.*.precio' => 'required|numeric|min:0',
         ]);
-
-        
-
         // Iniciar una transacción
         DB::beginTransaction();
 

@@ -3,15 +3,14 @@
 @section('title', 'editar tiempo de produccion')
 
 @section('content_header')
-    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        {{ __('editar tiempo de produccion') }}
-    </h2>
 @stop
 
 @section('content')
-<div class="box">
-    <a href="{{ route('tiempos.group') }}" class="btn btn-primary">volver</a>
+<div class="py-12">
     <div class="container">
+        <div class="mb-4">
+            <a href="{{ route('tiempos.group') }}" class="btn btn-primary">volver</a>
+        </div>
         <div class="card">
             <div class="card-body">
                 <form action="{{ route('tiempos-produccion.update', $tiempo_produccion->id) }}" method="POST">
@@ -171,7 +170,7 @@
             </div>
             <div class="buton mb-4">
                 <button type="submit" id="selectServicio" class="btn btn-primary">seleccionar servicio</button>
-                <button class="btn btn-default cerrarModal">cancelar</button>
+                <button class="btn btn-secondary cerrarModal">cancelar</button>
             </div>
         </div>
     </div>
@@ -214,7 +213,7 @@
             </div>
             <div class="buton mb-4">
                 <button type="submit" id="selectSDP" class="btn btn-primary">seleccionar SDP</button>
-                <button class="btn btn-default cerrarModal">cancelar</button>
+                <button class="btn btn-secondary cerrarModal">cancelar</button>
             </div>
         </div>
     </div>
@@ -463,6 +462,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const modalServicios = document.getElementById('modalServicios');
         const btnSelectServicio = document.getElementById('selectServicio');
+        const btnAbrirModal = document.getElementById('abrirModalServicios');
         const btnCerrarModal = modalServicios.querySelector('.cerrarModal');
         const inputNombre_servicio = document.getElementById('nombre_servicio');
         const inputProseso_id = document.getElementById('proseso_id');
@@ -482,8 +482,18 @@
             }
         });
 
+        btnAbrirModal.addEventListener('click', function() {
+            modalServicios.style.display = 'block';
+        });
+
         btnCerrarModal.addEventListener('click', function() {
             modalServicios.style.display = 'none';
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target == modalServicios) {
+                modalServicios.style.display = 'none';
+            }
         });
     });
 </script>

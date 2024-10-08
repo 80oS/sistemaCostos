@@ -3,8 +3,8 @@
 @section('title', 'Edit Role')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-300 leading-tight">
-    {{ __('ASIGNAR PERMISOS A ROL') }}
+<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
+    {{ __('Asignar permisos al role') }} {{ $role->name }}
 </h2>
 @stop
 
@@ -12,9 +12,6 @@
     <div class="p-12">
         <div class="container">
             <div class="card max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="card-header">
-                    <p>Asignar permisos a rol: {{ $role->name }}</p>
-                </div>
                 <div class="card-body">
                     <form action="{{ route('roles.update', $role->id) }}" method="POST" class="max-w-sm mx-auto space-y-4">
                         @csrf

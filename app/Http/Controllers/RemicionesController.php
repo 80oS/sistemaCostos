@@ -5,8 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Remiciones;
 use App\Models\Cliente;
+use App\Models\Item;
 use App\Models\Remicion;
 use App\Models\RemisionIngreso;
+use App\Models\SDP;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
+use function Pest\Laravel\json;
 
 class RemicionesController extends Controller
 {
@@ -18,7 +24,7 @@ class RemicionesController extends Controller
 
     public function Despacho()
     {
-        $remicionesDespacho = Remicion::all();
+        $remicionesDespacho = Remicion::with('items', 'cliente', 'sdp')->get();
         return view('remiciones.despacho', compact('remicionesDespacho'));
     }
 
@@ -28,38 +34,65 @@ class RemicionesController extends Controller
         return view('remiciones.ingreso', compact('remisionesIngreso'));
     }
 
-    public function create(Request $request)
+    public function getSdpsByCliente($clienteId)
     {
-        $clientes = Cliente::orderBy('nombre')->get(['nit', 'nombre']);
+        // Obtener SDPs del cliente seleccionado
+        $sdps = SDP::where('cliente_nit', $clienteId)->with('clientes')->get();
 
-        return view('remiciones.create', compact('clientes'));
+        // Retornar los datos en formato JSON
+        return response()->json($sdps);
+    }
+
+    public function createDespacho(Request $request)
+    {
+        $clientes = Cliente::has('SDP')->get();
+        $sdps = SDP::with('clientes', 'articulos')->get();
+
+        return view('remiciones.createDespacho', compact('clientes', 'sdps'));
     }
     
-    public function store(Request $request)
+    public function storeDespacho(Request $request)
     {
+        Log::info('Creación de la nueva remicion de despacho', $request->all());
+
         $request->validate([
-            'cantidad' => 'required|integer',
-            'descripcion' => 'required|string',
+            'cliente_id' => 'required|string|exists:clientes,nit',
             'fecha_despacho' => 'required|date',
-            'solicitud_produccion' => 'required|string',
+            'sdp_id' => 'required|integer|exists:sdps,numero_sdp',
             'observaciones' => 'nullable|string',
-            'recibido' => 'required|string',
-            'despacho' => 'required|string',
-            'cliente_nit' => 'required|exists:clientes,nit'
+            'despacho' => 'nullable|string',
+            'departamento' => 'required|string',
+            'recibido' => 'nullable|string',
+            'items' => 'required|array',
+            'items.*.cantidad' => 'required|numeric',
+            'items.*.descripcion' => 'required|string',
         ]);
 
-        $remiciones = new Remicion();
-        $remiciones->cantidad = $request->input('cantidad');
-        $remiciones->descripcion = $request->input('descripcion');
-        $remiciones->fecha_despacho = $request->input('fecha_despacho');
-        $remiciones->solicitud_produccion = $request->input('solicitud_produccion');
-        $remiciones->observaciones = $request->input('observaciones');
-        $remiciones->recibido = $request->input('recibido');
-        $remiciones->despacho = $request->input('despacho');
-        $remiciones->cliente_nit = $request->input('cliente_nit');
-        $remiciones->save();
+        DB::beginTransaction();
 
-        return redirect()->route('remiciones.index')->with('success', 'Remicion creada con éxito');
+        $remiciones = Remicion::create([
+            'cliente_id' => $request->cliente_id,
+            'fecha_despacho' => $request->fecha_despacho,
+            'sdp_id' => $request->sdp_id,
+            'observaciones' => $request->observaciones,
+            'despacho' => $request->despacho,
+            'departamento' => $request->departamento,
+            'recibido' => $request->recibido,
+        ]);
+
+        foreach ($request->input('items') as $itemsData){
+            $item = Item::firstOrCreate(
+                ['descripcion' => $itemsData['descripcion']]
+            );
+
+            $remiciones->items()->attach($item->id, [
+                'cantidad' => $itemsData['cantidad']
+            ]);
+        }
+
+        DB::commit();
+
+        return redirect()->route('remiciones.index')->with('success', 'Remicion de despacho creada con éxito');
     }
 
     public function show($codigo_remicion)
@@ -68,36 +101,72 @@ class RemicionesController extends Controller
         return view('remiciones.show', compact('remicion'));
     }
 
-    public function edit($codigo_remicion)
+    public function editDespacho($id)
     {
-        $remiciones = Remicion::where('codigo_remicion', $codigo_remicion)->firstOrFail();
-        return view('remiciones.edit', compact('remiciones'));
+        $remisionDespacho = Remicion::findOrFail($id);
+        
+
+        
+
+        return view('remiciones.editDespacho', compact('remisionDespacho'));
     }
 
-    public function update(Request $request, $codigo_remicion)
+    public function updateDespacho(Request $request, $id)
     {
+
+        $remiciones = Remicion::findOrFail($id);
+
         $request->validate([
-            'cantidad' => 'required|integer',
-            'descripcion' => 'required|string',
+            'cliente_id' => 'required|string|exists:clientes,nit',
             'fecha_despacho' => 'required|date',
-            'solicitud_produccion' => 'required|string',
+            'sdp_id' => 'required|integer|exists:sdps,numero_sdp',
             'observaciones' => 'nullable|string',
-            'recibido' => 'required|string',
-            'despacho' => 'required|string'
+            'despacho' => 'nullable|string',
+            'departamento' => 'required|string',
+            'recibido' => 'nullable|string',
+            'items' => 'required|array',
+            'items.*.cantidad' => 'required|numeric',
+            'items.*.descripcion' => 'required|string',
         ]);
 
-        $remiciones = Remicion::where('codigo_remicion', $codigo_remicion)->firstOrFail();
-        $remiciones->update($request->all());
+        DB::beginTransaction();
 
+        $remiciones->update([
+            'cliente_id' => $request->cliente_id,
+            'fecha_despacho' => $request->fecha_despacho,
+            'sdp_id' => $request->sdp_id,
+            'observaciones' => $request->observaciones,
+            'despacho' => $request->despacho,
+            'departamento' => $request->departamento,
+            'recibido' => $request->recibido,
+        ]);
 
-        return redirect()->route('remiciones.index')->with('success', 'Remicion se ha actualizado con éxito');
+        $items_esnviados = $request->input('items');
+
+        $items_ids = [];
+
+        foreach ($items_esnviados as $itemsData){
+            $item = Item::where('descripcion', $itemsData['descripcion'])->first();
+
+            if ($item){
+                $items_ids[$item->id] = [
+                    'cantidad' => $itemsData['cantidad'],
+                ];
+            }
+        }
+
+        $remiciones->items()->sycn($itemsData);
+
+        DB::commit();
+
+        return redirect()->route('remiciones.index')->with('success', 'Remision de despacho se ha actualizado con éxito');
     }
 
-    public function destroy($codigo_remicion)
+    public function destroyDespacho($id)
     {
-        $remicion = Remicion::where('codigo_remicion', $codigo_remicion)->firstOrFail();
-        $remicion->delete();
+        $remiciones = Remicion::findOrFail($id);
+        $remiciones->delete();
 
-        return redirect()->route('remiciones.index')->with('success', 'Remicion se ha eliminado con éxito');
+        return redirect()->route('remiciones.index')->with('success', 'Remision de despacho se ha eliminado con éxito');
     }
 }

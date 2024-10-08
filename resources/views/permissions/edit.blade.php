@@ -3,7 +3,9 @@
 @section('title', 'Edit Permission')
 
 @section('content_header')
-    <h1>Edit Permission</h1>
+<h2 class="font-semibold text-xl text-gray-900 leading-tight uppercase">
+    {{ __('editar permiso') }}
+</h2>
 @stop
 
 @section('content')
@@ -15,14 +17,24 @@
                         @csrf
                         @method('PUT')
                         <div class="form-group">
-                            <label for="name">Permission Name</label>
+                            <label for="name">Permiso</label>
                             <input type="text" class="form-control" id="name" name="name" value="{{ $permission->name }}" required>
                         </div>
                 
-                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="submit" class="btn btn-primary">actualizar</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+@stop
+
+@section('css')
+    {{-- Add here extra stylesheets --}}
+    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+@stop
+
+@section('js')
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
 @stop

@@ -4,7 +4,7 @@
 
 @section('content_header')
 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-    {{ __('Cargar materias primas') }}
+    {{ __('Cargar materias primas para la sdp') }} {{ $sdp->numero_sdp }}
 </h2>
 @stop
 

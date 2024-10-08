@@ -336,24 +336,27 @@ return [
             'icon' => 'fas fa-fw fa-address-card',
             
         ],
-        ['header' => 'USUARIOS'],
+        [
+            'header' => 'USUARIOS',
+            'can' => 'Configuracion'
+        ],
         [
             'text' => 'Usuarios',
             'route' => 'users.index',
             'icon' => 'fas fa-fw fa-users',
-            
+            'can' => 'Configuracion'
         ],
         [
             'text' => 'Roles',
             'route'  => 'roles.index',
             'icon' => 'fas fa-users-cog',
-            
+            'can' => 'Configuracion'
         ],
         [
             'text' => 'Permisos',
             'route'  => 'permisos.index',
             'icon' => 'fas fa-key',
-            
+            'can' => 'Configuracion'
         ],
     ],
 

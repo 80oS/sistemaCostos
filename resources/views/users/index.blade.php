@@ -19,7 +19,7 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
             <div class="mb-4">
-                <a href="{{route('register')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Crear nuevo usuario</a>
+                <a href="{{route('users.create')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Crear nuevo usuario</a>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full bg-white border border-gray-200">
@@ -28,6 +28,7 @@
                             <th class="px-4 py-2 border">id</th>
                             <th class="px-4 py-2 border">nombre</th>
                             <th class="px-4 py-2 border">correo</th>
+                            <th class="px-4 py-2 border">role</th>
                             <th class="px-4 py-2 border">editar</th>
                             <th class="px-4 py-2 border">eliminar</th>
                         </tr>
@@ -38,6 +39,13 @@
                             <td class="px-4 py-2 border">{{$user->id}}</td>
                             <td class="px-4 py-2 border">{{$user->name}}</td>
                             <td class="px-4 py-2 border">{{$user->email}}</td>
+                            <td class="px-4 py-2 border">
+                                @if($user->getRoleNames()->isNotEmpty())
+                                    {{ $user->getRoleNames()->implode(', ') }} <!-- Lista los roles separados por comas -->
+                                @else
+                                    <span>Sin rol asignado</span>
+                                @endif
+                            </td>
                             <td class="px-4 py-2 border">
                                 <a href="{{route('users.edit', $user->id)}}" class="btn btn-info">
                                     <i class="fas fa-edit"></i>

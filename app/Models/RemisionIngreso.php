@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\codigoREM_ING;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class RemisionIngreso extends Model
 {
     use HasFactory;
+    use codigoREM_ING;
 
     protected $fillable = [
         'codigo',
@@ -17,6 +19,12 @@ class RemisionIngreso extends Model
         'despacho',
         'recibido'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        self::bootCodigoREM_ING();
+    }
 
     public function proveedor()
     {

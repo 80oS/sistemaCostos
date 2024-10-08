@@ -3,7 +3,7 @@
 @section('title', 'roles')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-300 leading-tight">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
     {{ __('Lista de roles') }}
 </h2>
 
@@ -17,6 +17,9 @@
         </div>
     @endif
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="col-12 p">
+            <a href="{{route('home')}}" class="btn btn-primary">volver</a>
+        </div>
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
             <div class="card-header">
                 <x-adminlte-button label="nuevo" data-toggle="modal" data-target="#modalPurple" theme="primary" icon="fas fa-key"/>
@@ -33,9 +36,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($roles as $index => $role)
+                        @foreach ($roles as  $role)
                         <tr class="bg-gray-50 text-gray-700">
-                            <td class="px-4 py-2 border">{{ $index + 1 }}</td>
+                            <td class="px-4 py-2 border">{{ $role->id }}</td>
                             <td class="px-4 py-2 border">{{$role->name}}</td>
                             <td class="px-4 py-2 border">
                                 @if($role->permissions->isEmpty())
@@ -68,9 +71,6 @@
                 </table>
             </div>
         </div>
-    </div>
-    <div class="col-12 p">
-        <a href="{{route('home')}}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 rounded">volver</a>
     </div>
 </div>
 {{-- Themed --}}

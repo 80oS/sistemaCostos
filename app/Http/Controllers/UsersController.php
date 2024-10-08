@@ -32,9 +32,9 @@ class UsersController extends Controller
     {
         // Validar la solicitud
         $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
         if ($validator->fails()) {
@@ -50,34 +50,8 @@ class UsersController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Crear un equipo personal para el nuevo usuario, si es necesario
-        if (config('jetstream.features.teams')) {
-            Log::info('Jetstream está habilitado. Intentando crear un equipo...');
-    
-            try {
-                $team = Team::create([
-                    'user_id' => $user->id,
-                    'name' => $request->name . "'s Team",
-                    'personal_team' => true,
-                ]);
-    
-                // Asignar el equipo al usuario
-                $user->current_team_id = $team->id;
-                $user->save();
-    
-                Log::info('Equipo creado con éxito: ' . $team->id);
-            } catch (\Exception $e) {
-                Log::error('Error al crear el equipo: ' . $e->getMessage());
-            }
-        } else {
-            Log::info('Jetstream no está habilitado.');
-        }
-
-        
-        
-
         // Redirigir al usuario a la página de inicio o a donde desees
-        return redirect()->route('home')->with('status', 'Usuario registrado con éxito.');
+        return redirect()->route('users.index')->with('success', 'Usuario registrado con éxito.');
     }
 
     public function edit(string $id)

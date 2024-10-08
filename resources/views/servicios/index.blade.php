@@ -13,6 +13,9 @@
     <div class="">
         <a href="{{ route('servicio.index') }}" class="btn btn-info mb-4">ver sdp</a>
     </div>
+    <div class="col-12 p">
+        <a href="{{ route('servicio') }}" class="btn btn-primary">volver</a>
+    </div>
     <div class="tg max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-gray-400 overflow-hidden shadow-xl sm:rounded-lg p-6 tg">
             @if (session('success'))
@@ -59,9 +62,6 @@
                 </table>
             </div>
         </div>
-    </div>
-    <div class="col-12 p">
-        <a href="{{ route('servicio') }}" class="btn btn-primary">volver</a>
     </div>
 </div>
 @stop

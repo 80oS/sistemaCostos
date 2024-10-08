@@ -10,6 +10,7 @@ use App\Models\Operativo;
 use App\Models\Operativos;
 use App\Models\SDP;
 use App\Models\Servicio;
+use App\Models\ServicioCostos;
 use App\Models\Tiempos_produccion;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -139,6 +140,8 @@ class TiemposProduccionController extends Controller
         DB::beginTransaction();
 
         try {
+
+
             Log::info('Iniciando creación de tiempo de producción', $request->all());
 
             // Crear el registro de Tiempos_produccion
@@ -179,14 +182,26 @@ class TiemposProduccionController extends Controller
             $costoProduccion->save();
 
             Log::info('Costo de producción guardado', ['costo_produccion_id' => $costoProduccion->id]);
-            
-            $costoProduccion->servicios()->attach($costoProduccion->id, [
-                'servicio_id' => $tiempoProduccion->proseso_id,
-                'tiempo_produccion_id' => $tiempoProduccion->id,
-                'costos_produccion_id' => $costoProduccion->id,
-                'sdp_id' => $tiempoProduccion->sdp_id,
-                'valor_servicio' => $tiempoProduccion->valorSercicio()
-            ]);
+
+            $existingRelation = DB::table('servicios_costos')
+                ->where('servicio_id', $tiempoProduccion->proseso_id)  // Verificar el código del servicio
+                ->where('sdp_id', $tiempoProduccion->sdp_id)            // Verificar el SDP
+                ->first();
+
+            if ($existingRelation) {
+                    // Si ya existe, no se crea ni actualiza el servicio y se muestra un mensaje de error
+                    log::info('El servicio con el mismo nombre ya existe para este SDP y tiempo de producción.');
+                
+            }else {
+                // Si no existe, se crea el servicio
+                $costoProduccion->servicios()->attach($costoProduccion->id, [
+                    'servicio_id' => $tiempoProduccion->proseso_id,
+                    'tiempo_produccion_id' => $tiempoProduccion->id,
+                    'costos_produccion_id' => $costoProduccion->id,
+                    'sdp_id' => $tiempoProduccion->sdp_id,
+                    'valor_servicio' => $tiempoProduccion->valorSercicio(),
+                ]);
+            }
 
             // Procesar los artículos, si existen
             if ($request->has('articulos')) {
@@ -332,16 +347,25 @@ class TiemposProduccionController extends Controller
     
             Log::info('Costo de producción actualizado', ['costo_produccion_id' => $costoProduccion->id]);
     
-            // Actualizar los servicios asociados
-            $costoProduccion->servicios()->sync([
-                $tiempoProduccion->proseso_id => [
+            $existingRelation = DB::table('servicios_costos')
+                ->where('servicio_id', $tiempoProduccion->proseso_id)  // Verificar el código del servicio
+                ->where('sdp_id', $tiempoProduccion->sdp_id)            // Verificar el SDP
+                ->first();
+
+            if ($existingRelation) {
+                    // Si ya existe, no se crea ni actualiza el servicio y se muestra un mensaje de error
+                    log::info('El servicio con el mismo nombre ya existe para este SDP y tiempo de producción.');
+                
+            }else {
+                // Si no existe, se crea el servicio
+                $costoProduccion->servicios()->attach($costoProduccion->id, [
                     'servicio_id' => $tiempoProduccion->proseso_id,
                     'tiempo_produccion_id' => $tiempoProduccion->id,
                     'costos_produccion_id' => $costoProduccion->id,
                     'sdp_id' => $tiempoProduccion->sdp_id,
-                    'valor_servicio' => $tiempoProduccion->valorSercicio()
-                ]
-            ]);
+                    'valor_servicio' => $tiempoProduccion->valorSercicio(),
+                ]);
+            }
     
             // Procesar los artículos asociados, si existen
             if ($request->has('articulos')) {

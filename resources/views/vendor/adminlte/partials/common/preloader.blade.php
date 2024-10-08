@@ -15,11 +15,12 @@
             justify-content: center;
             height: 100vh;
             width: 100%;
+            background: linear-gradient(90deg, #000, #021e81) !important;
         }
     </style>
         <div class="preloader">
             <l-helix
-                size="80"
+                size="90"
                 speed="2.5"
                 color="#3a71e0"
             >
@@ -27,7 +28,6 @@
         </div>
 
         <script type="module" src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/helix.js"></script>
-
     @endif
 
 </div>

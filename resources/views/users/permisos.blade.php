@@ -3,7 +3,7 @@
 @section('title', 'permisos')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-300 leading-tight">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
     {{ __('Lista de permisos') }}
 </h2>
 
@@ -17,6 +17,9 @@
         </div>
     @endif
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="col-12 p">
+            <a href="{{route('home')}}" class="btn btn-primary">volver</a>
+        </div>
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
             <div class="card-header">
                 <x-adminlte-button label="nuevo" data-toggle="modal" data-target="#modalPurple" theme="primary" icon="fas fa-key"/>
@@ -27,21 +30,22 @@
                         <tr class="bg-gray-50 text-gray-700">
                             <th class="px-4 py-2 border">id</th>
                             <th class="px-4 py-2 border">nombre</th>
-                            <th class="px-4 py-2 border">actualizar y eliminar</th>
+                            <th class="px-4 py-2 border">actualizar</th>
+                            <th class="px-4 py-2 border">eliminar</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($permisos as $index => $permiso)
+                        @foreach ($permisos as  $permission)
                         <tr class="bg-gray-50 text-gray-700">
-                            <td class="px-4 py-2 border">{{ $index + 1 }}</td>
-                            <td class="px-4 py-2 border">{{$permiso->name}}</td>
+                            <td class="px-4 py-2 border">{{ $permission->id }}</td>
+                            <td class="px-4 py-2 border">{{$permission->name}}</td>
                             <td class="px-4 py-2 border">
-                                <a href="{{route('permisos.edit', $permiso->id)}}" class="btn btn-info">
+                                <a href="{{route('permissions.edit', $permission)}}" class="btn btn-info">
                                     <i class="fa-solid fa-pencil"></i>
                                 </a>
                             </td>
                             <td class="px-4 py-2 border">
-                                <form action="{{route('permisos.destroy', $permiso->id)}}" method="POST">
+                                <form action="{{route('permisos.destroy', $permission)}}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger" onclick="return confirm('seguro que quieres eliminar este role')">
@@ -55,9 +59,6 @@
                 </table>
             </div>
         </div>
-    </div>
-    <div class="col-12 p">
-        <a href="{{route('home')}}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 rounded">volver</a>
     </div>
 </div>
 {{-- Themed --}}

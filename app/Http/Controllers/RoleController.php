@@ -15,11 +15,6 @@ class RoleController extends Controller
         return view('users.roles', compact('roles'));
     }
 
-    public function create()
-    {
-        
-    }
-
     public function store(Request $request)
     {
         $role = Role::create([

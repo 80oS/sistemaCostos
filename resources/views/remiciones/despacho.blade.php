@@ -16,34 +16,57 @@
         </div>
         <div class="card">
             <div class="card-body">
+                <div class="mb-4">
+                    <a href="{{ route('remision.despacho.create') }}" class="btn btn-info">Crear</a>
+                </div>
                 <table class="table table-striped">
                     <thead>
                         <tr class="table-primary">
                             <th>codigo</th>
                             <th>cliente</th>
-                            <th>fecha de despacho</th>
                             <th>sdp</th>
+                            <th>fecha de despacho</th>
                             <th>observaciones</th>
                             <th>depacho</th>
                             <th>departamento</th>
                             <th>recibido</th>
+                            <th>editar</th>
                             <th>ver remision</th>
+                            <th>eliminar</th>
                         </tr>
                     </thead>
                     <tbody>
-                        
+                        @foreach ($remicionesDespacho as $remicionDespacho)
                             <tr class="table-secondary">
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>{{ $remicionDespacho->codigo }}</td>
+                                <td>{{ $remicionDespacho->cliente->nombre }}</td>
+                                <td>{{ $remicionDespacho->sdp->numero_sdp }}</td>
+                                <td>{{ $remicionDespacho->fecha_despacho }}</td>
+                                <td>{{ $remicionDespacho->observaciones }}</td>
+                                <td>{{ $remicionDespacho->despacho }}</td>
+                                <td>{{ $remicionDespacho->departamento }}</td>
+                                <td>{{ $remicionDespacho->recibido }}</td>
+                                <td>
+                                    <a href="{{ route('remision.despacho.edit', $remicionDespacho->id)}}" class="btn btn-primary">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ route('remision.despacho.show', $remicionDespacho->id)}}" class="btn btn-info">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <form action="{{ route('remision.despacho.destroy', $remicionDespacho->id) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger" onclick="return comfirm('Seguro que quire eliminar esta remision de despacho')">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
-                        
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -55,6 +78,7 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         .card-body {
             max-height: 400px;

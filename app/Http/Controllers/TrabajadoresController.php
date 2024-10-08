@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\DB;
 
 class TrabajadoresController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:Crear trabajador')->only('create');
+    }
 
     public function index()
     {

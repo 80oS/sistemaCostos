@@ -3,7 +3,7 @@
 @section('title', 'Editar servicio externo')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-300 leading-tight uppercase">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
     {{ __('Formulario de edición de servicio externo') }}
 </h2>
 @stop

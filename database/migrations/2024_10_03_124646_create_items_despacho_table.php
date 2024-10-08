@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('items_despacho', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('remision_despacho_id');
-            $table->string('item_id');
+            $table->unsignedBigInteger('item_id');
             $table->string('cantidad');
             $table->timestamps();
 
             $table->foreign('remision_despacho_id')->references('id')->on('remisiones_despacho')->onDelete('cascade');
-            $table->foreign('item_id')->references('codigo')->on('items')->onDelete('cascade');
+            $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
         });
     }
 
