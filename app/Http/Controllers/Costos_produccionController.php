@@ -138,11 +138,13 @@ class Costos_produccionController extends Controller
         $totalCIF= 0;
 
         $operariosConTiempos = collect();
+        $totalHorasPorOperario = [];
 
-        $sdp->articulos->each(function ($articulo) use ($sdp,  &$operariosConTiempos, $MOI, $GOI, $OCI, &$totalCIF, &$totalManoObraServicio, &$totalManoObra, &$totalHoras) {
 
-            $tiemposProduccion = $articulo->tiemposProduccion()->with('operativo.trabajador')->where('articulo_tiempos_produccion.sdp_id', $sdp->numero_sdp)->get();
-    
+        $sdp->articulos->each(function ($articulo) use ($sdp,  &$operariosConTiempos, &$totalHorasPorOperario, $MOI, $GOI, $OCI, &$totalCIF, &$totalManoObraServicio, &$totalManoObra, &$totalHoras) {
+
+            $tiemposProduccion = $articulo->tiemposProduccion()->with('operativo.trabajador', 'servicio')->where('articulo_tiempos_produccion.sdp_id', $sdp->numero_sdp)->get();
+
             foreach ($tiemposProduccion as $tiempo) {
                 $operario = $tiempo->operativo;
 
@@ -150,29 +152,38 @@ class Costos_produccionController extends Controller
 
                 $sueldo = $trabajador->sueldos()->orderBy('created_at', 'desc')->first()->sueldo ?? 0;
 
-                $costoProduccion = CostosProduccion::where('tiempo_produccion_id', $tiempo->id, 'servicio')
+                $costoProduccion = CostosProduccion::where('tiempo_produccion_id', $tiempo->id,)
                     ->where('sdp_id', $sdp->numero_sdp)
                     ->first();
 
+                $operarioId = $tiempo->operativo->trabajador_id;
+
+                if (!isset($totalHorasPorOperario[$operarioId])) {
+                    $totalHorasPorOperario[$operarioId] = 0; // Inicializa si no existe
+                }
+
+                $totalHorasPorOperario[$operarioId] += $tiempo->horas;
+
                 $horas = $tiempo->horas;
                 $totalHoras += $horas;
+
 
                 $totalCIF = ($MOI*$totalHoras) + ($GOI*$totalHoras) + ($OCI*$totalHoras);
 
                 $manoDeObraDirecta = $costoProduccion->mano_obra_directa ?? 0;
                 $totalManoObra += $manoDeObraDirecta;
 
-                $serviciosCostos = $tiempo->servicios_costos;
+                $serviciosCostos = $tiempo->servicios_costos; 
 
                 foreach ($serviciosCostos as $servicioCosto) {
+
                     $valor_servicio = $servicioCosto->valor_servicio;
-                    $servicio_nombre = $servicioCosto->servicio->nombre ?? 'Sin Nombre';
+                    $servicio_nombre = $tiempo->nombre_servicio ?? 'Sin Nombre';
                     
                     // Asegúrate de que horas es el valor correcto
-                    $servicio_horas = $valor_servicio * $horas; // Este debería ser el cálculo correcto
+                    $servicio_horas = $tiempo->valor_total_horas;
                 
                     // Guardar los detalles de cada servicio
-                // dd($detallesServicios);
 
                 $manoObraServicio = $manoDeObraDirecta + $valor_servicio + ($MOI*$horas) + ($GOI*$horas) + ($OCI*$horas);
                 $totalManoObraServicio += $manoObraServicio;
@@ -186,6 +197,7 @@ class Costos_produccionController extends Controller
                         'servicio_nombre' => $servicio_nombre ?? 'No definido',
                         'articulo' => $articulo->descripcion,
                         'horas' => $horas,
+                        'total_horas' => $totalHorasPorOperario[$operarioId] += $tiempo->horas,
                         'mano_obra_directa' => $manoDeObraDirecta,
                         'mano_obra_servicio' => $manoObraServicio,
                         'servicio_horas' => $servicio_horas,
@@ -195,7 +207,6 @@ class Costos_produccionController extends Controller
             }
         }
     });
-
             $totalTiempos = $totalTiempos ?? 0;
             $totalManoObraServicio = $totalManoObraServicio ?? 0;
             $totaldirectas = $totaldirectas ?? 0;

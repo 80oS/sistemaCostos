@@ -258,7 +258,7 @@
                                     <tr>
                                         <td>{{ $operario['nombre'] }}</td>
                                         <td>{{ $operario['servicio_nombre'] }}</td>
-                                        <td>{{ $operario['horas'] }}</td>
+                                        <td>{{ $operario['total_horas'] }}</td>
                                         <td>{{ number_format($operario['valor_servicio'], 2, ',', '.') }}</td>
                                         <td>{{ number_format($operario['servicio_horas'], 2, ',', '.') }}</td>
                                         <td>{{ number_format($operario['mano_obra_servicio'], 2, ',', '.') }}</td>

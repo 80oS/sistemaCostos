@@ -18,6 +18,7 @@
     {{-- Custom Meta Tags --}}
     @yield('meta_tags')
     @livewireStyles
+    @laravelPWA
 
     {{-- Title --}}
     <title>

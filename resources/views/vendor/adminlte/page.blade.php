@@ -7,6 +7,7 @@
     @stack('css')
     @yield('css')
     @livewireStyles
+    @laravelPWA
 @stop
 
 @section('classes_body', $layoutHelper->makeBodyClasses())

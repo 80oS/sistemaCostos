@@ -18,6 +18,7 @@
     <!-- Scripts -->
     @livewireStyles
     @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/css/app.css'])
+    @laravelPWA
 </head>
 <body>
     <div id="app">

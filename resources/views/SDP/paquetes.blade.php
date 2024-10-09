@@ -40,8 +40,8 @@
                     <tr>
                         <td>{{ $sdp->numero_sdp }}</td>
                         <td>{{ $sdp->clientes->nombre }}</td>
-                        <td>{{ $sdp->created_at->format('d-m-Y') }}</td>
                         <td>{{ $sdp->clientes->nit }}</td>
+                        <td>{{ $sdp->created_at->format('d-m-Y') }}</td>
                         <td>
                             <a href="{{ route('sdp.ver', $sdp->numero_sdp) }}" class="btn btn-info">
                                 ver sdp

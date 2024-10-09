@@ -243,6 +243,10 @@ Route::middleware(['auth'])->group(function () {
     // servocios Externos 
 
     Route::resource('serviciosExternos', servicioExternoController::class);
+
+    Route::get('/offline', function() {
+        return view('vendor.laravelpwa.offline');
+    });
 });
 
 
