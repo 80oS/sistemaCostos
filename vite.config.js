@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
+import tauriPlugin from 'vite-plugin-tauri';
 
 export default defineConfig({
     plugins: [
@@ -10,11 +11,14 @@ export default defineConfig({
                 'resources/js/app.js',
             ],
             refresh: true,
+            buildDirectory: 'build'
         }),
     ],
+    
     build: {
         outDir: 'public/build',
-        manifest: true,
+        manifest: 'manifest.json',
+        assetsDir: 'assets',
         rollupOptions: {
             output: {
                 assetFileNames: 'assets/[name].[hash].[ext]',
