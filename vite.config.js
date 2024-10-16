@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
-import tauriPlugin from 'vite-plugin-tauri';
+import { resolve } from 'path';
+const host = process.env.TAURI_DEV_HOST;
 
 export default defineConfig({
     plugins: [
@@ -14,6 +15,18 @@ export default defineConfig({
             buildDirectory: 'build'
         }),
     ],
+
+    server: {
+        strictPort: true,
+        host: host || false,
+        port: 5173,
+    },
+
+    resolve: {
+        alias: {
+            '@': resolve(__dirname, 'resources/js'),
+        }
+    },
     
     build: {
         outDir: 'public/build',
@@ -27,5 +40,10 @@ export default defineConfig({
             },
         },
         emptyOutDir: true,
+        target: process.env.TAURI_PLATFORM == 'windows' ? 'chrome105' : 'safari13', // Optimización según el SO
+        minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
+        sourcemap: !!process.env.TAURI_ENV_DEBUG,
     },
+    clearScreen: false,
+    envPrefix: ['VITE_', 'TAURI_'],
 });

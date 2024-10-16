@@ -3,7 +3,7 @@
 @section('title', 'ASIGNAR ROL A USUARIO')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-300 leading-tight">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
     {{ __('ASIGNAR ROL A USUARIO') }}
 </h2>
 @stop

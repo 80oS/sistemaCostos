@@ -121,7 +121,7 @@
     
         .table_wrapper {
                 background: #d6d6d6;
-                padding: 10px;
+                padding: 1px;
                 border-radius: 10px;
                 max-height: 400px;
                 overflow-x: auto;
@@ -249,7 +249,7 @@
                 background: #91dcff;
                 border: #000000 1px solid;
                 position: sticky;
-                top: 0px;
+                top: -1px;
                 z-index: 2;
             }
     
@@ -258,7 +258,7 @@
                 color: #000000;
                 border: #000000 1px solid;
                 position: sticky;
-                top: 0px;
+                top: -2px;
     
                 text-transform: uppercase;
             }

@@ -18,7 +18,7 @@
                     @method('PUT')
 
                     <div class="form-group">
-                        <label for="">{{ $servicioCosto->servicio->nombre }}</label>
+                        <label for="">{{ $servicioCosto->nombre }}</label>
                         <input type="hidden" name="servicio_id" value="{{ $servicioCosto->servicio_id }}">
                         <input type="text" name="valor_servicio" class="form-control" value="{{ $servicioCosto->valor_servicio }}" required>
                     </div>

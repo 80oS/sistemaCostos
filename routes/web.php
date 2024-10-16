@@ -37,6 +37,7 @@ use App\Http\Controllers\TrabajadoresController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VendedorController;
 use App\Http\Controllers\servicioExternoController;
+use App\Http\Controllers\ServicioSdpController;
 use App\Http\Controllers\SolicitudServicioExternoController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -159,9 +160,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/servicios-sdps', [ ServicioController::class, 'indexSdp'])->name('servicio.index');
 
     // servicios costos
-    Route::get('/sdp/{numero_sdp}/servicios', [ServicioCostosController::class, 'indexServicios'])->name('serviciosCostos.indexServicios');
-    Route::get('/servicioCosto/{servicio_id}/show', [ServicioCostosController::class, 'show'])->name('serviciosCostos.show');
-    Route::put('/sdps/{id}/update', [ServicioCostosController::class, 'actualizarPrecioServicio'])->name('servicioCosto.actualizar');
+    Route::get('/sdp/{numero_sdp}/servicios', [ServicioSdpController::class, 'indexServicios'])->name('serviciosCostos.indexServicios');
+    Route::get('/serviciosdp/{id}/show', [ServicioSdpController::class, 'show'])->name('serviciosCostos.show');
+    Route::put('/sdps/{id}/update', [ServicioSdpController::class, 'actualizarPrecioServicio'])->name('servicioCosto.actualizar');
 
     // almacen
     Route::get('/almacen', [AlmacenController::class, 'index'])->name('almacen');

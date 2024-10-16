@@ -11,10 +11,6 @@ class Servicio extends Model
     use HasFactory;
     use codigoAlf;
 
-    protected $primaryKey = 'id';
-    public $incrementing = true;
-    protected $keyType = 'int';
-
     protected $fillable = [
         'codigo',
         'nombre',
@@ -27,13 +23,22 @@ class Servicio extends Model
         return $this->hasMany(Tiempos_produccion::class, 'proseso_id', 'codigo');
     }
     
-    public function serviciosCostos() {
+    public function serviciosCostos() 
+    {
         return $this->hasMany(ServicioCostos::class);
     }
 
-    public function costosProduccion() {
+    public function costosProduccion() 
+    {
         return $this->belongsToMany(CostosProduccion::class, 'servicios_costos', 'servicio_id', 'costos_produccion_id')
             ->withPivot('valor_servicio', 'sdp_id');
+    }
+
+    public function sdps()
+    {
+        return $this->belongsToMany(SDP::class, 'servicio_s_d_p', 'servicio_id', 'sdp_id', 'numero_sdp', 'codigo')
+                    ->withPivot('valor_servicio', 'id')
+                    ->withTimestamps();
     }
 
 }

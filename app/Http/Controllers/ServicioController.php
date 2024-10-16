@@ -36,7 +36,8 @@ class ServicioController extends Controller
 
     public function create()
     {
-        return view('servicios.create');
+        $sdps = SDP::all();
+        return view('servicios.create', compact('sdps'));
     }
 
     public function store(Request $request)
@@ -49,6 +50,13 @@ class ServicioController extends Controller
         $validatedData['codigo'] = Servicio::generateUniqueCode();
 
         $servicio = Servicio::create($validatedData);
+
+        $servicioSdp = $servicio->servicios->attach($servicio->id, [
+            'servicio_id' => $servicio->codigo,
+            'sdp_id' => $request->input('sdp_id'),
+            'valor_servicio' => $servicio->valor_hora
+        ]);
+
 
         Log::info('Nuevo servicio creado: ' . $servicio->codigo);
 
@@ -72,6 +80,12 @@ class ServicioController extends Controller
 
         $servicio = Servicio::findOrFail($id);
         $servicio->update($request->all());
+
+        $servicioSdp = $servicio->sdp()->attach($servicio->id, [
+            'servicio_id' => $servicio->codigo,
+            'sdp_id' => $request->input('sdp_id'),
+            'valor_servicio' => $servicio->valor_hora
+        ]);
 
         return redirect()->route('servicios.index')
                     ->with('success', 'Servicio actualizado con éxito');

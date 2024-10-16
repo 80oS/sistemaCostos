@@ -145,7 +145,7 @@
             if (successMessage) {
                 successMessage.style.display = 'none';
             }
-        }, 2000);
+        }, 5000);
     </script>
 @stop
 

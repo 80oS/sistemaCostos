@@ -13,7 +13,7 @@
     <a href="{{ route('ADD_C_S') }}" class="btn btn-primary">volver</a>
 </div>
 @if (session('success'))
-    <div id="success-message" class="success-message" role="alert">
+    <div id="success-message" class="alert alert-success success-message" role="alert">
         <span class="block sm:inline">{{ session('success') }}</span>
     </div>
 @endif

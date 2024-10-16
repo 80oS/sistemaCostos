@@ -30,13 +30,13 @@
                     </tr>
                 </thead>
                 <tbody class="">
-                    @foreach($serviciosCostos as $serviciosCosto)
+                    @foreach($sdp->servicios as $serviciosCosto)
                         <tr>
-                            <td>{{  $serviciosCosto->servicio_id }}</td>
-                            <td>{{  $serviciosCosto->servicio->nombre }}</td>
-                            <td>{{ number_format($serviciosCosto->valor_servicio, 2, ',', '.') }}</td>
+                            <td>{{  $serviciosCosto->pivot->servicio_id }}</td>
+                            <td>{{  $serviciosCosto->nombre }}</td>
+                            <td>{{ number_format($serviciosCosto->pivot->valor_servicio, 2, ',', '.') }}</td>
                             <td>
-                                <a href="{{ route('serviciosCostos.show', $serviciosCosto->id) }}" class="btn btn-primary">Actualizar</a>
+                                <a href="{{ route('serviciosCostos.show', $serviciosCosto->pivot->id) }}" class="btn btn-primary">Actualizar</a>
                             </td>
                         </tr>
                     @endforeach
@@ -56,6 +56,11 @@
         }
         .card, .card-body {
             background: #c7bfbf;
+        }
+
+        .card-body {
+            max-height: 400px;
+            overflow-y: auto;
         }
     </style>
 @stop

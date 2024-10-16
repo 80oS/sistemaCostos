@@ -14,6 +14,11 @@
         <div class="mb-4">
             <a href="{{ route('remiciones.index') }}" class="btn btn-primary">volver</a>
         </div>
+        @if (session('success'))
+            <div id="success-message" class="alert alert-success success-message" role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        @endif
         <div class="card">
             <div class="card-body">
                 <div class="mb-4">
@@ -46,21 +51,21 @@
                                 <td>{{ $remicionDespacho->despacho }}</td>
                                 <td>{{ $remicionDespacho->departamento }}</td>
                                 <td>{{ $remicionDespacho->recibido }}</td>
-                                <td>
+                                <td class="text-center">
                                     <a href="{{ route('remision.despacho.edit', $remicionDespacho->id)}}" class="btn btn-primary">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <a href="{{ route('remision.despacho.show', $remicionDespacho->id)}}" class="btn btn-info">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
                                 </td>
-                                <td>
-                                    <form action="{{ route('remision.despacho.destroy', $remicionDespacho->id) }}">
+                                <td class="text-center">
+                                    <form action="{{ route('remision.despacho.destroy', $remicionDespacho->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger" onclick="return comfirm('Seguro que quire eliminar esta remision de despacho')">
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Seguro que quire eliminar esta remision de despacho')">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
                                     </form>
@@ -94,4 +99,12 @@
 @section('js')
     <script src="https://cdn.tailwindcss.com"></script>
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+    <script>
+        setTimeout(function() {
+            var successMessage = document.getElementById('success-message');
+            if (successMessage) {
+                successMessage.style.display = 'none';
+            }
+        }, 5000);
+    </script>
 @stop

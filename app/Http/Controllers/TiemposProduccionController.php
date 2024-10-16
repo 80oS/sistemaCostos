@@ -339,7 +339,6 @@ class TiemposProduccionController extends Controller
             Log::info('Costo de producción actualizado', ['costo_produccion_id' => $costoProduccion->id]);
     
             
-                // Si no existe, se crea el servicio
                 $costoProduccion->servicios()->attach($costoProduccion->id, [
                     'servicio_id' => $tiempoProduccion->proseso_id,
                     'tiempo_produccion_id' => $tiempoProduccion->id,
@@ -383,7 +382,7 @@ class TiemposProduccionController extends Controller
             DB::commit();
     
             // Redireccionar con un mensaje de éxito
-            return redirect()->route('tiempos.group')->with([
+            return redirect()->route('tiempos-produccion.operario', $tiempoProduccion->operativo_id)->with([
                 'success' => 'Tiempo de producción actualizado exitosamente.',
                 'valor_total_horas' => 'Valor total de horas: ' . $total_horas,
                 'total_horas' => 'Total de horas: ' . $horas,

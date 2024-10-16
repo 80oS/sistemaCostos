@@ -92,21 +92,21 @@ class RemicionesController extends Controller
 
         DB::commit();
 
-        return redirect()->route('remiciones.index')->with('success', 'Remicion de despacho creada con éxito');
+        return redirect()->route('remision.despacho')->with('success', 'Remicion de despacho creada con éxito');
     }
 
-    public function show($codigo_remicion)
+    public function showDespacho($id)
     {
-        $remicion = Remicion::with('cliente')->find($codigo_remicion);
-        return view('remiciones.show', compact('remicion'));
+        $remisionDespacho = Remicion::with('cliente')->find($id);
+
+        $items = $remisionDespacho->items;
+
+        return view('remiciones.showDespacho', compact('remisionDespacho', 'items'));
     }
 
     public function editDespacho($id)
     {
         $remisionDespacho = Remicion::findOrFail($id);
-        
-
-        
 
         return view('remiciones.editDespacho', compact('remisionDespacho'));
     }
@@ -155,11 +155,11 @@ class RemicionesController extends Controller
             }
         }
 
-        $remiciones->items()->sycn($itemsData);
+        $remiciones->items()->sync($items_ids);
 
         DB::commit();
 
-        return redirect()->route('remiciones.index')->with('success', 'Remision de despacho se ha actualizado con éxito');
+        return redirect()->route('remision.despacho')->with('success', 'Remision de despacho se ha actualizado con éxito');
     }
 
     public function destroyDespacho($id)
@@ -167,6 +167,6 @@ class RemicionesController extends Controller
         $remiciones = Remicion::findOrFail($id);
         $remiciones->delete();
 
-        return redirect()->route('remiciones.index')->with('success', 'Remision de despacho se ha eliminado con éxito');
+        return redirect()->route('remision.despacho')->with('success', 'Remision de despacho se ha eliminado con éxito');
     }
 }

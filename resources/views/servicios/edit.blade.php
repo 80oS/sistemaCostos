@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'home')
+@section('title', 'editar servicio')
 
 @section('content_header')
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -24,6 +24,11 @@
                 <div>
                     <label class="block mb-2 text-sm font-medium text-gray-900" for="cantidad">valor por hora</label>
                     <input type="number" name="valor_hora" id="valor_hora" value="{{ $servicio->valor_hora }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                </div>
+
+                <div>
+                    <label for="" class="form-label">sdp</label>
+                    <input type="text" name="sdp_id" value="" class="form-control">
                 </div>
 
                 <div class="flex items-center justify-between mt-4">

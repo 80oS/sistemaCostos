@@ -66,4 +66,11 @@ class SDP extends Model
     {
         return $this->hasMany(ServicioCostos::class, 'sdp_id', 'numero_sdp'); // Asegúrate de que 'numero_sdp' es la clave primaria de SDP
     }
+
+    public function servicios()
+    {
+        return $this->belongsToMany(Servicio::class, 'servicio_s_d_p', 'sdp_id', 'servicio_id', 'numero_sdp', 'codigo')
+                    ->withPivot('valor_servicio', 'id')
+                    ->withTimestamps();
+    }
 }
