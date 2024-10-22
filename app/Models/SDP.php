@@ -73,4 +73,9 @@ class SDP extends Model
                     ->withPivot('valor_servicio', 'id')
                     ->withTimestamps();
     }
+
+    public function remisionIngreso()
+    {
+        return $this->hasMany(RemisionIngreso::class, 'sdp_id', 'numero_sdp');
+    }
 }

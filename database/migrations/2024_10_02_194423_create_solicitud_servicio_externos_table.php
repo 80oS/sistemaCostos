@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Departamento;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,11 +14,12 @@ return new class extends Migration
     {
         Schema::create('solicitud_servicio_externos', function (Blueprint $table) {
             $table->id();
-            $table->integer('numero_ste');
-            $table->integer('sdp');
+            $table->integer('numero_ste')->unique();
             $table->string('observaciones')->nullable();
             $table->string('despacho')->nullable();
+            $table->enum('departamento', array_column(Departamento::cases(), 'value'));
             $table->string('recibido')->nullable();
+            $table->date('fecha_salida_planta');
             $table->timestamps();
         });
     }

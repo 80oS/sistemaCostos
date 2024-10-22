@@ -1,28 +1,48 @@
 @extends('adminlte::page')
 
-@section('title', 'crear SSE')
+@section('title', 'crear remision ingreso')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
-    {{ __('crear  Solicitud de Servicio Externo') }}
-</h2>
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
+        {{ __('crear remision de ingreso') }}
+    </h2>
 @stop
 
 @section('content')
     <div class="container">
-        @if (session('error'))
-            <div id="success-message" class="alert alert-danger" role="alert">
-                <span class="block sm:inline">{{ session('error') }}</span>
-            </div>
-        @endif
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('SSE.store') }}" method="POST" class="max-w-sm mx-auto space-y-4">
+                <form action="{{ route('remision.ingreso.store') }}" method="POST" class="max-w-sm mx-auto space-y-4">
                     @csrf
+                    <div class="group-form">
+                        <label for="proveedor_id" class="form-label">Proveedor / cliente</label>
+                        <div class="select_2">
+                            <select name="proveedor_id" id="proveedor_id" class="form-select">
+                                <option selected disabled >Seleccione el proveedor</option>
+                                @foreach ($proveedores as $proveedor)
+                                    <option value="{{ $proveedor->id }}">{{ $proveedor->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
 
                     <div class="form-group">
-                        <label for="numero_ste" class="form-label">numero SSE</label>
-                        <input type="text" name="numero_ste" value="{{ $nuevoNumeroSTE }}" class="form-control" readonly>
+                        <select name="cliente_nit" id="cliente_nit" class="form-select">
+                            <option selected disabled >Seleccione el cliente</option>
+                            @foreach ($clientes as $cliente)
+                                <option value="{{ $cliente->nit }}">{{ $cliente->nombre }}-{{ $cliente->nit }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="group-form">
+                        <label for="sdp_id" class="form-label">SDP</label>
+                        <select name="sdp_id" id="sdp_id" class="form-control">
+                            <option selected disabled>sleccione un sdp...</option>
+                            @foreach ($sdps as $sdp)
+                                <option value="{{ $sdp->numero_sdp }}">{{ $sdp->numero_sdp }}-{{ $sdp->clientes->nombre }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <div class="items-container group-form mb-4" id="items-container">
@@ -30,38 +50,39 @@
                         <button id="agregar_item" type="button" class="btn btn-primary mb-4">Agregar item </button>
                     </div>
 
-                    <div class="form-group">
-                        <label for="">observaciones</label>
+                    <div class="group-form">
+                        <label for="fecha_ingreso" class="form-label">Fecha de ingreso a planta</label>
+                        <input type="date" name="fecha_ingreso" class="form-control">
+                    </div>
+
+                    <div class="group-form">
+                        <label for="" class="form-label">Observaciones</label>
                         <input type="text" name="observaciones" class="form-control">
                     </div>
 
-                    <div class="form-group">
-                        <label for="despacho">despachado por</label>
+                    <div class="group-form">
+                        <label for="" class="form-label">Entregado por</label>
                         <input type="text" name="despacho" class="form-control">
                     </div>
 
-                    <div class="form-group">
-                        <label for="departamento">Departamento</label>
-                        <select name="departamento" id="departamento" class="form-select" required>
+                    <div class="group-form">
+                        <label for="" class="form-label">Departamento</label>
+                        <select name="departamento" id="" class="form-control">
+                            <option selected disabled >Seleccione el departamento</option>
                             @foreach (App\Enums\Departamento::cases() as $departamento)
                                 <option value="{{ $departamento->value }}">{{ $departamento->name }}</option>
                             @endforeach
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="fecha_salida_planta" class="form-label">Fecha de salida de planta</label>
-                        <input type="date" name="fecha_salida_planta" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="recibido">recibido por</label>
+                    <div class="group-form">
+                        <label for="" class="form-label">Recibido por</label>
                         <input type="text" name="recibido" class="form-control">
                     </div>
 
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">guardar</button>
-                        <a href="{{ route('SSE.index') }}" class="btn btn-secondary">cancelar</a>
+                    <div class="group-form">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <a href="{{ route('remision.ingreso') }}" class="btn btn-secondary">cancelar</a>
                     </div>
                 </form>
             </div>
@@ -85,16 +106,6 @@
                             <input type="text" class="form-control" name="descripcion">
                         </div>
 
-                        <div class="form-group">
-                            <label for="">Servicio requerido</label>
-                            <input type="text" class="form-control" name="servicio_requerido">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="">Dureza HRC</label>
-                            <input type="text" class="form-control" name="dureza_HRC">
-                        </div>
-
                         <button type="submit" class="btn btn-primary">guardar</button>
 
                     </form>
@@ -105,15 +116,27 @@
 @stop
 
 @section('css')
-        <link
+    {{-- Add here extra stylesheets --}}
+    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
             rel="stylesheet"
             integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
             crossorigin="anonymous"
         />
     <style>
-        .card-body, .card, .modal-content{
-            background: #909090 !important;
+        .modal-content {
+            background: #afaeae;
+        }
+        .card-body {
+            background: #afaeae;
+        }
+        select{
+            height: 38px !important;
+            padding: 5px !important;
+        }
+        h1 {
+            text-align: center;
         }
 
         .suggestions-list {
@@ -164,7 +187,7 @@
             function addItemRow() {
                 const container = document.getElementById('items-container');
                 const row = document.createElement('div');
-                row.classList.add('row', 'item-row', 'mb-2');
+                row.classList.add('row', 'item-row', 'mb-4');
                 row.innerHTML = `
 
                     <div>
@@ -179,29 +202,17 @@
                             <input type="text" class="form-control searchItem" id="searchItem" placeholder="Buscar item creado...">
                             <div class="suggestions-container"></div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="">Servicio requerido</label>
-                            <input type="text" class="form-control item-servicio_requerido" name="items[${itemIndex}][servicio_requerido]" readonly>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="">Dureza HRC</label>
-                            <input type="text" class="form-control item-dureza_HRC" name="items[${itemIndex}][dureza_HRC]" readonly>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="">Descripcion</label>
+                        <div class=group-form mb-4">
                             <input type="text" class="form-control item-descripcion" name="items[${itemIndex}][descripcion]" placeholder="Descripción" readonly>
                         </div>
 
-                        <div class="form-group">
-                            <label for="">Cantidad</label>
-                            <input type="number" class="form-control item-cantidad" name="items[${itemIndex}][cantidad]" placeholder="Cantidad">
-                            <input type="hidden" name="items[${itemIndex}][id]" class="item-id">
+                        <div class="group-form mb-4">
+                            <input type="number" class="form-control item-cantidad mb-4" name="items[${itemIndex}][cantidad]" placeholder="Cantidad">
+                            <input type="hidden" name="items[${itemIndex}][id]" class="item-id mb-4">
                         </div>
 
-                        <div class="form-group">
+                        <div class="group-form mb-4">
                             <button type="button" class="btn btn-danger btn-remove-item mb-4">Eliminar</button>
                         </div>
                     </div>
@@ -213,14 +224,10 @@
                 newItemSelect.addEventListener('change', function() {
                     const selectedOption = this.options[this.selectedIndex];
                     const descripcion = selectedOption.dataset.descripcion;
-                    const servicio_requerido = selectedOption.dataset.servicio_requerido;
-                    const dureza_HRC = selectedOption.dataset.dureza_HRC;
                     const cantidad = selectedOption.dataset.cantidad;
 
-                    
+                    // Rellenar los campos de descripción y cantidad
                     row.querySelector('.item-descripcion').value = descripcion;
-                    row.querySelector('.item-servicio_requerido').value = servicio_requerido;
-                    row.querySelector('.item-dureza_HRC').value = dureza_HRC;
                     row.querySelector('.item-cantidad').value = cantidad;
                 });
             }
@@ -237,7 +244,7 @@
                 if (event.target.classList.contains('searchItem')) {
                     let query = event.target.value;
                     if (query.length > 2) {
-                        fetch(`${baseUrl}/api/buscar-item-ste?q=${encodeURIComponent(query)}`)
+                        fetch(`${baseUrl}/api/buscar-items?q=${encodeURIComponent(query)}`)
                             .then(response => response.json())
                             .then(data => {
                                 let suggestionsContainer = event.target.nextElementSibling;
@@ -257,8 +264,6 @@
                                             let row = event.target.closest('.item-row');
 
                                             row.querySelector('input[name$="[descripcion]"]').value = item.descripcion;
-                                            row.querySelector('input[name$="[servicio_requerido]"]').value = item.servicio_requerido;
-                                            row.querySelector('input[name$="[dureza_HRC]"]').value = item.dureza_HRC;
                                             row.querySelector('input[name$="[id]"]').value = item.id;
 
                                             suggestionsContainer.innerHTML = '';
@@ -284,7 +289,7 @@
     
                 let formData = new FormData(event.target);
     
-                fetch('{{ route("item-ste.store") }}', {
+                fetch('{{ route("items.store") }}', {
                     method: 'POST',
                     body: formData,
                     headers: {

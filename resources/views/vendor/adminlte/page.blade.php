@@ -7,7 +7,6 @@
     @stack('css')
     @yield('css')
     @livewireStyles
-    
 @stop
 
 @section('classes_body', $layoutHelper->makeBodyClasses())

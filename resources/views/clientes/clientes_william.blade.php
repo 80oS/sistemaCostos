@@ -10,11 +10,11 @@
 
 @section('content')
 <div class=" flex items-end justify-end mb-4 px-20">
-    <a href="{{ route('clientes-comerciales') }}" class="btn btn-warning">volver</a>
+    <a href="{{ route('clientes-comerciales') }}" class="btn btn-primary">volver</a>
 </div>
 <div class="container">
     @if (session('success'))
-        <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <div id="success-message" class="alert alert-success" role="alert">
             <span class="block sm:inline">{{ session('success') }}</span>
         </div>
     @endif
@@ -54,10 +54,9 @@
                         <td>{{ $cliente->correo }}</td>
                         <td>{{ $cliente->vendedores->nombre }}</td>
                         <td>
-                            <a href="{{ route('clientes.edit', $cliente->nit) }}" class="btn btn-warning">Editar</a>
+                            <a href="{{ route('clientes.edit', $cliente->nit) }}" class="btn btn-info">Editar</a>
                         </td>
                         <td>
-                            
                             <form action="{{ route('clientes.destroy', $cliente->nit) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('DELETE')

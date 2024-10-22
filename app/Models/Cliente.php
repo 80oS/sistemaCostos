@@ -54,4 +54,9 @@ class Cliente extends Model
     {
         return $this->belongsTo(Municipio::class, 'ciudad');
     }
+
+    public function remisionIngreso()
+    {
+        return $this->hasMany(RemisionIngreso::class, 'cliente_nit', 'nit');
+    }
 }

@@ -15,9 +15,9 @@ return new class extends Migration
         Schema::create('remision_ingresos', function (Blueprint $table) {
             $table->id();
             $table->string('codigo');
-            $table->unsignedBigInteger('proveedor_id');
+            $table->unsignedBigInteger('proveedor_id')->nullable();
             $table->date('fecha_ingreso');
-            $table->string('ovserbaciones')->nullable();
+            $table->string('observaciones')->nullable();
             $table->string('despacho')->nullable();
             $table->enum('departamento', array_column(Departamento::cases(), 'value'));
             $table->string('recibido')->nullable();

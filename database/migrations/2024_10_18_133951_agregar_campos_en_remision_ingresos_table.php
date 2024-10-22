@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('remiciones', function (Blueprint $table) {
-            $table->string('cliente_nit');
+        Schema::table('remision_ingresos', function (Blueprint $table) {
+            $table->string('cliente_nit')->nullable();
             $table->foreign('cliente_nit')->references('nit')->on('clientes')->onDelete('cascade');
         });
     }
@@ -22,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('remiciones', function (Blueprint $table) {
-            $table->dropForeign('remiciones_cliente_nit_foreign');
+        Schema::table('remision_ingresos', function (Blueprint $table) {
+            $table->dropForeign(['cliente_nit']);
             $table->dropColumn('cliente_nit');
         });
     }

@@ -23,10 +23,21 @@
                 <li class="nav-item">
                     <a class="nav-link link" href="{{ route('almacen') }}">ALMACEN</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link link" href="{{ route('proveedor.index') }}">PROVEEDORES</a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
+
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <img src="{{ asset('images/idimcolLogo.png') }}" alt="IDIMCOL">
+        </div>
+    </div>
+</div>
 @stop
 
 @section('css')
@@ -45,6 +56,23 @@
 
         .link:hover {
             color: #5be03a;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        .card, .card-body {
+            width: 400px !important;
+            height: 400px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 100% !important;
+            box-shadow: 1px 10px 1px #000  !important;
+            border: #979595 1px solid;
         }
     </style>
 @stop

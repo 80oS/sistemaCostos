@@ -25,6 +25,10 @@ class Remicion extends Model
         'recibido'
     ];
 
+    protected $casts = [
+        'departamento' => Departamento::class
+    ];
+
     protected static function boot()
     {
         parent::boot();

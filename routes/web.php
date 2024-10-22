@@ -13,6 +13,8 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\horasController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ItemSTEController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MateriaPrimaDirectaController;
 use App\Http\Controllers\MateriaPrimaIndirectaController;
@@ -49,6 +51,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
+
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     Route::get('/gestion-humana', [TalentoHConroller::class, 'index'])->name('gestion-humana');
@@ -138,20 +141,35 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/municipios/{departamentoId}/add', [MunicipioController::class, 'addMunicipio']);
     Route::post('/municipios', [MunicipioController::class, 'store']);
 
+
     // remiciones
     Route::resource('remiciones', RemicionesController::class);
-    Route::get('remisiones/despacho', [RemicionesController::class, 'Despacho'])->name('remision.despacho');
-    Route::get('remisiones/despacho/create', [RemicionesController::class, 'createDespacho'])->name('remision.despacho.create');
-    Route::post('remisiones/despacho/store', [RemicionesController::class, 'storeDespacho'])->name('remision.despacho.store');
-    Route::get('remisiones/ingreso', [RemicionesController::class, 'Ingreso'])->name('remision.ingreso');
+    Route::get('/remisiones/despacho', [RemicionesController::class, 'Despacho'])->name('remision.despacho');
+    Route::get('/remisiones/despacho/create', [RemicionesController::class, 'createDespacho'])->name('remision.despacho.create');
+    Route::get('/remisiones/ingreso/create', [RemicionesController::class, 'createIngreso'])->name('remision.ingreso.create');
+    Route::post('/remisiones/despacho/store', [RemicionesController::class, 'storeDespacho'])->name('remision.despacho.store');
+    Route::post('/remisiones/ingreso/store', [RemicionesController::class, 'storeIngreso'])->name('remision.ingreso.store');
+    Route::get('/remisiones/ingreso', [RemicionesController::class, 'Ingreso'])->name('remision.ingreso');
     Route::get('/cliente/{cliente}/sdps', [RemicionesController::class, 'getSdpsByCliente']);
-    Route::get('remisnones/despacho/{id}/show', [RemicionesController::class, 'showDespacho'])->name('remision.despacho.show');
-    Route::get('remisnones/despacho/{id}/Edit', [RemicionesController::class, 'editDespacho'])->name('remision.despacho.edit');
-    Route::put('remisnones/despacho/{id}/update', [RemicionesController::class, 'updateDespacho'])->name('remision.despacho.update');
-    Route::delete('remisnones/despacho/{id}/destroy', [RemicionesController::class, 'destroyDespacho'])->name('remision.despacho.destroy');
+    Route::get('/remisnones/despacho/{id}/show', [RemicionesController::class, 'showDespacho'])->name('remision.despacho.show');
+    Route::get('/remisnones/ingreso/{id}/show', [RemicionesController::class, 'showIngreso'])->name('remision.ingreso.show');
+    Route::get('/remisnones/ingreso/{id}/Edit', [RemicionesController::class, 'editIngreso'])->name('remision.despacho.edit');
+    Route::get('/remisnones/despacho/{id}/Edit', [RemicionesController::class, 'editDespacho'])->name('remision.ingreso.edit');
+    Route::put('/remisnones/despacho/{id}/update', [RemicionesController::class, 'updateDespacho'])->name('remision.despacho.update');
+    Route::put('/remisnones/ingreso/{id}/update', [RemicionesController::class, 'updateIngreso'])->name('remision.ingreso.update');
+    Route::delete('/remisnones/despacho/{id}/destroy', [RemicionesController::class, 'destroyDespacho'])->name('remision.despacho.destroy');
+    Route::delete('/remisnones/ingreso/{id}/destroy', [RemicionesController::class, 'destroyIngreso'])->name('remision.ingreso.destroy');
+
+    // items 
+    Route::resource('items', ItemController::class);
+    Route::get('api/buscar-items', [ItemController::class, 'searchItem']);
 
     // solicitud servicio Externo
     Route::resource('SSE', SolicitudServicioExternoController::class);
+
+    // item ste 
+    Route::resource('item-ste', ItemSTEController::class);
+    Route::get('api/buscar-item-ste', [ItemSTEController::class, 'searchIem']);
 
 
     // servicios

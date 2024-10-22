@@ -10,7 +10,7 @@
 
 @section('content')
     <div class="cont">
-        <a href="{{ route('ADD_C_S') }}" class="button bg-yellow-800 hover:bg-yellow-500 text-black py-2 px-3 rounded">volver</a>
+        <a href="{{ route('ADD_C_S') }}" class="button btn btn-primary">volver</a>
         <div class="container">
             <div class="center">
                 <a href="{{ route('clientes-william') }}" class="bg-green-600 hover:bg-green-800 text-white px-3 py-2 rounded">clientes_William</a>

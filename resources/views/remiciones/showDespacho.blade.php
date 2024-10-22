@@ -21,17 +21,17 @@
                 <div class="contenido">
                     <div class="cabezera">
                         <div class="row">
-                            <div class="col-4 border text-center flex justify-center">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNkvsW9UU6hmZer2n_dGd7iO-ioVQ3Tyg8CA&s" alt="IDIMCOL">
+                            <div class="col-4  flex items-center justify-center mt-2">
+                                <img src="{{ asset('images/logoID.png') }}" alt="IDIMCOL">
                             </div>
-                            <div class="col-4 border text-center flex items-center justify-center">
-                                <h1><b>REMISION DE DESPACHO</b></h1>
+                            <div class="col-4 text-center flex items-center justify-center">
+                                <h1><b>REMISIÓN DE DESPACHO</b></h1>
                             </div>
-                            <div class="col-4 border text-justify flex  items-center justify-center">
+                            <div class="col-4 text-justify flex  items-center justify-center">
                                 <p>
-                                    <strong>codigo: </strong> F-PD-003<br>
-                                    <strong>version: </strong> 03<br>
-                                    <strong>fecha de creacion: </strong> {{ $remisionDespacho->created_at->format('d-m-y') }}<br>
+                                    <strong>código: </strong> F-PD-003<br>
+                                    <strong>versión: </strong> 03<br>
+                                    <strong>fecha de creación: </strong> {{ $remisionDespacho->created_at->format('d-m-y') }}<br>
                                 </p>
                             </div>
                         </div>
@@ -40,7 +40,7 @@
                         <table class="table">
                             <tbody>
                                 <tr>
-                                    <td>codigo</td>
+                                    <td>código de remisión</td>
                                     <td>{{ $remisionDespacho->codigo }}</td>
                                 </tr>
                                 <tr>
@@ -52,7 +52,7 @@
                                     <td>{{ $remisionDespacho->fecha_despacho }}</td>
                                 </tr>
                                 <tr>
-                                    <td>sdp</td>
+                                    <td>SDP / OC</td>
                                     <td>{{ $remisionDespacho->sdp_id }}</td>
                                 </tr>
                             </tbody>
@@ -62,8 +62,8 @@
                         <table class="table table-bordered table-striped">
                             <thead>
                                 <tr class="table-secondary">
-                                    <th>ITEM</th>
-                                    <th>DESCRIPCION</th>
+                                    <th>ÍTEM</th>
+                                    <th>DESCRIPCIÓN</th>
                                     <th>CANTIDAD</th>
                                 </tr>
                             </thead>
@@ -88,7 +88,7 @@
                             <div class="col-6 border">
                                 <p>
                                     <strong>DESPACHADO POR: </strong>{{ $remisionDespacho->despacho }} <br>
-                                    <strong>Departamento: </strong>{{ $remisionDespacho->departamento }}
+                                    <strong>DEPARTAMENTO: </strong>{{ $remisionDespacho->departamento }}
                                 </p>
                             </div>
                             <div class="col-6 border">
@@ -108,7 +108,7 @@
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <style>
-        .cabezera, .inform, .desc, .footer {
+        .inform, .desc, .footer {
             width: 100% !important;
         }
         .contenido {
@@ -116,8 +116,18 @@
             padding: 10px;
             width: 100%
         }
+        .cabezera{
+            background-color: #91d3fae4;
+            border: none;
+            height: 100px;
+            text-align: center;
+            
+        }
+        th, td, p, h1, h2, strong {
+            text-transform: capitalize;
+        }
         img {
-            width: 100px;
+            width: 90px;
             height: 90px;
         }
 

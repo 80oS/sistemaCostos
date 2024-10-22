@@ -3,16 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Remiciones;
 use App\Models\Cliente;
 use App\Models\Item;
 use App\Models\Remicion;
 use App\Models\RemisionIngreso;
 use App\Models\SDP;
+use App\Models\Proveedor;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
-use function Pest\Laravel\json;
 
 class RemicionesController extends Controller
 {
@@ -30,7 +28,7 @@ class RemicionesController extends Controller
 
     public function Ingreso()
     {
-        $remisionesIngreso = RemisionIngreso::all();
+        $remisionesIngreso = RemisionIngreso::with('proveedor')->get();
         return view('remiciones.ingreso', compact('remisionesIngreso'));
     }
 
@@ -50,15 +48,25 @@ class RemicionesController extends Controller
 
         return view('remiciones.createDespacho', compact('clientes', 'sdps'));
     }
+
+    public function createIngreso(Request $request)
+    {
+        $proveedores = Proveedor::all();
+        $clientes = Cliente::has('SDP')->get();
+        $sdps = SDP::with('clientes')->get();
+        $items = Item::all();
+
+        return view('remiciones.createIngreso', compact('proveedores', 'items', 'sdps', 'clientes'));
+    }
     
     public function storeDespacho(Request $request)
     {
         Log::info('Creación de la nueva remicion de despacho', $request->all());
 
         $request->validate([
-            'cliente_id' => 'required|string|exists:clientes,nit',
+            'cliente_id' => 'required|exists:clientes,nit',
             'fecha_despacho' => 'required|date',
-            'sdp_id' => 'required|integer|exists:sdps,numero_sdp',
+            'sdp_id' => 'required|exists:sdps,numero_sdp',
             'observaciones' => 'nullable|string',
             'despacho' => 'nullable|string',
             'departamento' => 'required|string',
@@ -95,6 +103,50 @@ class RemicionesController extends Controller
         return redirect()->route('remision.despacho')->with('success', 'Remicion de despacho creada con éxito');
     }
 
+    public function storeIngreso(Request $request)
+    {
+        $request->validate([
+            'proveedor_id' => 'nullable|exists:proveedores,id',
+            'cliente_nit' => 'nullable|exists:clientes,nit',
+            'sdp_id' => 'required|exists:sdps,numero_sdp',
+            'fecha_ingreso' => 'required|date',
+            'observaciones' => 'nullable|string',
+            'despacho' => 'nullable|string',
+            'departamento' => 'required|string',
+            'recibido' => 'nullable|string',
+            'items' => 'required|array',
+            'items.*.cantidad' => 'required|numeric',
+            'items.*.descripcion' => 'required|string',
+        ]);
+
+        DB::beginTransaction();
+
+        $remisionesIngreso = RemisionIngreso::create([
+            'proveedor_id' => $request->proveedor_id,
+            'cliente_nit' => $request->cliente_nit,
+            'sdp_id' => $request->sdp_id,
+            'fecha_ingreso' => $request->fecha_ingreso,
+            'observaciones' => $request->observaciones,
+            'despacho' => $request->despacho,
+            'departamento' => $request->departamento,
+            'recibido' => $request->recibido,
+        ]);
+
+        foreach ($request->input('items') as $itemsData){
+            $item = Item::firstOrCreate(
+                ['descripcion' => $itemsData['descripcion']]
+            );
+
+            $remisionesIngreso->items()->attach($item->id, [
+                'cantidad' => $itemsData['cantidad']
+            ]);
+        }
+
+        DB::commit();
+
+        return redirect()->route('remision.ingreso')->with('success', 'remision de ingreso creada exitosamente');
+    }
+
     public function showDespacho($id)
     {
         $remisionDespacho = Remicion::with('cliente')->find($id);
@@ -102,6 +154,15 @@ class RemicionesController extends Controller
         $items = $remisionDespacho->items;
 
         return view('remiciones.showDespacho', compact('remisionDespacho', 'items'));
+    }
+
+    public function showIngreso($id)
+    {
+        $remisionIngreso = RemisionIngreso::with('proveedor')->find($id);
+
+        $items = $remisionIngreso->items;
+
+        return view('remiciones.showIngreso', compact('remisionIngreso', 'items'));
     }
 
     public function editDespacho($id)
@@ -160,6 +221,11 @@ class RemicionesController extends Controller
         DB::commit();
 
         return redirect()->route('remision.despacho')->with('success', 'Remision de despacho se ha actualizado con éxito');
+    }
+
+    public function editIngreso($id)
+    {
+
     }
 
     public function destroyDespacho($id)

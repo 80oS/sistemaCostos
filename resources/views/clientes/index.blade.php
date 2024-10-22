@@ -10,11 +10,11 @@
 
 @section('content')
 <div class=" flex items-end justify-end mb-4 px-20">
-    <a href="{{ route('clientes-comerciales') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">volver</a>
+    <a href="{{ route('clientes-comerciales') }}" class="btn btn-primary">volver</a>
 </div>
 <div class="py-12">
     @if (session('success'))
-        <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <div id="success-message" class="alert alert-success" role="alert">
             <span class="block sm:inline">{{ session('success') }}</span>
         </div>
     @endif
@@ -54,14 +54,14 @@
                         <td>{{ $cliente->correo }}</td>
                         <td>{{ $cliente->vendedores->nombre }}</td>
                         <td>
-                            <a href="{{ route('clientes.edit', $cliente->nit) }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded">Editar</a>
+                            <a href="{{ route('clientes.edit', $cliente->nit) }}" class="btn btn-info">Editar</a>
                         </td>
                         <td>
                             
                             <form action="{{ route('clientes.destroy', $cliente->nit) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">Eliminar</button>
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">Eliminar</button>
                             </form>
                         </td>
                     </tr>

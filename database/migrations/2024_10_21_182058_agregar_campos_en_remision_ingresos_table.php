@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('sdps', function (Blueprint $table) {
-            $table->string('cliente_nit');
-            $table->foreign('cliente_nit')->references('nit')->on('clientes')->onDelete('cascade');
+        Schema::table('solicitud_servicio_externos', function (Blueprint $table) {
+            $table->date('fecha_salida_planta');
         });
     }
 
@@ -22,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('sdps', function (Blueprint $table) {
-            $table->dropForeign('sdps_cliente_nit_foreign');
-            $table->dropColumn('cliente_nit');
+        Schema::table('solicitud_servicio_externos', function (Blueprint $table) {
+            $table->dropColumn('fecha_salida_planta');
         });
     }
 };

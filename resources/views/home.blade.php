@@ -14,7 +14,7 @@
 <div class="container">
     <div class="card">
         <div class="card-body">
-            <img src="https://www.acofi.edu.co/eiei2018/wp-content/uploads/2018/01/IDIMCOL.jpg" alt="IDIMCOL">
+            <img src="{{ asset('images/idimcolLogo.png') }}" alt="IDIMCOL">
         </div>
     </div>
 </div>
@@ -42,7 +42,7 @@
         height: 400px !important;
         border-radius: 100% !important;
         box-shadow: 1px 10px 1px #000  !important;
-        border: #979595 1px solid;
+        border: #212121 1px solid;
     }
 </style>
 @stop

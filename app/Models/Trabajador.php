@@ -44,11 +44,6 @@ class Trabajador extends Model
         return $this->hasMany(Sueldo::class, 'trabajador_id');
     }
 
-    public function hijos()
-    {
-        return $this->hasMany(Hijo::class, 'trabajador_id');
-    }
-
     public function nominas()
     {
         return $this->hasMany(Nominas::class);

@@ -22,7 +22,7 @@ trait codigoREM_DES
             $nextNumber = $lastNumber + 1;
         }
 
-        $newCode = 'REM_DES' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        $newCode = 'REM_DES_' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
 
         // Asegurarse de que el código sea único
         while (static::where('codigo', $newCode)->exists()) {

@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('costos_produccions', function (Blueprint $table) {
+        Schema::table('remision_ingresos', function (Blueprint $table) {
             $table->integer('sdp_id');
+
             $table->foreign('sdp_id')->references('numero_sdp')->on('sdps')->onDelete('cascade');
         });
     }
@@ -22,8 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('costos_produccions', function (Blueprint $table) {
-            $table->dropForeign('costos_produccions_sdp_id_foreign');
+        Schema::table('remision_ingresos', function (Blueprint $table) {
+            $table->dropForeign(['sdp_id']);
             $table->dropColumn('sdp_id');
         });
     }

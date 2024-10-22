@@ -49,7 +49,7 @@
                         </td>
                         <td>
                             <div class="col-4">
-                                <a href="{{ route('sdp.edit', $sdp->numero_sdp) }}" class="btn btn-warning">Editar</a>
+                                <a href="{{ route('sdp.edit', $sdp->numero_sdp) }}" class="btn btn-info">Editar</a>
                             </div>
                         </td>
                         <td>

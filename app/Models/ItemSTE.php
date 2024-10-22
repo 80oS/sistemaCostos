@@ -9,18 +9,17 @@ class ItemSTE extends Model
 {
     use HasFactory;
 
+    protected $table = 'items_ste';
+
     protected $fillable = [
-        'solicitud_servicio_externo_id',
-        'cantidad',
         'descripcion',
-        'material',
-        'tratamiento_termico',
-        'dureza_HRC',
-        'peso'
+        'servicio_requerido',
+        'dureza_HRC'
     ];
 
     public function solicitdServicioExterno()
     {
-        return $this->belongsTo(SolicitudServicioExterno::class);
+        return $this->belongsToMany(SolicitudServicioExterno::class, 'items_ste_cantidad', 'item_ste_id', 'solicitud_servicio_externo_id')
+                    ->withPivot('cantidad');
     }
 }

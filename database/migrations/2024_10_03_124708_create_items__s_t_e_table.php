@@ -14,12 +14,9 @@ return new class extends Migration
         Schema::create('items_STE', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('solicitud_servicio_externo_id');
-            $table->integer('cantidad');
             $table->string('descripcion')->nullable();
-            $table->string('material')->nullable();
-            $table->string('tratamiento_termico')->nullable();
+            $table->string('servicio_requerido')->nullable();
             $table->string('dureza_HRC')->nullable();
-            $table->string('peso')->nullable();
             $table->timestamps();
 
             $table->foreign('solicitud_servicio_externo_id')->references('id')->on('solicitud_servicio_externos')->onDelete('cascade');
