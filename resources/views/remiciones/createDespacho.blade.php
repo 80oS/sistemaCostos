@@ -18,7 +18,7 @@
 
                     <div class="">
                         <select name="cliente_id" id="cliente_id" class="form-control">
-                            <option value="" id="search">Seleccione o busque un cliente</option>
+                            <option value="" id="search">Seleccione un cliente</option>
                             @foreach($clientes as $cliente)
                                 <option value="{{ $cliente->nit }}">{{ $cliente->nombre }}</option>
                             @endforeach
@@ -173,25 +173,12 @@
                     row.querySelector('.item-descripcion').value = descripcion;
                     row.querySelector('.item-cantidad').value = cantidad;
                 });
+
+                populateArticuloSelect(newItemSelect);
             }
 
-            document.getElementById('agregar_item').addEventListener('click', addItemRow);
-
-            document.getElementById('items-container').addEventListener('click', function(event) {
-                if (event.target.classList.contains('btn-remove-item')) {
-                    event.target.closest('.item-row').remove();
-                }
-            });
-
-            const sdpSelect = document.getElementById('sdp_id');
-            
-            sdpSelect.addEventListener('change', function() {
-                const sdpId = this.value;
-                const itemSelects = document.querySelectorAll('.item-select');
-
-                itemSelects.forEach(select => {
-                    select.innerHTML = '<option value="" selected disabled>Seleccione uno de los item que pertenece a la SDP</option>';
-                });
+            function populateArticuloSelect(selectElement) {
+                const sdpId = document.getElementById('sdp_id').value;
 
                 if (sdpId) {
                     fetch(`${baseUrl}/api/getArticulos/${sdpId}`)
@@ -201,14 +188,18 @@
                                 const option = new Option(`${articulo.codigo} - ${articulo.descripcion}`, articulo.id);
                                 option.dataset.descripcion = articulo.descripcion;
                                 option.dataset.cantidad = articulo.cantidad;
-
-
-                                itemSelects.forEach(select => {
-                                    select.appendChild(option.cloneNode(true));
-                                });
+                                selectElement.appendChild(option);
                             });
                         })
                         .catch(error => console.error('Error fetching articles:', error));
+                }
+            }
+
+            document.getElementById('agregar_item').addEventListener('click', addItemRow);
+
+            document.getElementById('items-container').addEventListener('click', function(event) {
+                if (event.target.classList.contains('btn-remove-item')) {
+                    event.target.closest('.item-row').remove();
                 }
             });
         });

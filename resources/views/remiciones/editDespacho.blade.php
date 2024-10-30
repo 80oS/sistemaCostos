@@ -4,7 +4,7 @@
 
 @section('content_header')
 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-    {{ __('editar remicion') }}
+    {{ __('editar remision de despacho') }}
 </h2>
 @stop
 
@@ -72,7 +72,7 @@
                             <option selected disabled >Seleccione un departamento</option>
                             @foreach (App\Enums\Departamento::cases() as $departamento)
                                 <option value="{{ $departamento->value }}"
-                                    {{ $remisionDespacho->departamento == $departamento->value ? 'selected': ''}}
+                                    {{ $remisionDespacho->departamento === $departamento ? 'selected': ''}}
                                     >
                                     {{ $departamento->name }}</option>
                             @endforeach
@@ -86,7 +86,7 @@
     
                     <div class="flex items-center justify-between mt-4">
                         <button type="submit" class="btn btn-primary">Guardar</button>
-                        <a href="{{ route('remiciones.index') }}" class="btn btn-secondary">Cancelar</a>
+                        <a href="{{ route('remision.despacho') }}" class="btn btn-secondary">Cancelar</a>
                     </div>
                 </form>
             </div>
@@ -122,7 +122,6 @@
                         <div class="mb-4">
                             <select name="items[${itemIndex}][articulo_id]" class="form-control item-select" id="item-select-${itemIndex}">
                                 <option value="" selected disabled>Seleccione uno de los item que pertenece a la SDP</option>
-
                             </select>
                         </div>
 
@@ -153,6 +152,26 @@
                     row.querySelector('.item-descripcion').value = descripcion;
                     row.querySelector('.item-cantidad').value = cantidad;
                 });
+
+                populateArticuloSelect(newItemSelect);
+            }
+
+            function populateArticuloSelect(selectElement) {
+                const sdpId = document.getElementById('sdp_id').value;
+
+                if (sdpId) {
+                    fetch(`${baseUrl}/api/getArticulos/${sdpId}`)
+                        .then(response => response.json())
+                        .then(articulos => {
+                            articulos.forEach(articulo => {
+                                const option = new Option(`${articulo.codigo} - ${articulo.descripcion}`, articulo.id);
+                                option.dataset.descripcion = articulo.descripcion;
+                                option.dataset.cantidad = articulo.cantidad;
+                                selectElement.appendChild(option);
+                            });
+                        })
+                        .catch(error => console.error('Error fetching articles:', error));
+                }
             }
 
             document.getElementById('agregar_item').addEventListener('click', addItemRow);
@@ -163,34 +182,10 @@
                 }
             });
 
-            const sdpSelect = document.getElementById('sdp_id');
-            
-            sdpSelect.addEventListener('change', function() {
-                const sdpId = this.value;
-                const itemSelects = document.querySelectorAll('.item-select');
-
+            const itemSelects = document.querySelectorAll('.item-select');
                 itemSelects.forEach(select => {
-                    select.innerHTML = '<option value="" selected disabled>Seleccione item de la sdp</option>';
+                    populateArticuloSelect(select);
                 });
-
-                if (sdpId) {
-                    fetch(`${baseUrl}/api/getArticulos/${sdpId}`)
-                        .then(response => response.json())
-                        .then(articulos => {
-                            articulos.forEach(articulo => {
-                                const option = new Option(`${articulo.codigo} - ${articulo.descripcion}`, articulo.id);
-                                option.dataset.descripcion = articulo.descripcion;
-                                option.dataset.cantidad = articulo.cantidad;
-
-
-                                itemSelects.forEach(select => {
-                                    select.appendChild(option.cloneNode(true));
-                                });
-                            });
-                        })
-                        .catch(error => console.error('Error fetching articles:', error));
-                }
-            });
         });
     </script>
 @stop

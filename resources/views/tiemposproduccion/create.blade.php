@@ -78,17 +78,6 @@
                             <label for="hora_fin">Hora Fin</label>
                             <input type="time" id="hora_fin" name="hora_fin" required>
                         </div>
-                        
-                        <div class="mb-4">
-                            <input type="checkbox" id="laboral_descanso">
-                            <label for="laboral_descanso">Laboral con descansos</label>
-                        
-                            <div class="tiempo-restar-container">
-                                <button type="button" id="decrementar">-</button>
-                                <span id="minutos_restados">0</span> minutos
-                                <button type="button" id="incrementar">+</button>
-                            </div>
-                        </div>
                     </div>
         
                     <div class="mb-4">
@@ -227,7 +216,6 @@
                             <th>select</th>
                             <th>codigo</th>
                             <th>descripcion</th>
-                            <th>cliente</th>
                         </tr>
                     </thead>
                     <tbody id="sdpTableBody">
@@ -237,8 +225,7 @@
                                 <input type="radio" name="SDP_select" value="{{ $sdp->numero_sdp }}" data-codigo="{{ $sdp->numero_sdp }}">
                             </td>
                             <td>{{ $sdp->numero_sdp }}</td>
-                            <td>{{ $sdp->articulos->first()->descripcion }}</td>
-                            <td>{{ $sdp->clientes->nombre }}</td>
+                            <td>{{ $sdp->nombre }}</td>
                         </tr>
                         @endforeach
                     </tbody>

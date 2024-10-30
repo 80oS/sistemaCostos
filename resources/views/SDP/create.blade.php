@@ -32,7 +32,7 @@
                 <div class="">
                     <label for="vendedor" class="form-label">Vendedor</label>
                     <div class="">
-                        <select name="vendedor_id" id="vendedor_id" class="form-control" required>
+                        <select name="vendedor_id" id="vendedor_id" class="form-select" required>
                             <option value="">Seleccione un vendedor</option>
                             @foreach ($vendedores as $vendedor)
                                 <option value="{{ $vendedor->id }}">{{ $vendedor->nombre }}</option>
@@ -44,10 +44,15 @@
                 <div class="">
                     <label for="cliente" class="form-label">Cliente</label>
                     <div class="">
-                        <select name="cliente_nit" id="cliente_nit" class="form-control" required>
+                        <select name="cliente_nit" id="cliente_nit" class="form-select" required>
                             <option value="">Seleccione un cliente</option>
                         </select>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="" class="form-label">Nombre</label>
+                    <input type="text" name="nombre" class="form-control">
                 </div>
 
                 <div class="form-group ">
@@ -57,7 +62,7 @@
                 </div>
             
                 <div class="form-group">
-                    <label for="fecha_despacho_comercial" class="form-label">Fecha Despacho Comercial</label>
+                    <label for="fecha_despacho_comercial" class="form-label">Fecha de facturacion</label>
                     <input type="date" name="fecha_despacho_comercial" id="fecha_despacho_comercial" class="form-control" required>
                 </div>
             
@@ -132,6 +137,12 @@
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
     <style>
         .modal-body, .modal-header {
             background: #b1b1b1 !important;
@@ -282,6 +293,17 @@
 @section('js')
     <script src="https://cdn.tailwindcss.com"></script>
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+    <script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"
+        ></script>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+            crossorigin="anonymous"
+        ></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let articuloIndex = 0;
@@ -450,6 +472,10 @@
     
             // Si se seleccionó un vendedor
             if (vendedorId && clientesPorVendedor[vendedorId]) {
+
+                const clientesOrdenados = clientesPorVendedor[vendedorId].sort((a, b) => 
+                    a.nombre.localeCompare(b.nombre)
+                );
                 // Agregar las opciones de clientes asociados al vendedor
                 clientesPorVendedor[vendedorId].forEach(function(cliente) {
                     const option = document.createElement('option');

@@ -16,6 +16,7 @@
 
         <!-- Styles -->
         @livewireStyles
+        @laravelPWA
     </head>
     <body>
         <x-preloader />

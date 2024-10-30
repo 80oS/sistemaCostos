@@ -13,18 +13,16 @@ return new class extends Migration
     {
         Schema::create('sdps', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre')->nullable();
             $table->integer('numero_sdp')->unique();
             $table->bigInteger('cliente_nit');
             $table->unsignedBigInteger('vendedor_id');
-            $table->integer('cantidad');
-            $table->string('descripcion', 255);
-            $table->string('material', 255);
             $table->date('fecha_despacho_comercial');
             $table->date('fecha_despacho_produccion')->nullable();
-            $table->string('plano', 255)->nullable();
             $table->string('observaciones', 255)->nullable();
             $table->string('requisitos_cliente', 255)->nullable();
-            $table->decimal('precio', 10, 2);
+            $table->string('orden_compra')->nullable();
+            $table->string('memoria_calculo')->nullable();
             $table->timestamps();
 
             $table->foreign('cliente_nit')->references('nit')->on('clientes')->onDelete('cascade');

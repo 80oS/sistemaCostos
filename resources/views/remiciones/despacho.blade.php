@@ -27,16 +27,16 @@
                 <table class="table table-striped">
                     <thead>
                         <tr class="table-primary">
-                            <th>codigo</th>
+                            <th>código</th>
                             <th>cliente</th>
                             <th>sdp</th>
                             <th>fecha de despacho</th>
                             <th>observaciones</th>
-                            <th>depacho</th>
+                            <th>despachado</th>
                             <th>departamento</th>
                             <th>recibido</th>
                             <th>editar</th>
-                            <th>ver remision</th>
+                            <th>ver remisión</th>
                             <th>eliminar</th>
                         </tr>
                     </thead>
@@ -85,13 +85,9 @@
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        .card-body {
-            max-height: 400px;
-            overflow-y: auto;
-        }
         th {
-            text-align: center;
             text-transform: uppercase;
+            text-align: center;
         }
     </style>
 @stop
@@ -105,6 +101,6 @@
             if (successMessage) {
                 successMessage.style.display = 'none';
             }
-        }, 5000);
+        }, 10000);
     </script>
 @stop

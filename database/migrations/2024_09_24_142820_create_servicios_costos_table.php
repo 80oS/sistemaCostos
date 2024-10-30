@@ -17,11 +17,13 @@ return new class extends Migration
             $table->unsignedBigInteger('costos_produccion_id');
             $table->integer('sdp_id');
             $table->decimal('valor_servicio', 20, 2);
+            $table->unsignedBigInteger('tiempo_produccion_id');
             $table->timestamps();
 
             $table->foreign('servicio_id')->references('codigo')->on('servicios')->onDelete('cascade');
             $table->foreign('costos_produccion_id')->references('id')->on('costos_produccions')->onDelete('cascade');
             $table->foreign('sdp_id')->references('numero_sdp')->on('sdps')->onDelete('cascade');
+            $table->foreign('tiempo_produccion_id')->references('id')->on('tiempos_produccions')->onDelete('cascade');
             
         });
     }

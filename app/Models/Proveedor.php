@@ -11,7 +11,15 @@ class Proveedor extends Model
 
     protected $table = 'proveedores';
 
-    protected $fillable = ['nombre', 'direccion', 'telefono', 'email'];
+    protected $fillable = [
+        'nit',
+        'nombre',
+        'persona_contacto',
+        'email',
+        'telefono',
+        'direccion',
+        'ciudad'
+    ];
 
     public function productos()
     {
@@ -21,5 +29,15 @@ class Proveedor extends Model
     public function remisionIngreso()
     {
         return $this->hasMany(RemisionIngreso::class);
+    }
+
+    public function materiaPrimaDirecta()
+    {
+        return $this->hasMany(MateriaPrimaDirecta::class);
+    }
+
+    public function materiaPrimaIndirecta()
+    {
+        return $this->hasMany(MateriaPrimaIndirecta::class);
     }
 }

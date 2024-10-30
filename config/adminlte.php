@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => '',
+    'title' => 'sistemaCostos',
     'title_prefix' => '',
     'title_postfix' => '| IDIMCOL',
 
@@ -301,37 +301,37 @@ return [
         ],
         // Sidebar items:
         [
-            'text' => 'Gestíon Humana',
+            'text' => 'Gestión Humana',
             'route' => 'gestion-humana',
             'icon' => 'fas fa-fw fa-city',
         ],
         [
-            'text' => ' Gestíon Operacional',
+            'text' => ' Gestión Operacional',
             'route' => 'servicio',
             'icon' => 'fas fa-w fa-wrench',
             
         ],
         [
-            'text' => 'Gestion Comercial',
+            'text' => 'Gestión Comercial',
             'route' => 'ADD_C_S',
             'icon' => 'fas fa-fw fa-handshake',
             
         ],
         [
-            'text' => 'Gestion De Costos',
+            'text' => 'Gestión De Costos',
             'route' => 'cif.index',
             'icon' => 'fas fa-fw fa-dollar-sign',
             
         ],
         [
-            'text' => 'Gestion Logistica',
+            'text' => 'Gestión Logística',
             'route' => 'AdministraciónInventario',
             'icon' => 'fas fa-fw fa-boxes',
             
         ],
-        ['header' => 'CONFIGURACION DE CUENTA'],
+        ['header' => 'CONFIGURACIÓN DE CUENTA'],
         [
-            'text' => 'profile',
+            'text' => 'perfil',
             'route' => 'profile.show',
             'icon' => 'fas fa-fw fa-address-card',
             

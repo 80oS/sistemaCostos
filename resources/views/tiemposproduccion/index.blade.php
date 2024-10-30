@@ -3,15 +3,15 @@
 @section('title', 'grupos de tiempos de produccion')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-800 leading-tight">
-    {{ __('grupos de tiempos de procuccion por operario') }}
+<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
+    {{ __('grupos de tiempos de procucción por operario') }}
 </h2>
 @stop
 
 @section('content')
 <div class="py-12">
     @if (session('success'))
-        <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <div id="success-message" class="alert alert-success" role="alert">
             <span class="block sm:inline">{{ session('success') }}</span>
         </div>
     @endif

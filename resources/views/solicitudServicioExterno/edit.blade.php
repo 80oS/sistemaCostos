@@ -29,7 +29,7 @@
                 <div class="items-container group-form mb-4" id="items-container">
                     <h1 class="mb-4 text-center"><b>Items</b></h1>
 
-                    @foreach ($solicitudServicioExterno->itemSTE as $item)
+                    @foreach ($itemsSte as $item)
                         <div class="form-group">
                             <label for="">Descripcion</label>
                             <input type="text" class="form-control item-descripcion" name="items[{{ $loop->index }}][descripcion]" value="{{ $item->descripcion }}" readonly>
@@ -48,6 +48,10 @@
                         <div class="form-group">
                             <label for="">Cantidad</label>
                             <input type="number" class="form-control item-cantidad" name="items[{{ $loop->index }}][cantidad]" value="{{ $item->pivot->cantidad }}" placeholder="Cantidad">
+                        </div>
+
+                        <div class="form-group">
+                            <button type="button" class="btn btn-danger btn-remove-item mb-4">Eliminar</button>
                         </div>
                     @endforeach
 
@@ -134,8 +138,14 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
     <style>
-        .card-body, .modal-centent {
+        .card-body, .modal-content {
             background: #838383;
         }
         .suggestions-list {
@@ -166,6 +176,17 @@
 
 @section('js')
     <script src="https://cdn.tailwindcss.com"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"
+    ></script>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"
+    ></script>
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

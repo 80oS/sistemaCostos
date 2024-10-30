@@ -33,13 +33,14 @@ class SolicitudServicioExterno extends Model
 
     public function itemSTE()
     {
-        return $this->belongsToMany(ItemSTE::class, 'items_ste_cantidad', 'item_ste_id', 'solicitud_servicio_externo_id')
-                    ->withPivot('cantidad');
+        return $this->belongsToMany(ItemSTE::class, 'items_ste_cantidad', 'item_ste_id', 'solicitud_servicio_externo_id', 'numero_ste', 'id')
+                    ->withPivot('cantidad', 'id')
+                    ->withTimestamps();
     }
 
-    public function numero_ste()
+    public function nuevoNumero_ste()
     {
-        $ultimoSTE = SolicitudServicioExterno::latest('id')->first();
+        $ultimoSTE = SolicitudServicioExterno::latest('numero_ste')->first();
         $nuevonumero_ste = $ultimoSTE ? $ultimoSTE->numero_ste + 1 : 1;
         return $nuevonumero_ste;
     }

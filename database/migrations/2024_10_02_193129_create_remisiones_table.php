@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('cliente_id');
             $table->date('fecha_despacho');
             $table->integer('sdp_id');
-            $table->string('ovserbaciones')->nullable();
+            $table->string('observaciones')->nullable();
             $table->string('despacho')->nullable();
             $table->enum('departamento', array_column(Departamento::cases(), 'value'));
             $table->string('recibido')->nullable();

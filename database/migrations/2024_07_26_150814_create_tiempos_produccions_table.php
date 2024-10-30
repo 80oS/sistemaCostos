@@ -23,11 +23,15 @@ return new class extends Migration
             $table->Integer('sdp_id');
             $table->string('nombre_operario');
             $table->string('nombre_servicio');
+            $table->unsignedBigInteger('cif_id');
+            $table->decimal('valor_total_horas', 20, 2);
+            $table->decimal('horas', 8, 2);
             $table->timestamps();
 
             $table->foreign('proseso_id')->references('codigo')->on('servicios')->onDelete('cascade');
             $table->foreign('operativo_id')->references('codigo')->on('operativos')->onDelete('cascade');
             $table->foreign('sdp_id')->references('numero_sdp')->on('sdps')->onDelete('cascade');
+            $table->foreign('cif_id')->references('id')->on('cifs')->onDelete('cascade');
         });
     }
 

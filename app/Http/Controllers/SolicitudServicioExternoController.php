@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItemSTE;
+use App\Models\OrdenCompra;
+use App\Models\Proveedor;
 use App\Models\SDP;
 use App\Models\SolicitudServicioExterno;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 use function Laravel\Prompts\error;
 
@@ -21,13 +24,15 @@ class SolicitudServicioExternoController extends Controller
 
     public function create()
     {
-        $nuevoNumeroSTE = $this->numero_ste();
-        return view('solicitudServicioExterno.create', compact('nuevoNumeroSTE'));
+        $nuevoNumeroSTE = $this->nuevoNumero_ste();
+        $proveedores = Proveedor::all();
+        $ordenesCompra = OrdenCompra::all();
+        return view('solicitudServicioExterno.create', compact('nuevoNumeroSTE', 'proveedores', 'ordenesCompra'));
     }
 
-    public function numero_ste()
+    public function nuevoNumero_ste()
     {
-        $ultimoSTE = SolicitudServicioExterno::latest('id')->first();
+        $ultimoSTE = SolicitudServicioExterno::latest('numero_ste')->first();
         $nuevonumero_ste = $ultimoSTE ? $ultimoSTE->numero_ste + 1 : 1;
         return $nuevonumero_ste;
     }
@@ -40,6 +45,9 @@ class SolicitudServicioExternoController extends Controller
 
             $request->validate([
                 'numero_ste' => 'required|unique:solicitud_servicio_externos,numero_ste',
+                'proveedor_id' => 'required|exists:proveedores,nit',
+                'ordenCompra_id' => 'required|exists:orden__compras,numero',
+                'direccion' => 'nullable|string',
                 'observaciones' => 'nullable|string',
                 'despacho' => 'nullable|string',
                 'recibido' => 'nullable|string',
@@ -54,7 +62,7 @@ class SolicitudServicioExternoController extends Controller
     
             DB::beginTransaction();
     
-            $nuevoNumeroSTE = $this->numero_ste();
+            $nuevoNumeroSTE = $this->nuevoNumero_ste();
     
             $solicitudesServicioExterno = SolicitudServicioExterno::create([
                 'numero_ste' => $nuevoNumeroSTE,
@@ -66,13 +74,15 @@ class SolicitudServicioExternoController extends Controller
             ]);
     
             foreach ($request->input('items') as $itemsData){
-                $item = ItemSTE::firstOrCreate(
-                    ['descripcion' => $itemsData['descripcion']],
-                    [
-                        'servicio_requerido' => $itemsData['servicio_requerido'] ?? null,
-                        'dureza_HRC' => $itemsData['dureza_HRC'] ?? null
-                    ]
-                );
+                $item = ItemSTE::where('descripcion', $itemsData['descripcion'])->first();
+
+                if (!$item) {
+                    $item = ItemSTE::create([
+                        'descripcion' => $itemsData['descripcion'],
+                        'servicio_requerido' => $itemsData['servicio_requerido'],
+                        'dureza_HRC' => $itemsData['dureza_HRC']
+                    ]);
+                }
     
                 $solicitudesServicioExterno->itemSTE()->attach($item->id, [
                     'cantidad' => $itemsData['cantidad']
@@ -104,21 +114,21 @@ class SolicitudServicioExternoController extends Controller
     {
         try {
 
-            Log::info('Creacion del nuevo ste', $request->all());
+            Log::info('Actualizacion ste', $request->validated());
 
             $solicitudServicioExterno = SolicitudServicioExterno::findOrFail($id);
 
             $request->validate([
-                'numero_ste' => 'required|unique:solicitud_servicio_externos,numero_ste,' . $solicitudServicioExterno->id,
-                'observaciones' => 'nullable|string',
-                'despacho' => 'nullable|string',
-                'recibido' => 'nullable|string',
+                'numero_ste' => ['required',Rule::unique('solicitud_servicio_externos', 'numero_ste')->ignore($solicitudServicioExterno->id)],
+                'observaciones' => 'nullable|string|max:191',
+                'despacho' => 'nullable|string|max:191',
+                'recibido' => 'nullable|string|max:191',
                 'departamento' => 'required|in:Administracion,Produccion',
                 'fecha_salida_planta' => 'required|date',
-                'items' => 'required|array',
+                'items' => 'required|array|min:1',
                 'items.*.descripcion' => 'required|string',
-                'items.*.servicio_requerido' => 'required|string',
-                'items.*.dureza_HRC' => 'required|string',
+                'items.*.servicio_requerido' => 'required|string|max:191',
+                'items.*.dureza_HRC' => 'required|string|max:191',
                 'items.*.cantidad' => 'required|integer|min:1'
             ]);
     
@@ -137,19 +147,25 @@ class SolicitudServicioExternoController extends Controller
             $itemEnviados = $request->input('items');
 
             $items_Ids = [];
-    
-            foreach ($itemEnviados as $itemsData){
-
+            foreach ($itemEnviados as $itemsData) {
                 $item = ItemSTE::where('descripcion', $itemsData['descripcion'])->first();
 
-                if($item){
+                if (!$item) {
+                    $item = ItemSTE::create([
+                        'descripcion' => $itemsData['descripcion'],
+                        'servicio_requerido' => $itemsData['servicio_requerido'],
+                        'dureza_HRC' => $itemsData['dureza_HRC'],
+                    ]);
+                }
+
+                if ($item) {
                     $items_Ids[$item->id] = [
                         'cantidad' => $itemsData['cantidad']
                     ];
                 }
             }
 
-            $solicitudServicioExterno->itemSTE()->sync($items_Ids);
+            $solicitudServicioExterno->itemSTE()->syncWithoutDetaching($items_Ids);
     
             DB::commit();
     
@@ -159,7 +175,7 @@ class SolicitudServicioExternoController extends Controller
 
             Log::error('Error al crear ste: ' . $e->getMessage(), ['stack' => $e->getTraceAsString()]);
 
-            return redirect()->back()->with('error', 'Ha ocurrido un error al crear la ste, porfavor, intentalo de nuevo: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Ha ocurrido un error al actualizar la ste, porfavor, intentalo de nuevo: ' . $e->getMessage());
         }
     }
 

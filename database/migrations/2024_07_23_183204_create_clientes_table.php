@@ -13,13 +13,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('clientes', function (Blueprint $table) {
-            $table->bigInteger('nit')->primary();
+            $table->string('nit')->primary();
             $table->string('nombre');
-            $table->string('direccion');
+            $table->string('direccion')->nullable();
             $table->string('telefono', 20)->nullable();
             $table->string('contacto')->nullable();
             $table->string('correo')->unique();
+            $table->unsignedBigInteger('comerciales_id');
+            $table->unsignedBigInteger('departamento');
+            $table->unsignedBigInteger('ciudad')->after('departamento');
             $table->timestamps();
+
+            $table->foreign('comerciales_id')->references('id')->on('vendedores')->onDelete('cascade');
+            $table->foreign('departamento')->references('id')->on('departamentos')->onDelete('cascade');
+            $table->unsignedBigInteger('ciudad')->after('departamento');
+            $table->foreign('ciudad')->references('id')->on('municipios')->onDelete('cascade');
         });
     }
 

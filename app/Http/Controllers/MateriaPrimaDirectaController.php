@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MateriaPrimaDirecta;
+use App\Models\Proveedor;
 use Illuminate\Http\Request;
 
 class MateriaPrimaDirectaController extends Controller
@@ -15,16 +16,18 @@ class MateriaPrimaDirectaController extends Controller
 
     public function create()
     {
-        return view('materiasPrimasDirectas.create');
+        $proveedores = Proveedor::all();
+        return view('materiasPrimasDirectas.create', compact('proveedores'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'descripcion' => 'required|string',
+            'proveedor_id' => 'required|exists:proveedores,nit',
             'proveedor' => 'required|string',
             'numero_factura' => 'required|string',
-            'numero_orden_compra' => 'required|string',
+            'numero_orden_compra' => 'required|exists:orden__compras,numero',
             'precio_unit' => 'required|numeric',
         ]);
 

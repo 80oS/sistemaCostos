@@ -77,6 +77,14 @@
         label {
             color: #000 !important;
         }
+
+        th {
+            text-transform: uppercase;
+        }
+
+        td {
+            text-transform: capitalize;
+        }
     </style>
 @stop
 

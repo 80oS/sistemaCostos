@@ -80,16 +80,7 @@
                             <input type="time" name="hora_fin" id="hora_fin" value="{{ old('hora_fin', $tiempo_produccion->hora_fin) }}" required>
                         </div>
 
-                        <div class="mb-4">
-                            <input type="checkbox" id="laboral_descanso">
-                            <label for="laboral_descanso">Laboral con descansos</label>
                         
-                            <div class="tiempo-restar-container">
-                                <button type="button" id="decrementar">-</button>
-                                <span id="minutos_restados">0</span> minutos
-                                <button type="button" id="incrementar">+</button>
-                            </div>
-                        </div>
                     </div>
         
                     <div class="mb-4">

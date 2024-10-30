@@ -21,7 +21,7 @@
     <div class="card">
         <div class="card-body"> 
             <div class="mb-4">
-                <a href="{{ route('clientes.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Crear</a>
+                <a href="{{ route('clientes.create') }}" class="btn btn-primary">Crear</a>
             </div>
             <table class="table" id="clientes">
                 <thead>
@@ -29,13 +29,13 @@
                         <th>#</th>
                         <th>NIT</th>
                         <th>Nombre</th>
-                        <th>Direccion</th>
+                        <th>Dirección</th>
                         <th>Ciudad/Municpio</th>
                         <th>Departamento</th>
                         <th>Teléfono</th>
                         <th>contacto</th>
                         <th>Correo</th>
-                        <th>Comerciales</th>
+                        <th>Comercial</th>
                         <th>Actualizar</th>
                         <th>eliminar</th>
                     </tr>
@@ -100,6 +100,9 @@
         input {
             background: #fff !important;
             color: #000 !important;
+        }
+        th {
+            text-transform: uppercase;
         }
     </style>
 @stop

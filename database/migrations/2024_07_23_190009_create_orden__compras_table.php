@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('orden__compras', function (Blueprint $table) {
             $table->id();
+            $table->string('numero')->unique();
             $table->foreignId('proveedor_id')->constrained('proveedores');
             $table->date('fecha_orden');
             $table->float('subtotal');

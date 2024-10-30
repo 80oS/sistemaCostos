@@ -17,10 +17,7 @@ return new class extends Migration
             $table->string('descripcion');
             $table->string('material')->nullable();
             $table->string('plano')->nullable();
-            $table->unsignedBigInteger('SDP_id');
             $table->timestamps();
-
-            $table->foreign('SDP_id')->references('id')->on('sdps')->onDelete('cascade');
         });
     }
 

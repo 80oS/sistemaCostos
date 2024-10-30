@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('nominas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('trabajador_id')->constrained('trabajadors');
+            $table->unsignedBigInteger('paquete_nomina_id')->nullable();
             $table->integer('año');
             $table->integer('mes');
             $table->string('periodo_pago');
@@ -33,7 +34,9 @@ return new class extends Migration
             $table->decimal('auxilio_transporte', 20, 2)->nullable();
             $table->string('desde')->nullable();
             $table->string('a')->nullable();
+            $table->decimal('otro', 20, 2);
             $table->timestamps();
+            $table->foreign('paquete_nomina_id')->references('id')->on('paquete_nominas')->onDelete('cascade');
         });
     }
 

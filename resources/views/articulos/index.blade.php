@@ -11,7 +11,7 @@
 @section('content')
     <div class="p-12">
         <div class=" flex items-end justify-end mb-4 px-20">
-            <a href="{{ route('ADD_C_S') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">volver</a>
+            <a href="{{ route('ADD_C_S') }}" class="btn btn-primary">volver</a>
         </div>
         @if (session('success'))
             <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -44,7 +44,7 @@
                                 <td>{{ $articulo->material }}</td>
                                 <td>{{ $articulo->plano }}</td>
                                 <td>
-                                    <a href="{{ route('articulos.edit', $articulo->id) }}" class="text-yellow-700 hover:text-yellow-300">
+                                    <a href="{{ route('articulos.edit', $articulo->id) }}" class="btn btn-info">
                                         Editar
                                     </a>
                                 </td>
@@ -52,8 +52,7 @@
                                     <form action="{{ route('articulos.destroy', $articulo->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-
-                                        <button type="submit" class="text-red-700 hover:text-red-300" onclick="return confirm('¿Estás seguro de que deseas eliminar este articulo?');">eliminar</button>
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este articulo?');">eliminar</button>
                                     </form>
                                 </td>
                             </tr>
@@ -96,6 +95,14 @@
 
         label {
             color: #000 !important;
+        }
+
+        th {
+            text-transform: uppercase;
+        }
+
+        td {
+            text-transform: capitalize;
         }
 
     </style>

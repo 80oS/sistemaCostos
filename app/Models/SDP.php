@@ -26,7 +26,9 @@ class SDP extends Model
         'observaciones',
         'requisitos_cliente',
         'orden_compra',
-        'memoria_calculo'
+        'memoria_calculo',
+        'nombre',
+        'estado'
     ];
 
     public function Tiempos_produccion()

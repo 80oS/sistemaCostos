@@ -11,7 +11,7 @@
 @section('content')
 <div class="box">
     <div class="col-12 px-20 mb-4">
-        <a href="{{ route('trabajador.butons') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-3 rounded">volver</a>
+        <a href="{{ route('trabajador.butons') }}" class="btn btn-primary">volver</a>
     </div>
     <div class="container">
         <div class="flex">
@@ -86,12 +86,12 @@
                                     @if ($trabajador->estado === 'activo')
                                         <form action="{{ route('trabajadores.disable', $trabajador->id) }}" method="POST">
                                             @csrf
-                                            <button type="submit" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Deshabilitar</button>
+                                            <button type="submit" class="btn btn-secondary">Deshabilitar</button>
                                         </form>
                                     @else
                                         <form action="{{ route('trabajadores.enable', $trabajador->id) }}" method="POST">
                                             @csrf
-                                            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Habilitar</button>
+                                            <button type="submit" class="btn btn-success">Habilitar</button>
                                         </form>
                                     @endif
                                 </td>
@@ -107,14 +107,7 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
-    @tailwind base;
-    @tailwind components;
-    @tailwind utilities;
     <style>
-
-    * {
-    
-    }
     .p-6 {
         padding: auto;
     }
@@ -192,7 +185,7 @@
         }
         table .c-1 {
             position: sticky;
-            left: 14px;
+            left: 20px;
             border:1px solid #000000;
             color: #000000;
         }
@@ -209,7 +202,7 @@
         }
         table .c-2 {
             position: sticky;
-            left: 80px;
+            left: 112px;
             border:1px solid #000000;
             color: #000000;
         }
@@ -227,7 +220,7 @@
         }
         table .c-3 {
             position: sticky;
-            left: 150px;
+            left: 199px;
             border:1px solid #000000;
             color: #000000;
         }
@@ -244,7 +237,7 @@
         }
         table .c-4 {
             position: sticky;
-            left: 220px;
+            left: 300px;
             border:1px solid #000000;
             color: #000000;
         }
@@ -276,6 +269,13 @@
         table .v {
             color: #000000;
             border:1px solid #000000;
+        }
+
+        th {
+            text-transform: uppercase;
+        }
+        td {
+            text-transform: capitalize;
         }
     </style>
 @stop

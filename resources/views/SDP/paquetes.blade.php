@@ -13,7 +13,7 @@
     <a href="{{ route('ADD_C_S') }}" class="btn btn-primary">volver</a>
 </div>
 @if (session('success'))
-    <div id="success-message" class="alert alert-success success-message" role="alert">
+    <div id="success-message" class="alert alert-success" role="alert">
         <span class="block sm:inline">{{ session('success') }}</span>
     </div>
 @endif
@@ -23,28 +23,45 @@
             <div class="mb-4">
                 <a href="{{ route('sdp.create') }}" class="btn btn-info">crear sdp</a>
             </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-4">
+                        Total de SDP <input type="text" value="{{ $totalSdp }}" class="form-control" readonly>
+                    </div>
+                    <div class="col-4">
+                        Total de SDP abiertas <input type="text" value="{{ $sdpAbiertas }}" class="form-control" readonly>
+                    </div>
+                    <div class="col-4">
+                        Total de SDP cerradas <input type="text" value="{{ $sdpCerradas }}" class="form-control" readonly>
+                    </div>
+                </div>
+            </div>
             <table class="table table-striped" id="sdp">
                 <thead>
                     <tr>
                         <th>numero_sdp</th>
                         <th>clientes</th>
                         <th>nit</th>
+                        <th>nombre</th>
                         <th>fecha de creacion</th>
+                        <th>Estado</th>
                         <th>lista sdps</th>
                         <th>Editar</th>
                         <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($sdps as $sdp)
+                    @foreach($sdps as $index => $sdp)
                     <tr>
                         <td>{{ $sdp->numero_sdp }}</td>
                         <td>{{ $sdp->clientes->nombre }}</td>
                         <td>{{ $sdp->clientes->nit }}</td>
+                        <td>{{ $sdp->nombre ?? '' }}</td>
                         <td>{{ $sdp->created_at->format('d-m-Y') }}</td>
+                        <td>{{ $sdp->estado }}</td>
                         <td>
                             <a href="{{ route('sdp.ver', $sdp->numero_sdp) }}" class="btn btn-info">
-                                ver sdp
+                                ver_sdp
                             </a>
                         </td>
                         <td>
@@ -134,9 +151,9 @@
         }, 5000);
     </script>
     <script>
-        new DataTable('#sdp', {
+        $('#sdp').DataTable({
             paging: false,
-            scrollCollapse: true,
+            scrollCollapse: false,
             scrollX: true,
             scrollY: '50vh',
         });

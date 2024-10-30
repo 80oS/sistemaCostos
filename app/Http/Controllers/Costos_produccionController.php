@@ -179,13 +179,10 @@ class Costos_produccionController extends Controller
 
                     $valor_servicio = $servicioCosto->valor_servicio;
                     $servicio_nombre = $tiempo->nombre_servicio ?? 'Sin Nombre';
-                    
-                    // Asegúrate de que horas es el valor correcto
-                    $servicio_horas = $tiempo->valor_total_horas;
                 
-                    // Guardar los detalles de cada servicio
+                $servicio_horas = $totalHorasPorOperario[$operarioId] * $valor_servicio;
 
-                $manoObraServicio = $manoDeObraDirecta + $valor_servicio + ($MOI*$horas) + ($GOI*$horas) + ($OCI*$horas);
+                $manoObraServicio = $sueldo + $valor_servicio;
                 $totalManoObraServicio += $manoObraServicio;
     
                 if ($operario && $operario->trabajador) {
@@ -204,7 +201,7 @@ class Costos_produccionController extends Controller
                         'index_articulo' => $articulo['index_articulo'],
                     ]);
                 }
-            }
+                }
         }
     });
             $totalTiempos = $totalTiempos ?? 0;

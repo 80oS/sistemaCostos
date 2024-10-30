@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('tiempos_produccion_id');
             $table->foreignId('articulo_id');
+            $table->integer('sdp_id');
             $table->timestamps();
 
             $table->foreign('tiempos_produccion_id')->references('id')->on('tiempos_produccions')->onDelete('cascade');
             $table->foreign('articulo_id')->references('id')->on('articulos')->onDelete('cascade');
+            $table->foreign('sdp_id')->references('numero_sdp')->on('sdps')->onDelete('cascade');
         });
     }
 

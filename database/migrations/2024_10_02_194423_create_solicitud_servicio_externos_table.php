@@ -20,7 +20,16 @@ return new class extends Migration
             $table->enum('departamento', array_column(Departamento::cases(), 'value'));
             $table->string('recibido')->nullable();
             $table->date('fecha_salida_planta');
+            $table->string('proveedor_id');
+            $table->string('ordenCompra_id');
+            $table->string('direccion');
+            $table->string('telefono');
+            $table->string('correo');
+            $table->string('contacto');
             $table->timestamps();
+
+            $table->foreign('proveedor_id')->references('nit')->on('proveedores')->onDelete('cascade');
+            $table->foreign('ordenCompra_id')->references('numero')->on('orden__compras')->onDelete('cascade');
         });
     }
 

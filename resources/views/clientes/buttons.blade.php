@@ -13,10 +13,10 @@
         <a href="{{ route('ADD_C_S') }}" class="button btn btn-primary">volver</a>
         <div class="container">
             <div class="center">
-                <a href="{{ route('clientes-william') }}" class="bg-green-600 hover:bg-green-800 text-white px-3 py-2 rounded">clientes_William</a>
-                <a href="{{ route('clientes-fabian') }}" class="bg-green-800 hover:bg-green-600 text-white px-3 py-2 rounded">clientes_Fabian</a>
-                <a href="{{ route('clientes-ochoa') }}" class="bg-lime-600 hover:bg-lime-800 text-white px-3 py-2 rounded">clientes-Hernando</a>
-                <a href="{{ route('clientes.index') }}" class="bg-blue-600 hover:bg-blue-800 text-white px-3 py-2 rounded">todos_los_clientes</a>
+                <a href="{{ route('clientes-william') }}" class="btn btn-info">clientes_William</a>
+                <a href="{{ route('clientes-fabian') }}" class="btn btn-info">clientes_Fabian</a>
+                <a href="{{ route('clientes-ochoa') }}" class="btn btn-info">clientes-Hernando</a>
+                <a href="{{ route('clientes.index') }}" class="btn btn-info">todos_los_clientes</a>
             </div>
         </div>
     </div>

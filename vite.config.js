@@ -15,6 +15,10 @@ export default defineConfig({
             buildDirectory: 'build'
         }),
     ],
+
+    server: {
+        port: 3000, // Cambia a otro puerto si es necesario
+    },
     
     build: {
         outDir: 'public/build',

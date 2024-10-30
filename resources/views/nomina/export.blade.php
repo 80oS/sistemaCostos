@@ -10,7 +10,7 @@
 
 @section('content')
 <div class="flex flex-col items-end justify-end mb-4">
-    <a href="{{ route('nomina.show', $paquete->id) }}" class="btn btn-warning">volver</a>
+    <a href="{{ route('nomina.show', $paquete->id) }}" class="btn btn-primary">volver</a>
 </div>
 <div class="card">
     <div class="card-body">

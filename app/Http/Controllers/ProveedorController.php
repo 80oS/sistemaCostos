@@ -14,58 +14,78 @@ class ProveedorController extends Controller
         return view('proveedores.index', compact('proveedores'));
     }
 
-    // Método para mostrar el formulario de creación de un nuevo proveedor
     public function create()
     {   
-        $proveedor = new Proveedor();
-        return view('proveedores.create', compact('proveedor'));
+        return view('proveedores.create');
     }
 
-    // Método para almacenar un nuevo proveedor en la base de datos
+    
     public function store(Request $request)
     {
-        $proveedor = new Proveedor();
-        $proveedor->numero_identificacion = $request->input('numero_identificacion');
-        $proveedor->nombre = $request->input('nombre');
-        $proveedor->direccion = $request->input('direccion');
-        $proveedor->telefono = $request->input('telefono');
-        $proveedor->correo = $request->input('correo');
-        $proveedor->tipo_servicio = $request->input('tipo_servicio');
-        $proveedor->save();
-    
-        // Redirigir a la lista de proveedores con un mensaje de éxito
-        return redirect()->route('proveedores.index')->with('success', 'Proveedor creado con éxito');
+        $request->validate([
+            'nit' => 'required|string',
+            'nombre' => 'required|string',
+            'persona_contacto' => 'required|string',
+            'email' => 'required|string|email',
+            'telefono' => 'required|string',
+            'direccion' => 'required|string',
+            'ciudad' => 'required|string'
+        ]);
+
+        $proveedor = Proveedor::create([
+            'nit' => $request->nit,
+            'nombre' => $request->nombre,
+            'persona_contacto' => $request->persona_contacto,
+            'email' => $request->email,
+            'telefono' => $request->telefono,
+            'direccion' => $request->direccion,
+            'ciudad' => $request->ciudad
+        ]);
+
+        return redirect()->route('proveedor.index')->with('success', 'Proveedor creado con éxito');
     }
     // Método para mostrar el formulario de edición de un proveedor
-    public function edit($numero_identificacion)
+    public function edit($id)
     {
         // Buscar el proveedor por su número de identificación
-        $proveedor = Proveedor::where('numero_identificacion', $numero_identificacion)->firstOrFail();
+        $proveedor = Proveedor::findOrfail($id);
         return view('proveedores.edit', compact('proveedor'));
     }
 
     // Método para actualizar un proveedor existente en la base de datos
-    public function update(Request $request, $numero_identificacion)
+    public function update(Request $request, $id)
     {
-        $proveedor = Proveedor::where('numero_identificacion', $numero_identificacion)->firstOrFail();
-        $proveedor->nombre = $request->input('nombre');
-        $proveedor->direccion = $request->input('direccion');
-        $proveedor->telefono = $request->input('telefono');
-        $proveedor->correo = $request->input('correo');
-        $proveedor->tipo_servicio = $request->input('tipo_servicio');
-        $proveedor->save();
-    
-        // Redirigir a la lista de proveedores con un mensaje de éxito
-        return redirect()->route('proveedores.index')->with('success', 'Proveedor actualizado con éxito');
+        $proveedor = Proveedor::findOrfail($id);
+        
+        $request->validate([
+            'nit' => 'required|string',
+            'nombre' => 'required|string',
+            'persona_contacto' => 'required|string',
+            'email' => 'required|string|email',
+            'telefono' => 'required|string',
+            'direccion' => 'required|string',
+            'ciudad' => 'required|string'
+        ]);
+
+        $proveedor->update([
+            'nit' => $request->nit,
+            'nombre' => $request->nombre,
+            'persona_contacto' => $request->persona_contacto,
+            'email' => $request->email,
+            'telefono' => $request->telefono,
+            'direccion' => $request->direccion,
+            'ciudad' => $request->ciudad
+        ]);
+        
+        return redirect()->route('proveedor.index')->with('success', 'Proveedor actualizado con éxito');
     }
-    // Método para eliminar un proveedor de la base de datos
+
     public function destroy($id)
     {
-        // Buscar el proveedor por su ID y eliminarlo
+        
         $proveedor = Proveedor::findOrFail($id);
         $proveedor->delete();
 
-        // Redirigir a la lista de proveedores con un mensaje de éxito
-        return redirect()->route('proveedores.index')->with('success', 'Proveedor eliminado con éxito');
+        return redirect()->route('proveedor.index')->with('success', 'Proveedor eliminado con éxito');
     }
 }

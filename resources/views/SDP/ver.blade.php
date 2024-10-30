@@ -30,7 +30,7 @@
                         @endforeach    
                     </div>
                     <div class="center">
-                        <h1 class="text-2xl font-bold mb-2">SOLICITUD DE PRODUCCION</h1>
+                        <h1 class="text-2xl font-bold mb-2">SOLICITUD DE PRODUCCIÓN</h1>
                         <p class="text-sm p"><b>Nro. S.D.P: {{ $sdp->numero_sdp }}</b></p>
                     </div>
                     <div class=" contentt text-center border border-black rounded p-3">
@@ -71,7 +71,7 @@
                             <th class="border p-2">Código</th>
                             <th class="border p-2">Descripción</th>
                             <th class="border p-2">Material</th>
-                            <th class="border p-2">Fecha de Despacho Comercial</th>
+                            <th class="border p-2">Fecha de Facturacion</th>
                             <th class="border p-2">Fecha de Despacho Producción</th>
                             <th class="border p-2">Plano</th>
                             <th class="border p-2">Cantidad</th>

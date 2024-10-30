@@ -15,9 +15,13 @@ return new class extends Migration
             $table->id();
             $table->decimal('mano_obra_directa', 20, 2);
             $table->unsignedBigInteger('sdp_id');
+            $table->unsignedBigInteger('tiempo_produccion_id');
+            $table->unsignedBigInteger('cif_id');
             $table->timestamps();
 
             $table->foreign('sdp_id')->references('id')->on('sdps')->onDelete('cascade');
+            $table->foreign('tiempo_produccion_id')->references('id')->on('tiempos_produccions')->onDelete('cascade');
+            $table->foreign('cif_id')->references('id')->on('cifs')->onDelete('cascade');
         });
     }
 

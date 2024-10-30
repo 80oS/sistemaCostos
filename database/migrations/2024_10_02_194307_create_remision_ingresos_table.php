@@ -21,9 +21,13 @@ return new class extends Migration
             $table->string('despacho')->nullable();
             $table->enum('departamento', array_column(Departamento::cases(), 'value'));
             $table->string('recibido')->nullable();
+            $table->integer('sdp_id');
+            $table->string('cliente_nit')->nullable();
             $table->timestamps();
 
             $table->foreign('proveedor_id')->references('id')->on('proveedores')->onDelete('cascade');
+            $table->foreign('sdp_id')->references('numero_sdp')->on('sdps')->onDelete('cascade');
+            $table->foreign('cliente_nit')->references('nit')->on('clientes')->onDelete('cascade');
         });
     }
 

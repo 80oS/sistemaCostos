@@ -25,6 +25,39 @@
                         <input type="text" name="numero_ste" value="{{ $nuevoNumeroSTE }}" class="form-control" readonly>
                     </div>
 
+                    <div class="form-group"><label for=""></label>
+                        <select name="proveedor_id" id="" class="form-select">
+                            <option selected="false" disabled>Seleccione el proveedor</option>
+                            @foreach ( $proveedores as $proveedor )
+                                <option value="{{ $proveedor->id }}">{{ $proveedor->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group"><label for=""></label>
+                        <select name="ordenCompra_id" id="" class="form-select">
+                            <option selected="false" disabled>Seleccione la orden de compra</option>
+                            @foreach ($ordenesCompra as $orden)
+                                <option value="{{ $orden->numero }}">{{ $orden->numero }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="" class="form-label">Direccion</label>
+                        <input type="text" name="direccion" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="" class="form-label">Nit</label>
+                        <input type="text" name="nit" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="" class="form-label">Contacto</label>
+                        <input type="text" name="contacto" class="form-control">
+                    </div>
+
                     <div class="items-container group-form mb-4" id="items-container">
                         <h1><b>Items</b></h1>
                         <button id="agregar_item" type="button" class="btn btn-primary mb-4">Agregar item </button>

@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('descripcion');
             $table->string('proveedor');
+            $table->string('proveedor_id');
             $table->string('valor_hora');
             $table->timestamps();
+            
+            $table->foreign('proveedor_id')->references('nit')->on('proveedores')->onDelete('cascade');
         });
     }
 

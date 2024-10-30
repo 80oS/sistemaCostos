@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'home')
+@section('title', 'Proveedores')
 
 @section('content_header')
 <h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
@@ -9,40 +9,45 @@
 @stop
 
 @section('content')
-<div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-            <div class="mb-4">
-                <a href="{{route('proveedor.create')}}" class="btn btn-primary">Crear</a>
+    <div class="container">
+        <div class="col-12 mb-4">
+            <a href="{{ route('AdministraciónInventario') }}" class="btn btn-primary">volver</a>
+        </div>
+        @if (session('success'))
+            <div id="success-message" class="alert alert-success success-message" role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
             </div>
-
-            <div class="table-wraper">
-                <table id="tablaProveedores" class="min-w-full bg-white border border-gray-200">
+        @endif
+        <div class="card">
+            <div class="card-body">
+                <div class="mb-4">
+                    <a href="{{ route('proveedor.create') }}" class="btn btn-primary">Crear</a>
+                </div>
+                <table class="table table-striped">
                     <thead>
-                        <tr class="bg-gray-50 text-gray-700">
-                            <th class="px-4 py-2 border">#</th>
-                            <th class="px-4 py-2 border">NOMBRE COMPLETO</th>
-                            <th class="px-4 py-2 border">PERSONA DE CONTACTO</th>
-                            <th class="px-4 py-2 border">TELEFONO</th>
-                            <th class="px-4 py-2 border">CORREO</th>
-                            <th class="px-4 py-2 border">DIRECCION</th>
-                            <th class="px-4 py-2 border">CIUDAD</th>
-                            <th class="px-4 py-2 border">EDITAR</th>
-                            <th class="px-4 py-2 border">ELIMINAR</th>
+                        <tr class="table-primary">
+                            <th>Nit</th>
+                            <th>NOMBRE COMPLETO</th>
+                            <th>PERSONA DE CONTACTO</th>
+                            <th>TELEFONO</th>
+                            <th>CORREO</th>
+                            <th>DIRECCION</th>
+                            <th>CIUDAD</th>
+                            <th>EDITAR</th>
+                            <th>ELIMINAR</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($proveedores as $index  => $proveedor)
-
-                        <tr class="text-gray-700">
-                            <td class="border px-4 py-2">{{ $index + 1 }}</td>
-                            <td class="border px-4 py-2">{{$proveedor->nombre}}</td>
-                            <td class="border px-4 py-2">{{$proveedor->persona_contacto}}</td>
-                            <td class="border px-4 py-2">{{$proveedor->telefono}}</td>
-                            <td class="border px-4 py-2">{{$proveedor->email}}</td>
-                            <td class="border px-4 py-2">{{$proveedor->direccion}}</td>
-                            <td class="border px-4 py-2">{{$proveedor->ciudad}}</td>
-                            <td class="border px-4 py-2">
+                        @foreach ($proveedores as  $proveedor)
+                        <tr class="table-secondary">
+                            <td>{{ $proveedor->nit }}</td>
+                            <td>{{$proveedor->nombre}}</td>
+                            <td>{{$proveedor->persona_contacto}}</td>
+                            <td>{{$proveedor->telefono}}</td>
+                            <td>{{$proveedor->email}}</td>
+                            <td>{{$proveedor->direccion}}</td>
+                            <td>{{$proveedor->ciudad}}</td>
+                            <td>
                                 <a href="{{route('proveedor.edit', $proveedor->id)}}" class="btn btn-info">Editar</a>
                             </td>
                             <td>
@@ -68,27 +73,9 @@
         .p {
             padding: 20px;
         }
-
-        .table-wraper {
-            max-height: 600px;
+        .card-body {
+            max-height: 400px;
             overflow-y: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ccc;
-            text-align: left;
-        }
-
-        thead th {
-            
-            position: sticky;
-            top: 0; /* Fija la fila del encabezado en la parte superior */
-            z-index: 1; /* Asegura que el encabezado esté por encima de las filas del cuerpo */ 
-            border: 1px solid #ccc;
         }
     </style>
 @stop
@@ -96,4 +83,12 @@
 @section('js')
     <script src="https://cdn.tailwindcss.com"></script>
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+    <script>
+        setTimeout(function() {
+            var successMessage = document.getElementById('success-message');
+            if (successMessage) {
+                successMessage.style.display = 'none';
+            }
+        }, 10000);
+    </script>
 @stop

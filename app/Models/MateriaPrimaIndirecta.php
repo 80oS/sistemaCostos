@@ -21,6 +21,7 @@ class MateriaPrimaIndirecta extends Model
         'numero_orden_compra',
         'precio_unit',
         'valor',
+        'proveedor_id '
     ];
 
     public static function boot()
@@ -34,5 +35,15 @@ class MateriaPrimaIndirecta extends Model
         return $this->belongsToMany(CostosProduccion::class, 'materia_prima_indirectas_costos', 'costos_produccion_id', 'materia_indirecta_id')
                     ->withPivot('id','cantidad')
                     ->withTimestamps();
+    }
+
+    public function proveedor()
+    {
+        return $this->belongsTo(Proveedor::class, 'proveedor_id', 'nit');
+    }
+
+    public function OrdenCompra()
+    {
+        return $this->belongsTo(OrdenCompra::class, 'numero_orden_compra', 'numero');
     }
 }

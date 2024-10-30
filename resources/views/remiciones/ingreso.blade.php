@@ -27,7 +27,7 @@
                 <table class="table table-striped">
                     <thead>
                         <tr class="table-primary">
-                            <th>codigo</th>
+                            <th>código</th>
                             <th>proveedor / cliente</th>
                             <th>fecha de ingreso</th>
                             <th>observaciones</th>
@@ -107,6 +107,6 @@
             if (successMessage) {
                 successMessage.style.display = 'none';
             }
-        }, 5000);
+        }, 10000);
     </script>
 @stop

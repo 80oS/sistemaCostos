@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Departamento;
 use App\Traits\codigoREM_DES;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

@@ -8,9 +8,317 @@
     </h2>
 @stop
 
+@section('content')
+<div class="py-12">
+    @if (session('success'))
+        <div id="success-message" class="alert alert-success" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+    @endif
+    @if (session('error'))
+        <div id="success-message" class="alert alert-success" role="alert">
+            <span class="block sm:inline">{{ session('error') }}</span>
+        </div>
+    @endif
+    <div class="max-w-full mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="flex flex-row items-start justify-start">
+            <button id="guardarCambios" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" 
+                data-calculo-dias="{{ json_encode($nominas->map(function($nomina) {
+                    return [
+                        'id' => $nomina->id,
+                        'total_dias_trabajados' => $nomina->dias->dias_trabajados - $nomina->dias->dias_incapacidad - $nomina->dias->dias_vacaciones - $nomina->dias->dias_remunerados
+                    ];
+                })) }}">
+                Guardar cambios
+            </button>
+        </div>
+        <div class="flex flex-row items-end justify-end gap-10">
+            <a href="{{ route('nomina.index') }}" id="exportToExcel" class="btnE btn btn-primary">
+                volver
+            </a>
+            <a href="{{ route('nominas.export', $paquete->id) }}"  id="exportButton" class="btnE btn btn-info">Exportar a Excel</a>
+        </div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Agregar trabajador
+        </button>
+        <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+            <div class="w-full">
+                <div class="flow-root">
+                    <div class="mt-8 overflow-x-auto">
+                        <div class="flex">
+                            <input type="text" id="searchInput" placeholder="Buscar trabajadores..." class="border rounded p-2 mb-4">
+                        </div>
+                        <div class="inline-block min-w-full py-2 align-middle container">
+                            <table id="nominas-table"  class="display">
+                                <thead>
+                                    <tr>
+                                        <th colspan="30" class="px-4 py-2 border idi text-center">IDIMCOL S.A.S</th>
+                                    </tr>
+                                </thead>
+                                <thead>
+                                    <tr>
+                                        @php
+                                            // Crear objetos de fecha para el inicio y el fin del período
+                                            $inicio = \Carbon\Carbon::create($paquete->año, $paquete->mes, 1)->format('d/m/Y');
+                                            $fin = \Carbon\Carbon::create($paquete->año, $paquete->mes, 1)->addDays(29)->format('d/m/Y');
+                                        @endphp
+                                        <th colspan="8" class="px-4 py-2 border d text-center">MES</th>
+                                        <th colspan="8" class="px-4 py-2 border d text-center">{{ $meses[$paquete->mes] }}</th>
+                                        <th colspan="11" class="px-4 py-2 border d text-center"> Del {{ $inicio }} al {{ $fin }} </th>
+                                        <th colspan="1" class="px-4 py-2 border d text-center"> año </th>
+                                    </tr>
+                                </thead>
+                                <thead>
+                                    <tr>
+                                        <th colspan="1" class="px-4 py-2 border  x  text-center">No</th>
+                                        <th colspan="4" class="px-4 py-2 border x  text-center">datos personales</th>
+                                        <th colspan="12" class="px-4 py-2 border x  text-center">devengados</th>
+                                        <th colspan="1" class="px-4 py-2 border x text-center">total</th>
+                                        <th colspan="7" class="px-4 py-2 border x text-center">deducciones</th>
+                                        <th colspan="1" class="px-4 py-2 border x text-center">total</th>
+                                        <th colspan="1" class="px-4 py-2 border x text-center">total</th>
+                                        <th colspan="1" class="px-4 py-2 border x text-center">{{ $paquete->año }}</th>
+                                        <th colspan="2" class="px-4 py-2 border x text-center">pago</th>
+                                    </tr>
+                                </thead>
+                                <thead>
+                                    <tr>
+                                        <th class="px-4 py-2 border c-1">#</th>
+
+                                        <th class="px-4 py-2 border c-2">cédula</th>
+                                        <th class="px-4 py-2 border c-3">apellidos</th>
+                                        <th class="px-4 py-2 border c-4">nombres</th>
+                                        <th class="px-4 py-2 border c">cargo</th>
+
+                                        <th class="px-4 py-2 border c">salario</th>
+
+                                        <th class="px-4 py-2 border c">dias trabajados</th>
+                                        <th class="px-4 py-2 border c">dias incapacidad</th>
+                                        <th class="px-4 py-2 border c">dias vacaciones</th>
+                                        <th class="px-4 py-2 border c">dias renumerados</th>
+                                        <th class="px-4 py-2 border c">dias totales</th>
+
+                                        <th class="px-4 py-2 border c">bonificacion// auxilio de rodamiento</th>
+                                        <th class="px-4 py-2 border c">devengados dias trabajados</th>
+                                        <th class="px-4 py-2 border c">devengados dias incapacidad</th>
+                                        <th class="px-4 py-2 border c">devengados dias vacaciones</th>
+                                        <th class="px-4 py-2 border c">devengados dias renumerados</th>
+                                        <th class="px-4 py-2 border c">auxilio de transporte</th>
+                                        <th class="px-4 py-2 border c">total devengados</th>
+
+                                        <th class="px-4 py-2 border c">salud</th>
+
+                                        <th class="px-4 py-2 border c">pensión</th>
+                                        <th class="px-4 py-2 border c">libranza salarial</th>
+                                        <th class="px-4 py-2 border c">anticipo</th>
+                                        <th class="px-4 py-2 border c">dias no renumerados</th>
+                                        <th class="px-4 py-2 border c">suspensión</th>
+                                        <th class="px-4 py-2 border c">otro</th>
+
+                                        <th class="px-4 py-2 border c">total deducido</th>
+
+                                        <th class="px-4 py-2 border c">total a pagar</th>
+
+                                        <th class="px-4 py-2 border c">area de trabajo</th>
+
+                                        <th class="px-4 py-2 border c">desde</th>
+                                        <th class="px-4 py-2 border c">a</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody id="trabajadoresTable">
+                                    @foreach($nominas as $index => $nomina)
+                                        <tr data-nomina-id="{{ $nomina->id }}" class="text-gray-950">
+                                            <td class="px-4 py-2 border c-1 ">{{ $index + 1 }}</td>
+                                            <td class="px-4 py-2 border c-2 ">{{ $nomina->trabajador->numero_identificacion }}</td>
+                                            <td class="px-4 py-2 border c-3 ">{{ $nomina->trabajador->apellido }}</td>
+                                            <td class="px-4 py-2 border c-4 ">{{ $nomina->trabajador->nombre }}</td>
+                                            <td class="px-4 py-2 border c">{{ $nomina->trabajador->cargo }}</td>
+                                            <td class="px-4 py-2 border c">{{ number_format($nomina->trabajador->sueldos->first()->sueldo, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c" data-field="dias_trabajados" data-nomina-id="{{ $nomina->id }}" >{{ $nomina->dias->dias_trabajados }}</td>
+                                            <td class="px-4 py-2 border c" contenteditable="true" id="dias_incapacidad" data-field="dias_incapacidad" data-nomina-id="{{ $nomina->id }}">{{ $nomina->dias->dias_incapacidad }}</td>
+                                            <td class="px-4 py-2 border c" contenteditable="true" id="dias_vacaciones" data-field="dias_vacaciones" data-nomina-id="{{ $nomina->id }}">{{ $nomina->dias->dias_vacaciones }}</td>
+                                            <td class="px-4 py-2 border c" contenteditable="true" id="dias_remunerados" data-field="dias_remunerados" data-nomina-id="{{ $nomina->id }}">{{ $nomina->dias->dias_remunerados }}</td>
+                                            <td class="px-4 py-2 border c">{{ $nomina->total_dias }}</td>
+                                            <td class="px-4 py-2 border c" contenteditable="true" data-field="bonificacion_auxilio" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->bonificacion_auxilio, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c" data-field="devengado_trabajados" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->devengado_trabajados, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c" data-field="devengado_incapacidad" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->devengado_incapacidad, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c" data-field="devengado_vacaciones" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->devengado_vacaciones, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c" data-field="devengado_remunerados" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->devengado_remunerados, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c" data-field="auxilio_transporte" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->auxilio_transporte, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c" data-field="total_devengado" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->total_devengado, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c" data-field="salud" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->salud, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c" data-field="pension" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->pension, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c" contenteditable="true" data-field="celular" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->celular, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c" contenteditable="true" data-field="anticipo" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->anticipo, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c" contenteditable="true" data-field="dias_no_remunerados" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->dias->dias_no_remunerados, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c" data-field="suspencion" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->suspencion, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c" contenteditable="true" data-field="otro" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->otro, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c" data-field="total_deducido" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->total_deducido, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c" data-field="total_a_pagar" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->total_a_pagar, 2, ',', '.') }}</td>
+                                            <td class="px-4 py-2 border c">{{ $nomina->trabajador->departamentos }}</td>
+                                            <td class="px-4 py-2 border c" contenteditable="true" data-field="desde" data-nomina-id="{{ $nomina->id }}">{{ $nomina->desde }}</td>
+                                            <td class="px-4 py-2 border c" contenteditable="true" data-field="a" data-nomina-id="{{ $nomina->id }}">{{ $nomina->a }}</td>     
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="cont mb-4">
+    <div class="desprendible">
+        @foreach($nominas as $nomina)
+            <a href="{{ route('nomina.desprendible', $nomina->id) }}" class="px-4 py-2 ad text-white hover:text-blue-400">
+                {{ $nomina->trabajador->nombre }}
+                {{ $nomina->trabajador->apellido }}
+            </a>
+        @endforeach
+    </div>
+</div>
+<div class="py-12">
+    <div class="max-w-full mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+            <div class="w-full">
+                <div class="flow-root">
+                    <div class="mt-8 overflow-x-auto">
+                        <div class="inline-block min-w-full py-2 align-middle">
+                            <table class="totales">
+                                <thead>
+                                    <tr class="">
+                                        <th colspan="22" class="px-4 py-2 border text-center">totales</th>
+                                    </tr>
+                                </thead>
+                                <thead>
+                                    <tr class="">
+                                        <th class="px-4 py-2 border">salario</th>
+                                        <th class="px-4 py-2 border">dias trabajados</th>
+                                        <th class="px-4 py-2 border">dias incapacidad</th>
+                                        <th class="px-4 py-2 border"> dias vacaviones</th>
+                                        <th class="px-4 py-2 border">dias remunerados</th>
+                                        <th class="px-4 py-2 border">dias totales</th>
+                                        <th class="px-4 py-2 border">bonificacion auxilo de rodamiento</th>
+                                        <th class="px-4 py-2 border">devengado dias trabajados</th>
+                                        <th class="px-4 py-2 border">devengado dias incapacidad</th>
+                                        <th class="px-4 py-2 border">devengado dias vacaciones</th>
+                                        <th class="px-4 py-2 border">devengado dias remunerados</th>
+                                        <th class="px-4 py-2 border">auxilio de transporte</th>
+                                        <th class="px-4 py-2 border">total devengados</th>
+                                        <th class="px-4 py-2 border">salud</th>
+                                        <th class="px-4 py-2 border">pensión</th>
+                                        <th class="px-4 py-2 border">libranza salarial</th>
+                                        <th class="px-4 py-2 border">anticipo</th>
+                                        <th class="px-4 py-2 border">dias no remunerados</th>
+                                        <th class="px-4 py-2 border">suspensión</th>
+                                        <th class="px-4 py-2 border">otro</th>
+                                        <th class="px-4 py-2 border">total deducido</th>
+                                        <th class="px-4 py-2 border">total a pagar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="">
+                                        <td class="px-4 py-2 border">{{ number_format($totalSueldo, 2, ',', '.') }}</td>
+                                        <td class="px-4 py-2 border">{{ $total_dias_trabajados }}</td>
+                                        <td class="px-4 py-2 border">{{  $total_dias_incapacidad }}</td>
+                                        <td class="px-4 py-2 border">{{ $total_dias_vacaciones }}</td>
+                                        <td class="px-4 py-2 border">{{ $total_dias_remunerados }}</td>
+                                        <td class="px-4 py-2 border">{{ $total_dias }}</td>
+                                        <td class="px-4 py-2 border">{{ number_format($total_bonificacion, 2, ',', '.') }}</td>
+                                        <td class="px-4 py-2 border">{{ number_format($total_D_dias_trabajados, 2, ',', '.') }}</td>
+                                        <td class="px-4 py-2 border">{{ number_format($total_D_dias_incapacidad, 2, ',', '.') }}</td>
+                                        <td class="px-4 py-2 border">{{ number_format($total_D_dias_vacaciones, 2, ',', '.') }}</td>
+                                        <td class="px-4 py-2 border">{{ number_format($total_D_dias_remunerados, 2, ',', '.') }}</td>
+                                        <td class="px-4 py-2 border">{{ number_format($total_auxilio, 2, ',', '.') }}</td>
+                                        <td class="px-4 py-2 border">{{ number_format($total_devengado, 2, ',', '.') }}</td>
+                                        <td class="px-4 py-2 border">{{ number_format($total_pencion, 2, ',', '.') }}</td>
+                                        <td class="px-4 py-2 border">{{ number_format($total_salud, 2, ',', '.') }}</td>
+                                        <td class="px-4 py-2 border">{{ number_format($total_celular, 2, ',', '.') }}</td>
+                                        <td class="px-4 py-2 border">{{ number_format($total_anticipo, 2, ',', '.') }}</td>
+                                        <td class="px-4 py-2 border">{{ number_format($total_dias_no_remunerados, 2, ',', '.') }}</td>
+                                        <td class="px-4 py-2 border">{{ number_format($total_suspencion, 2, '.', ',') }}</td>
+                                        <td class="px-4 py-2 border">{{ number_format($total_otro, 2, ',', '.') }}</td>
+                                        <td class="px-4 py-2 border">{{ number_format($total_deducido, 2, ',', '.') }}</td>
+                                        <td class="px-4 py-2 border">{{ number_format($total_a_pagar, 2, ',', '.') }}</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    
+                                    <tr>
+                                        <td class="border border-gray-300 p-2 text-right" colspan="21">TOTAL PCC</td>
+                                        <td class="border border-gray-300 p-2 text-right">{{ number_format($total_a_pagar_pcc, 2, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2 text-right" colspan="21">TOTAL ADMON</td>
+                                        <td class="border border-gray-300 p-2 text-right">{{ number_format($total_a_pagar_admon, 2, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-gray-300 p-2 text-right" colspan="21">TOTAL SOCIOS</td>
+                                        <td class="border border-gray-300 p-2 text-right">{{ number_format($total_a_pagar_socios, 2, ',', '.') }}</td>
+                                    </tr>
+                                    <tr class="bg-gray-300">
+                                        <td class="border border-gray-300 p-2 text-right font-bold" colspan="21">SUBTOTAL</td>
+                                        <td class="border border-gray-300 p-2 text-right font-bold">{{ number_format($subtotal, 2, ',', '.') }}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar Trabajador</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('nomina.addWorker', $paquete->id) }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="trabajador_id" class="form-label">Seleccione Trabajador</label>
+                        <select class="form-select" name="trabajador_id" required>
+                            @foreach($trabajadoresSinNomina as $trabajador)
+                                <option value="{{ $trabajador->id }}">{{ $trabajador->nombre }} {{ $trabajador->apellido }} - {{ $trabajador->numero_identificacion }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="mes" class="label-form">Mes</label>
+                        <input type="number" name="mes" min="1" max="12" value="{{ $paquete->mes }}" class="form-control" required>
+                    </div class="form-group">
+                    
+                    <div class="form-group">
+                        <label for="año" class="label-form">Año</label>
+                        <input type="number" name="año" value="{{ $paquete->año }}" class="form-control" required>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Agregar Trabajador</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@stop
+
 @section('css')
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+    crossorigin="anonymous"
+/>
     <style>
-        
         .container {
             max-height: 500px;
             overflow-y: auto;
@@ -155,7 +463,7 @@
         }
 
         .cont {
-            background: #1b3b32;
+            background: #3a88b9;
             border-radius: 10px;
             max-width: 130rem;
             max-height: 100px;
@@ -188,266 +496,25 @@
 
     </style>
 @endsection
-
-@section('content')
-<div class="py-12">
-    <div class="max-w-full mx-auto sm:px-6 lg:px-8 space-y-6">
-        <div class="flex flex-row items-start justify-start">
-            <button id="guardarCambios" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" 
-                data-calculo-dias="{{ json_encode($nominas->map(function($nomina) {
-                    return [
-                        'id' => $nomina->id,
-                        'total_dias_trabajados' => $nomina->dias->dias_trabajados - $nomina->dias->dias_incapacidad - $nomina->dias->dias_vacaciones - $nomina->dias->dias_remunerados
-                    ];
-                })) }}">
-                Guardar cambios
-            </button>
-        </div>
-        <div class="flex flex-row items-end justify-end gap-10">
-            <a href="{{ route('nomina.index') }}" id="exportToExcel" class="btnE btn btn-warning">
-                volver
-            </a>
-            <a href="{{ route('nominas.export', $paquete->id) }}"  id="exportButton" class="btnE btn btn-success">Exportar a Excel</a>
-        </div>
-        <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <div class="w-full">
-                <div class="flow-root">
-                    <div class="mt-8 overflow-x-auto">
-                        <div class="flex">
-                            <input type="text" id="searchInput" placeholder="Buscar trabajadores..." class="border rounded p-2 mb-4">
-                        </div>
-                        <div class="inline-block min-w-full py-2 align-middle container">
-                            <table id="nominas-table"  class="display">
-                                <thead>
-                                    <tr>
-                                        <th colspan="30" class="px-4 py-2 border idi text-center">IDIMCOL S.A.S</th>
-                                    </tr>
-                                </thead>
-                                <thead>
-                                    <tr>
-                                        @php
-                                            // Crear objetos de fecha para el inicio y el fin del período
-                                            $inicio = \Carbon\Carbon::create($paquete->año, $paquete->mes, 1)->format('d/m/Y');
-                                            $fin = \Carbon\Carbon::create($paquete->año, $paquete->mes, 1)->addDays(29)->format('d/m/Y');
-                                        @endphp
-                                        <th colspan="8" class="px-4 py-2 border d text-center">MES</th>
-                                        <th colspan="8" class="px-4 py-2 border d text-center">{{ $meses[$paquete->mes] }}</th>
-                                        <th colspan="11" class="px-4 py-2 border d text-center"> Del {{ $inicio }} al {{ $fin }} </th>
-                                        <th colspan="1" class="px-4 py-2 border d text-center"> año </th>
-                                    </tr>
-                                </thead>
-                                <thead>
-                                    <tr>
-                                        <th colspan="1" class="px-4 py-2 border  x  text-center">No</th>
-                                        <th colspan="4" class="px-4 py-2 border x  text-center">datos personales</th>
-                                        <th colspan="12" class="px-4 py-2 border x  text-center">devengados</th>
-                                        <th colspan="1" class="px-4 py-2 border x text-center">total</th>
-                                        <th colspan="7" class="px-4 py-2 border x text-center">deducciones</th>
-                                        <th colspan="1" class="px-4 py-2 border x text-center">total</th>
-                                        <th colspan="1" class="px-4 py-2 border x text-center">total</th>
-                                        <th colspan="1" class="px-4 py-2 border x text-center">{{ $paquete->año }}</th>
-                                        <th colspan="2" class="px-4 py-2 border x text-center">pago</th>
-                                    </tr>
-                                </thead>
-                                <thead>
-                                    <tr>
-                                        <th class="px-4 py-2 border c-1">#</th>
-
-                                        <th class="px-4 py-2 border c-2">cedula</th>
-                                        <th class="px-4 py-2 border c-3">apellidos</th>
-                                        <th class="px-4 py-2 border c-4">nombres</th>
-                                        <th class="px-4 py-2 border c-5">cargo</th>
-
-                                        <th class="px-4 py-2 border c">salario</th>
-
-                                        <th class="px-4 py-2 border c">dias trabajados</th>
-                                        <th class="px-4 py-2 border c">dias incapacidad</th>
-                                        <th class="px-4 py-2 border c">dias vacaciones</th>
-                                        <th class="px-4 py-2 border c">dias renumerados</th>
-                                        <th class="px-4 py-2 border c">dias totales</th>
-
-                                        <th class="px-4 py-2 border c">bonificacion// auxilio de rodamiento</th>
-                                        <th class="px-4 py-2 border c">devengados dias trabajados</th>
-                                        <th class="px-4 py-2 border c">devengados dias incapacidad</th>
-                                        <th class="px-4 py-2 border c">devengados dias vacaciones</th>
-                                        <th class="px-4 py-2 border c">devengados dias renumerados</th>
-                                        <th class="px-4 py-2 border c">auxilio de transporte</th>
-                                        <th class="px-4 py-2 border c">total devengados</th>
-
-                                        <th class="px-4 py-2 border c">salud</th>
-
-                                        <th class="px-4 py-2 border c">pension</th>
-                                        <th class="px-4 py-2 border c">celular</th>
-                                        <th class="px-4 py-2 border c">anticipo</th>
-                                        <th class="px-4 py-2 border c">dias no renumerados</th>
-                                        <th class="px-4 py-2 border c">suspencion</th>
-                                        <th class="px-4 py-2 border c">otro</th>
-
-                                        <th class="px-4 py-2 border c">total deducido</th>
-
-                                        <th class="px-4 py-2 border c">total a pagar</th>
-
-                                        <th class="px-4 py-2 border c">area de trabajo</th>
-
-                                        <th class="px-4 py-2 border c">desde</th>
-                                        <th class="px-4 py-2 border c">a</th>
-                                        
-                                    </tr>
-                                </thead>
-                                <tbody id="trabajadoresTable">
-                                    @foreach($nominas as $index => $nomina)
-                                        <tr data-nomina-id="{{ $nomina->id }}" class="text-gray-950">
-                                            <td class="px-4 py-2 border c-1 ">{{ $index + 1 }}</td>
-                                            <td class="px-4 py-2 border c-2 ">{{ $nomina->trabajador->numero_identificacion }}</td>
-                                            <td class="px-4 py-2 border c-3 ">{{ $nomina->trabajador->apellido }}</td>
-                                            <td class="px-4 py-2 border c-4 ">{{ $nomina->trabajador->nombre }}</td>
-                                            <td class="px-4 py-2 border c-5 ">{{ $nomina->trabajador->cargo }}</td>
-                                            <td class="px-4 py-2 border c">{{ number_format($nomina->trabajador->sueldos->first()->sueldo, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c" data-field="dias_trabajados" data-nomina-id="{{ $nomina->id }}" >{{ $nomina->dias->dias_trabajados }}</td>
-                                            <td class="px-4 py-2 border c" contenteditable="true" id="dias_incapacidad" data-field="dias_incapacidad" data-nomina-id="{{ $nomina->id }}">{{ $nomina->dias->dias_incapacidad }}</td>
-                                            <td class="px-4 py-2 border c" contenteditable="true" id="dias_vacaciones" data-field="dias_vacaciones" data-nomina-id="{{ $nomina->id }}">{{ $nomina->dias->dias_vacaciones }}</td>
-                                            <td class="px-4 py-2 border c" contenteditable="true" id="dias_remunerados" data-field="dias_remunerados" data-nomina-id="{{ $nomina->id }}">{{ $nomina->dias->dias_remunerados }}</td>
-                                            <td class="px-4 py-2 border c">{{ $nomina->total_dias }}</td>
-                                            <td class="px-4 py-2 border c" contenteditable="true" data-field="bonificacion_auxilio" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->bonificacion_auxilio, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c" data-field="devengado_trabajados" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->devengado_trabajados, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c" data-field="devengado_incapacidad" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->devengado_incapacidad, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c" data-field="devengado_vacaciones" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->devengado_vacaciones, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c" data-field="devengado_remunerados" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->devengado_remunerados, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c" data-field="auxilio_transporte" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->auxilio_transporte, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c" data-field="total_devengado" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->total_devengado, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c" data-field="salud" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->salud, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c" data-field="pension" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->pension, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c" contenteditable="true" data-field="celular" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->celular, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c" contenteditable="true" data-field="anticipo" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->anticipo, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c" contenteditable="true" data-field="dias_no_remunerados" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->dias->dias_no_remunerados, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c" data-field="suspencion" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->suspencion, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c" contenteditable="true" data-field="otro" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->otro, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c" data-field="total_deducido" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->total_deducido, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c" data-field="total_a_pagar" data-nomina-id="{{ $nomina->id }}">{{ number_format($nomina->total_a_pagar, 2, ',', '.') }}</td>
-                                            <td class="px-4 py-2 border c">{{ $nomina->trabajador->departamentos }}</td>
-                                            <td class="px-4 py-2 border c" contenteditable="true" data-field="desde" data-nomina-id="{{ $nomina->id }}">{{ $nomina->desde }}</td>
-                                            <td class="px-4 py-2 border c" contenteditable="true" data-field="a" data-nomina-id="{{ $nomina->id }}">{{ $nomina->a }}</td>     
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="cont mb-4">
-    <div class="desprendible">
-        @foreach($nominas as $nomina)
-            <a href="{{ route('nomina.desprendible', $nomina->id) }}" class="px-4 py-2 ad text-white hover:text-blue-400">
-                {{ $nomina->trabajador->nombre }}
-                {{ $nomina->trabajador->apellido }}
-            </a>
-        @endforeach
-    </div>
-</div>
-<div class="py-12">
-    <div class="max-w-full mx-auto sm:px-6 lg:px-8 space-y-6">
-        <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <div class="w-full">
-                <div class="flow-root">
-                    <div class="mt-8 overflow-x-auto">
-                        <div class="inline-block min-w-full py-2 align-middle">
-                            <table class="totales">
-                                <thead>
-                                    <tr class="">
-                                        <th colspan="22" class="px-4 py-2 border text-center">totales</th>
-                                    </tr>
-                                </thead>
-                                <thead>
-                                    <tr class="">
-                                        <th class="px-4 py-2 border">salario</th>
-                                        <th class="px-4 py-2 border">dias trabajados</th>
-                                        <th class="px-4 py-2 border">dias incapacidad</th>
-                                        <th class="px-4 py-2 border"> dias vacaviones</th>
-                                        <th class="px-4 py-2 border">dias remunerados</th>
-                                        <th class="px-4 py-2 border">dias totales</th>
-                                        <th class="px-4 py-2 border">bonificacion auxilo de rodamiento</th>
-                                        <th class="px-4 py-2 border">devengado dias trabajados</th>
-                                        <th class="px-4 py-2 border">devengado dias incapacidad</th>
-                                        <th class="px-4 py-2 border">devengado dias vacaciones</th>
-                                        <th class="px-4 py-2 border">devengado dias remunerados</th>
-                                        <th class="px-4 py-2 border">auxilio de transporte</th>
-                                        <th class="px-4 py-2 border">total devengados</th>
-                                        <th class="px-4 py-2 border">salud</th>
-                                        <th class="px-4 py-2 border">pencion</th>
-                                        <th class="px-4 py-2 border">celular</th>
-                                        <th class="px-4 py-2 border">anticipo</th>
-                                        <th class="px-4 py-2 border">dias no remunerados</th>
-                                        <th class="px-4 py-2 border">suspencion</th>
-                                        <th class="px-4 py-2 border">otro</th>
-                                        <th class="px-4 py-2 border">total deducido</th>
-                                        <th class="px-4 py-2 border">total a pagar</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="">
-                                        <td class="px-4 py-2 border">{{ number_format($totalSueldo, 2, ',', '.') }}</td>
-                                        <td class="px-4 py-2 border">{{ $total_dias_trabajados }}</td>
-                                        <td class="px-4 py-2 border">{{  $total_dias_incapacidad }}</td>
-                                        <td class="px-4 py-2 border">{{ $total_dias_vacaciones }}</td>
-                                        <td class="px-4 py-2 border">{{ $total_dias_remunerados }}</td>
-                                        <td class="px-4 py-2 border">{{ $total_dias }}</td>
-                                        <td class="px-4 py-2 border">{{ number_format($total_bonificacion, 2, ',', '.') }}</td>
-                                        <td class="px-4 py-2 border">{{ number_format($total_D_dias_trabajados, 2, ',', '.') }}</td>
-                                        <td class="px-4 py-2 border">{{ number_format($total_D_dias_incapacidad, 2, ',', '.') }}</td>
-                                        <td class="px-4 py-2 border">{{ number_format($total_D_dias_vacaciones, 2, ',', '.') }}</td>
-                                        <td class="px-4 py-2 border">{{ number_format($total_D_dias_remunerados, 2, ',', '.') }}</td>
-                                        <td class="px-4 py-2 border">{{ number_format($total_auxilio, 2, ',', '.') }}</td>
-                                        <td class="px-4 py-2 border">{{ number_format($total_devengado, 2, ',', '.') }}</td>
-                                        <td class="px-4 py-2 border">{{ number_format($total_pencion, 2, ',', '.') }}</td>
-                                        <td class="px-4 py-2 border">{{ number_format($total_salud, 2, ',', '.') }}</td>
-                                        <td class="px-4 py-2 border">{{ number_format($total_celular, 2, ',', '.') }}</td>
-                                        <td class="px-4 py-2 border">{{ number_format($total_anticipo, 2, ',', '.') }}</td>
-                                        <td class="px-4 py-2 border">{{ number_format($total_dias_no_remunerados, 2, ',', '.') }}</td>
-                                        <td class="px-4 py-2 border">{{ number_format($total_suspencion, 2, '.', ',') }}</td>
-                                        <td class="px-4 py-2 border">{{ number_format($total_otro, 2, ',', '.') }}</td>
-                                        <td class="px-4 py-2 border">{{ number_format($total_deducido, 2, ',', '.') }}</td>
-                                        <td class="px-4 py-2 border">{{ number_format($total_a_pagar, 2, ',', '.') }}</td>
-                                    </tr>
-                                </tbody>
-                                <tfoot>
-                                    
-                                    <tr>
-                                        <td class="border border-gray-300 p-2 text-right" colspan="21">TOTAL PCC</td>
-                                        <td class="border border-gray-300 p-2 text-right">{{ number_format($total_a_pagar_pcc, 2, ',', '.') }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-300 p-2 text-right" colspan="21">TOTAL ADMON</td>
-                                        <td class="border border-gray-300 p-2 text-right">{{ number_format($total_a_pagar_admon, 2, ',', '.') }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border border-gray-300 p-2 text-right" colspan="21">TOTAL SOCIOS</td>
-                                        <td class="border border-gray-300 p-2 text-right">{{ number_format($total_a_pagar_socios, 2, ',', '.') }}</td>
-                                    </tr>
-                                    <tr class="bg-gray-300">
-                                        <td class="border border-gray-300 p-2 text-right font-bold" colspan="21">SUBTOTAL</td>
-                                        <td class="border border-gray-300 p-2 text-right font-bold">{{ number_format($subtotal, 2, ',', '.') }}</td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@stop
 @section('js')
     <script src="https://cdn.tailwindcss.com"></script>
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"
+    ></script>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"
+    ></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const editableCells = document.querySelectorAll('td[contenteditable]');
             const guardarCambiosBtn = document.getElementById('guardarCambios');
+            const baseUrl =  '{{ url('/') }}'
             let cambios = {};
             let calculoDias = JSON.parse(guardarCambiosBtn.dataset.calculoDias);
 
@@ -515,7 +582,7 @@
 
                 console.log('Cambios a enviar:', cambios);
 
-                fetch('/nominas/update-bulk', {
+                fetch(`${baseUrl}/nominas/update-bulk`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -588,12 +655,12 @@
             });
         });
     </script>
+    <script>
+        setTimeout(function() {
+            var successMessage = document.getElementById('success-message');
+            if (successMessage) {
+                successMessage.style.display = 'none';
+            }
+        }, 5000);
+    </script>
 @stop
-
-
-
-
-
-
-
-

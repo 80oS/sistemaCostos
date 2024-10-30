@@ -11,10 +11,13 @@
 @section('content')
 <div class="py-12">
     @if (session('success'))
-        <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <div id="success-message" class="alert alert-success" role="alert">
             <span class="block sm:inline">{{ session('success') }}</span>
         </div>
     @endif
+    <div class="mb-4">
+        <a href="{{ route('gestion-humana') }}" class="btn btn-primary">volver</a>
+    </div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="dark:bg-gray-300 overflow-hidden shadow-xl sm:rounded-lg p-6">
             
@@ -44,7 +47,8 @@
                             <th scope="col" class="py-3 px-6">Mes</th>
                             <th scope="col" class="py-3 px-6">Año</th>
                             <th scope="col" class="py-3 px-6">ver nominas</th>
-                            <th scope="col" class="py-3 px-6">Acciones</th>
+                            <th scope="col" class="py-3 px-6">Editar</th>
+                            <th scope="col" class="py-3 px-6">Eliminar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,13 +58,16 @@
                                 <td class="py-4 px-4">{{ $paquete->mes }}</td>
                                 <td class="py-4 px-4">{{ $paquete->año }}</td>
                                 <td class="py-4 px-4">
-                                    <a href="{{ route('nomina.show', $paquete->id) }}" class="font-medium text-blue-600 hover:underline mr-5">Ver Nóminas</a>
+                                    <a href="{{ route('nomina.show', $paquete->id) }}" class="btn btn-info">Ver Nóminas</a>
+                                </td>
+                                <td class="py-4 px-4">
+                                    <a href="{{ route('paqueteNomina.edit', $paquete->id) }}" class="btn btn-primary">Editar</a>
                                 </td>
                                 <td class="py-4 px-6">
                                     <form action="{{ route('paquete_nominas.destroy', $paquete->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este paquete?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-500 hover:text-red-800">Eliminar</button>
+                                        <button type="submit" class="btn btn-danger">Eliminar</button>
                                     </form>
                                 </td>
                             </tr>
@@ -70,9 +77,6 @@
             </div>
         </div>
     </div>
-</div>
-<div class="col-12 px-20">
-    <a href="{{ route('gestion-humana') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-3 rounded">volver</a>
 </div>
 @stop
 

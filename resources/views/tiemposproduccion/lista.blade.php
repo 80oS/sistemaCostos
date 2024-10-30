@@ -10,8 +10,11 @@
 
 @section('content')
 <div class="py-12">
-    <div class="flex items-end justify-end col-12 px-20 mb-4">
+    <div class="flex items-end justify-end col-12 px-20 mb-4 gap-3">
         <a href="{{ route('tiempos.group') }}" class="btn btn-primary">volver</a>
+        <a href="{{ route('tiempos.print', $tiempos_produccion->first()->operativo_id) }}" target="black" class="btn btn-info">
+            ver lista
+        </a>
     </div>
     @if(session('success'))
         <div id="success-message" class="alert alert-success">
@@ -40,11 +43,10 @@
                             <th class="px-2 py-1 border">sdp</th>
                             <th class="px-2 py-1 border">editar</th>
                             <th class="px-2 py-1 border">eliminar</th>
-                            <th class="px-2 py-1 border">recalcular</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($tiempos_produccion as $index => $tiempo)
+                        @foreach ($tiempos_produccion as  $index => $tiempo)
                             <tr class="bg-gray-200 text-gray-800 capitalize">
                                 <td class="px-2 py-2 border">{{ $index + 1 }}</td>
                                 <td class="px-2 py-2 border">{{ $tiempo->operativo_id }}</td>
@@ -61,7 +63,7 @@
                                 <td class="px-2 py-2 border">{{ number_format($tiempo->valor_total_horas, 2, ',', '.') }}</td>
                                 <td class="px-2 py-2 border">{{ $tiempo->sdp_id }}</td>
                                 <td class="px-2 py-2 border">
-                                    <a href="{{ route('tiempos-produccion.edit', $tiempo->id) }}" class="text-yellow-800 hover:text-yellow-500">
+                                    <a href="{{ route('tiempos-produccion.edit', $tiempo->id) }}" class="btn btn-info">
                                         Editar
                                     </a>
                                 </td>
@@ -70,14 +72,7 @@
                                         @csrf
                                         @method('DELETE')
 
-                                        <button type="submit" class="text-red-700 hover:text-red-400" onclick="return confirm('¿Estás seguro de que deseas eliminar este tiempo de produccion?');">Eliminar</button>
-                                    </form>
-                                </td>
-                                <td class="px-4 py-2 border">
-                                    <form action="{{ route('tiempos_produccion.recalcular', $tiempo->id) }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        @method('PUT')
-                                        <button type="submit" class="btn btn-warning">Recalcular</button>
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este tiempo de produccion?');">Eliminar</button>
                                     </form>
                                 </td>
                             </tr>

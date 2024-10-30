@@ -14,14 +14,16 @@ return new class extends Migration
         Schema::create('horas__extras', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('trabajadores_id');
-            $table->float('valor_bono');
-            $table->float('horas_diurnas');
-            $table->float('horas_nocturnas');
-            $table->float('horas_festivos');
-            $table->float('horas_recargo_nocturno');
+            $table->string('operario_cod');
+            $table->decimal('valor_bono', 20, 2)->change();
+            $table->decimal('horas_diurnas', 20, 2)->change();
+            $table->decimal('horas_nocturnas', 20, 2)->change();
+            $table->decimal('horas_festivos', 20, 2)->change();
+            $table->decimal('horas_recargo_nocturno', 20, 2)->change();
             $table->timestamps();
 
             $table->foreign('trabajadores_id')->references('id')->on('trabajadors')->onDelete('cascade');
+            $table->foreign('operario_cod')->references('codigo')->on('operativos')->onDelete('cascade');
         });
     }
 

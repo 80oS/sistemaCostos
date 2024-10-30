@@ -13,8 +13,8 @@
         </div>
         <div class="container">
             <div class="center">
-                <a href="{{ route('trabajadores.activos') }}" class="btn btn-success">empleados_activos</a>
-                <a href="{{ route('trabajadores.inactivos') }}" class="btn btn-danger">empleados_inactivos</a>
+                <a href="{{ route('trabajadores.activos') }}" class="btn btn-info">empleados_activos</a>
+                <a href="{{ route('trabajadores.inactivos') }}" class="btn btn-info">empleados_inactivos</a>
                 <a href="{{ route('trabajadores.index') }}" class="btn btn-info">todos_los_empleados</a>
             </div>
         </div>

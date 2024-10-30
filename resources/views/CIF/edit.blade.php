@@ -24,17 +24,17 @@
                         <div class="flex flex-row gap-3">
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label for="GOI" class="form-label">Gasto operativo indirecto</label>
+                                    <label for="GOI" class="form-label">Gasto operativo indirecto (GOI)</label>
                                     <input type="text" class="form-control" name="GOI" value="{{ $cif->GOI }}" placeholder="GOI">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="MOI" class="form-label">mano de obra indirecta</label>
+                                    <label for="MOI" class="form-label">mano de obra indirecta (MOI)</label>
                                     <input type="text" class="form-control" id="MOI" value="{{ $cif->MOI }}" name="MOI" placeholder="MOI">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
-                                    <label for="OCI" class="form-label">otros costos indirectos</label>
+                                    <label for="OCI" class="form-label">otros costos indirectos (OCI)</label>
                                     <input type="text" class="form-control" id="" value="{{ $cif->OCI }}" name="OCI" placeholder="OCI">
                                 </div>
                                 <div class="mb-3">

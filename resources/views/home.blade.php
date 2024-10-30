@@ -6,7 +6,7 @@
 @stop
 @section('content')
 @if (session('success'))
-    <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+    <div id="success-message" class="alert alert-success" role="alert">
         <span class="block sm:inline">{{ session('success') }}</span>
     </div>
 @endif
@@ -40,6 +40,7 @@
     .card, .card-body {
         width: 400px !important;
         height: 400px !important;
+        background: #fafafa10 !important;
         border-radius: 100% !important;
         box-shadow: 1px 10px 1px #000  !important;
         border: #212121 1px solid;

@@ -53,7 +53,7 @@ class ClienteController extends Controller
 
     public function create()
     {
-        $comerciales = Vendedor::all();
+        $comerciales = Vendedor::orderBy('nombre', 'asc')->get();
         $departamentos = Departamento::orderBy('nombre', 'asc')->get();
         $municipios = Municipio::orderBy('nombre', 'asc')->get();
         return view('clientes.create', compact('comerciales', 'departamentos', 'municipios'));
@@ -93,9 +93,9 @@ class ClienteController extends Controller
     public function edit($id)
     {
         $cliente = Cliente::with(['departamentos', 'municipios', 'vendedores'])->findOrFail($id);
-        $departamentos = Departamento::all();
-        $municipios = Municipio::all();
-        $comerciales = Vendedor::all();
+        $departamentos = Departamento::orderBy('nombre', 'asc')->get();
+        $municipios = Municipio::orderBy('nombre', 'asc')->get();
+        $comerciales = Vendedor::orderBy('nombre', 'asc')->get();
         return view('clientes.edit', compact('cliente', 'departamentos', 'municipios', 'comerciales'));
     }
 

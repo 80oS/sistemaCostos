@@ -9,13 +9,10 @@
 @stop
 
 @section('content')
-{{-- <div class="container px-20">
-    <a href="{{ route('nomina.show', ) }}" class="bg-yellow-700 hover:bg-yellow-400 px-3 py-2 text-white rounded">volver</a>
-</div> --}}
 <div class="py-12">
     <div class="container">
         @if (session('success'))
-            <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <div id="success-message" class="alert alert-success" role="alert">
                 <span class="block sm:inline">{{ session('success') }}</span>
             </div>
         @endif
@@ -27,48 +24,46 @@
                 <div class="col-12 mb-4">
                     <a href="{{ route('horas-extras.create') }}" class="btn btn-info">crear bono</a>
                 </div>
-                <div class="overflow-y-auto">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>codigo</th>
-                                <th>operarios</th>
-                                <th>valor del bono</th>
-                                <th>hora extras diurna</th>
-                                <th>hora extras nocturna</th>
-                                <th>hora extra festivos / dominical</th>
-                                <th>hora extra recargo nocturna</th>
-                                <th>editar</th>
-                                <th>eliminar</th>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr class="table table-primary">
+                            <th>#</th>
+                            <th>Código</th>
+                            <th>operarios</th>
+                            <th>valor del bono</th>
+                            <th>hora extras diurna</th>
+                            <th>hora extra nocturna</th>
+                            <th>hora extra festiva / dominical</th>
+                            <th>hora extra de recargo nocturno</th>
+                            <th>editar</th>
+                            <th>eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($horas_extras as $index => $horas)
+                            <tr class="table table-secondary">
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $horas->operarios->codigo }}</td>
+                                <td>{{ $horas->operarios->operario }}</td>
+                                <td>{{ number_format($horas->valor_bono, 2, ',', '.') }}</td>
+                                <td>{{ number_format($horas->horas_diurnas, 2, ',', '.') }}</td>
+                                <td>{{ number_format($horas->horas_nocturnas, 2, ',', '.') }}</td>
+                                <td>{{ number_format($horas->horas_festivos, 2, ',', '.') }}</td>
+                                <td>{{ number_format($horas->horas_recargo_nocturno, 2, ',', '.') }}</td>
+                                <td>
+                                    <a href="{{ route('horas-extras.edit', $horas->id) }}" class="btn btn-warning">Editar</a>
+                                </td>
+                                <td>
+                                    <form action="{{ route('horas-extras.destroy', $horas->id ) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger" >eliminar</button>
+                                    </form>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($horas_extras as $index => $horas)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $horas->operarios->codigo }}</td>
-                                    <td>{{ $horas->operarios->operario }}</td>
-                                    <td>{{ number_format($horas->valor_bono, 2, ',', '.') }}</td>
-                                    <td>{{ number_format($horas->horas_diurnas, 2, ',', '.') }}</td>
-                                    <td>{{ number_format($horas->horas_nocturnas, 2, ',', '.') }}</td>
-                                    <td>{{ number_format($horas->horas_festivos, 2, ',', '.') }}</td>
-                                    <td>{{ number_format($horas->horas_recargo_nocturno, 2, ',', '.') }}</td>
-                                    <td>
-                                        <a href="{{ route('horas-extras.edit', $horas->id) }}" class="btn btn-warning">Editar</a>
-                                    </td>
-                                    <td>
-                                        <form action="{{ route('horas-extras.destroy', $horas->id ) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger" >eliminar</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -91,18 +86,17 @@
             text-transform: uppercase;
         }
 
-        table thead tr th, tbody tbody tr td {
-            background: #9c9a9a !important;
-            color: #000 !important;
-            border: #bdbbbb 1px solid;
+        thead tr th, tbody tr td {
+            border: #000 1px solid !important;
         }
 
         th {
+            text-align: center;
             text-transform: uppercase;
         }
         
         .card, .card-body {
-            background: #9f9f9f !important;
+            background: #aeaeae !important;
         }
     </style>
 @stop

@@ -78,11 +78,11 @@
                                 <td class=" v">{{ $trabajador->cuenta_bancaria }}</td>
                                 <td class=" v">{{ $trabajador->banco }}</td>
                                 <td class=" v">
-                                    <a href="{{ route('trabajadores.edit', $trabajador->id) }}" class="btn btn-success">Actualizar</a>
+                                    <a href="{{ route('trabajadores.edit', $trabajador->id) }}" class="btn btn-info">Actualizar</a>
                                 </td>
                                 <td class=" v">
                                     @if($trabajador->sueldos->isNotEmpty())
-                                    <a href="{{ route('sueldos.edit', $trabajador->sueldos->first()->id) }}" class="btn btn-success">Actualizar_Sueldo</a>
+                                    <a href="{{ route('sueldos.edit', $trabajador->sueldos->first()->id) }}" class="btn btn-primary">Actualizar_Sueldo</a>
                                     @else
                                         <a href="{{ route('sueldos.create', $trabajador->id) }}" class="btn-blue">Crear_Sueldo</a>
                                     @endif
@@ -172,9 +172,6 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
-    @tailwind base;
-    @tailwind components;
-    @tailwind utilities;
     <style>
     * {
     text-transform: capitalize;

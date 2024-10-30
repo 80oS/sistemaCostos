@@ -19,7 +19,7 @@ class ItemSTE extends Model
 
     public function solicitdServicioExterno()
     {
-        return $this->belongsToMany(SolicitudServicioExterno::class, 'items_ste_cantidad', 'item_ste_id', 'solicitud_servicio_externo_id')
-                    ->withPivot('cantidad');
+        return $this->belongsToMany(SolicitudServicioExterno::class, 'items_ste_cantidad', 'item_ste_id', 'solicitud_servicio_externo_id', 'numero_ste', 'id')
+                    ->withPivot('cantidad', 'id');
     }
 }

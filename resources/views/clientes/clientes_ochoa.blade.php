@@ -35,7 +35,6 @@
                         <th>Teléfono</th>
                         <th>contacto</th>
                         <th>Correo</th>
-                        <th>Comerciales</th>
                         <th>Actualizar</th>
                         <th>eliminar</th>
                     </tr>
@@ -52,7 +51,6 @@
                         <td>{{ $cliente->telefono }}</td>
                         <td>{{ $cliente->contacto }}</td>
                         <td>{{ $cliente->correo }}</td>
-                        <td>{{ $cliente->vendedores->nombre }}</td>
                         <td>
                             <a href="{{ route('clientes.edit', $cliente->nit) }}" class="btn btn-info">Editar</a>
                         </td>
@@ -100,6 +98,13 @@
         input {
             background: #fff !important;
             color: #000 !important;
+        }
+
+        th {
+            text-transform: uppercase;
+        }
+        td {
+            text-transform: capitalize;
         }
     </style>
 @stop

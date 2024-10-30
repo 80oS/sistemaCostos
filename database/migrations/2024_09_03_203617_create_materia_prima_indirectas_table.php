@@ -13,14 +13,18 @@ return new class extends Migration
     {
         Schema::create('materia_prima_indirectas', function (Blueprint $table) {
             $table->id();
+            $table->string('codigo')->unique();
             $table->string('descripcion');
             $table->string('proveedor');
+            $table->string('proveedor_id');
             $table->string('numero_factura');
             $table->string('numero_orden_compra');
             $table->decimal('precio_unit', 20, 2);
             $table->decimal('valor', 20, 2);
             $table->timestamps();
 
+            $table->foreign('proveedor_id')->references('nit')->on('proveedores')->onDelete('cascade');
+            $table->foreign('numero_orden_compra')->references('numero')->on('orden__compras')->onDelete('cascade');
         });
     }
 

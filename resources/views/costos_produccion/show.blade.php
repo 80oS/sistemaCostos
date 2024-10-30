@@ -13,7 +13,7 @@
 
 @section('content')
 <div class="flex items-end justify-end mb-4 gap-5">
-    <a href="{{ route('resumen.costos', $sdp->numero_sdp) }}" class="btn btn-success">ver resumen</a>
+    <a href="{{ route('resumen.costos', $sdp->numero_sdp) }}" class="btn btn-info">ver resumen</a>
     <a href="{{ route('costos_produccion.index') }}" class="btn btn-primary">volver</a>
 </div>
 {{-- @if (!$tiemposProduccionCargados)
@@ -57,6 +57,7 @@
                     <!-- Columna 2 -->
                     <div>
                         <p><span class="font-semibold">Vendedor: </span> {{ $sdp->vendedores->nombre }}</p>
+                        <p><span class="font-semibold">Nombre: </span> {{ $sdp->nombre }}</p>
                     </div>
                     <!-- Columna 3 -->
                     <div>
@@ -122,11 +123,11 @@
                     <thead>
                         <tr class="bg-gray-400 border border-black">
                             <th class="border p-1">Valor de Venta</th>
-                            <th class="border p-1">Mano de Obra Directa</th>
+                            <th class="border p-1">Mano de Obra Directa (MOI)</th>
                             <th class="border p-1">Nomina</th>
-                            <th class="border p-1">Materias Primas Directas</th>
-                            <th class="border p-1">Materias Primas Indirectas</th>
-                            <th class="border p-1">Costos Indirectos de Fábrica</th>
+                            <th class="border p-1">Materias Primas Directas (MPD)</th>
+                            <th class="border p-1">Materias Primas Indirectas (MPI)</th>
+                            <th class="border p-1">Costos Indirectos de Fábrica (CIF)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -247,8 +248,8 @@
                                     <th>Servicio</th>
                                     <th>Horas Trabajadas</th>
                                     <th>Valor del Servicio</th>
-                                    <th>servio por horas</th>
-                                    <th>Mano de Obra Total</th>
+                                    <th>servicio por horas</th>
+                                    <th>MOI</th>
                                     <th>Articulo</th>
                                     <th>numero de item</th>
                                 </tr>

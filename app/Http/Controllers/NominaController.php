@@ -21,6 +21,87 @@ class NominaController extends Controller
         return view('nomina.index', compact('paquetes'));
     }
 
+    public function addWorker(Request $request, $paqueteId)
+    {
+        $paquete = PaqueteNomina::findOrFail($paqueteId);
+        $trabajadorId = $request->input('trabajador_id');
+        $trabajador = Trabajador::findOrFail($trabajadorId);
+
+        // Verificar si el trabajador ya está en el paquete
+        if ($paquete->nominas()->where('trabajador_id', $trabajadorId)->exists()) {
+            return redirect()->back()->with('error', 'El trabajador ya está en este paquete de nóminas.');
+        }
+
+        if ($trabajador->estado == 'inactivo') {
+            Log::info('Trabajador inactivo, nómina no creada', ['trabajador_id' => $trabajador->id]);
+            return redirect()->back()->with('error', 'El trabajador está inactivo y no se puede agregar a la nómina.');
+        }
+
+        $esAprendizSENA = $trabajador->cargo == 'APRENDIZ SENA';
+
+        // Crear la nómina para el trabajador en el paquete actual
+        $nomina = $paquete->nominas()->create([
+            'trabajador_id' => $trabajadorId,
+            'mes' => $request->mes,
+            'año' => $request->año,
+            'periodo_pago' => $request->mes . '/' . $request->año,
+            'paquete_nomina_id' => $paquete->id,
+            'devengado_trabajados' => 0,
+            'devengado_incapacidad' => 0,
+            'devengado_vacaciones' => 0,
+            'devengado_remunerados' => 0,
+            'pension' => $esAprendizSENA ? 0 : 0.04, // Si es Aprendiz SENA, la pensión es 0
+            'salud' => $esAprendizSENA ? 0 : 0.04, 
+            'total_deducido' => 0,
+            'total_devengado' => 0,
+            'total_a_pagar' => 0,
+            'suspencion' => 0,
+            'bonificacion_auxilio' => 0,
+            'celular' => 0,
+            'anticipo' => 0,
+            'otro' => 0,
+            'auxilio_transporte' => 0,
+        ]);
+
+        $dias = new Dias([
+            'nomina_id' => $nomina->id,
+            'trabajador_id' => $trabajador->id,
+            'dias_trabajados' => 30,
+            'dias_incapacidad' => 0,
+            'dias_vacaciones' => 0,
+            'dias_remunerados' => 0,
+            'dias_no_remunerados' => 0,
+        ]);
+        $dias->save();
+
+        $nomina->calcularNomina();
+
+        return redirect()->back()->with('success', 'Trabajador agregado al paquete de nómina exitosamente.');
+    }
+
+    public function editNomina($id)
+    {
+        $paqueteNomina = PaqueteNomina::findOrFail($id);
+        return view('nomina.edit', compact('paqueteNomina'));
+    }
+
+    public function updateNomina(Request $request, $id)
+    {
+        $paqueteNomina = PaqueteNomina::findOrFail($id);
+
+        $request->validate([
+            'mes' => 'required|integer|min:1|max:12',
+            'año' => 'required|integer',
+        ]);
+
+        $paqueteNomina->update([
+            'mes' => $request->input('mes'),
+            'año' => $request->input('año'),
+        ]);
+
+        return redirect()->route('nomina.index')->with('Pagete de nomina actualizado');
+    }
+
     public function crearPaquete(Request $request)
     {
         Log::info('Iniciando creación de paquete', $request->all());
@@ -202,6 +283,8 @@ class NominaController extends Controller
             11 => 'Noviembre',
             12 => 'Diciembre',
         ];
+
+        $trabajadoresSinNomina = Trabajador::doesntHave('nominas')->where('estado', 'activo')->get();
     
         $trabajadorIds = Trabajador::where('estado', 'activo')->pluck('id');
     
@@ -297,7 +380,7 @@ class NominaController extends Controller
                                             'total_salud', 'total_celular', 'total_anticipo', 
                                             'total_suspencion', 'total_deducido', 'total_a_pagar', 
                                             'total_dias', 'total_a_pagar_pcc', 'total_a_pagar_admon', 
-                                            'total_a_pagar_socios', 'subtotal', 'total_otro'));
+                                            'total_a_pagar_socios', 'subtotal', 'total_otro', 'trabajadoresSinNomina'));
     }
 
     public function updateBulk(Request $request)
@@ -392,9 +475,6 @@ class NominaController extends Controller
             ], 500);
         }
     }
-
-
-    
 
 
     public function destroy($id)

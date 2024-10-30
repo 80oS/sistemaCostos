@@ -19,7 +19,10 @@ class SDPController extends Controller
     public function indexPaquetes()
     {
         $sdps = SDP::with('clientes')->get();
-        return view('SDP.paquetes', compact('sdps'));
+        $totalSdp = count($sdps);
+        $sdpAbiertas = SDP::where('estado', 'abierto')->count();
+        $sdpCerradas = SDP::where('estado', 'cerrado')->count();
+        return view('SDP.paquetes', compact('sdps', 'totalSdp', 'sdpAbiertas', 'sdpCerradas'));
     }
 
 
@@ -45,12 +48,38 @@ class SDPController extends Controller
         return view('SDP.ver', compact('sdp','total', 'idimcols'));
     }
 
-    
+    public function abrir($id)
+    {
+        $sdp = Sdp::findOrFail($id);
+
+        if ($sdp->estado === 'cerrado') {
+            $sdp->estado = 'abierto';
+            $sdp->save();
+
+            return redirect()->route('sdp.index')->with('success', 'El SDP ha sido abierto correctamente.');
+        }
+
+        return redirect()->back()->withErrors('El SDP ya está abierto.');
+    }
+
+    public function cerrar($id)
+    {
+        $sdp = Sdp::findOrFail($id);
+
+        if ($sdp->estado === 'abierto') {
+            $sdp->estado = 'cerrado';
+            $sdp->save();
+
+            return redirect()->route('sdp.index')->with('success', 'El SDP ha sido cerrado correctamente.');
+        }
+
+        return redirect()->back()->withErrors('El SDP ya está cerrado.');
+    }
 
     public function create()
     {
-        $clientes = Cliente::orderBy('nombre')->get(['nit', 'nombre']);
-        $vendedores = Vendedor::orderBy('nombre')->get(['id', 'nombre']);
+        $clientes = Cliente::orderBy('nombre', 'asc')->get(['nit', 'nombre']);
+        $vendedores = Vendedor::orderBy('nombre', 'asc')->get(['id', 'nombre']);
         
         // Obtener el último número de SDP
         $nuevoNumeroSDP = $this->numero_sdp();
@@ -79,6 +108,7 @@ class SDPController extends Controller
             // Validaciones
             $request->validate([
                 'numero_sdp' => 'required|unique:sdps,numero_sdp',
+                'nombre' => 'nullable|string',
                 'cliente_nit' => 'required|exists:clientes,nit',
                 'vendedor_id' => 'required|exists:vendedores,id',
                 'fecha_despacho_comercial' => 'required|date',
@@ -87,6 +117,7 @@ class SDPController extends Controller
                 'orden_compra' => 'nullable|string',
                 'memoria_calculo' => 'nullable|string',
                 'requisitos_cliente' => 'nullable|string',
+                'estado' => 'required|in:abierto,cerrado',
                 'articulos' => 'required|array',
                 'articulos.*.descripcion' => 'required|string',
                 'articulos.*.cantidad' => 'required|integer|min:1',
@@ -98,9 +129,13 @@ class SDPController extends Controller
 
             $nuevoNumeroSDP = $this->numero_sdp();
 
+            $cliente = Cliente::findOrFail($request->cliente_nit);
+            $nombreSDP = $request->nombre ?: $cliente->nombre;
+
             // Crear el nuevo SDP
             $sdp = Sdp::create([
                 'numero_sdp' => $nuevoNumeroSDP,
+                'nombre' => $nombreSDP,
                 'cliente_nit' => $request->cliente_nit,
                 'vendedor_id' => $request->vendedor_id,
                 'fecha_despacho_comercial' => $request->fecha_despacho_comercial,
@@ -155,86 +190,90 @@ class SDPController extends Controller
     public function edit(string $id)
     {
         $sdp = SDP::with('clientes', 'articulos', 'vendedores')->findOrFail($id);
-        $clientes = Cliente::orderBy('nombre')->get(['nit', 'nombre']);
-        $vendedores = Vendedor::orderBy('nombre')->get(['id', 'nombre']);
+        $clientes = Cliente::orderBy('nombre', 'asc')->get(['nit', 'nombre']);
+        $vendedores = Vendedor::orderBy('nombre', 'asc')->get(['id', 'nombre']);
         return view('SDP.edit', compact('sdp', 'clientes', 'vendedores'));
     }
 
     public function update(Request $request, $id)
-{
-    try {
-        Log::info('Llegó la solicitud de actualización', $request->all());
+    {
+        try {
+            Log::info('Llegó la solicitud de actualización', $request->all());
 
-        $sdp = Sdp::findOrFail($id);
-        // Validaciones
-        $request->validate([
-            'numero_sdp' => 'required|unique:sdps,numero_sdp,' . $sdp->id,
-            'cliente_nit' => 'required|exists:clientes,nit',
-            'vendedor_id' => 'required|exists:vendedores,id',
-            'fecha_despacho_comercial' => 'required|date',
-            'fecha_despacho_produccion' => 'required|date',
-            'observaciones' => 'nullable|string',
-            'orden_compra' => 'nullable|string',
-            'memoria_calculo' => 'nullable|string',
-            'requisitos_cliente' => 'nullable|string',
-            'articulos' => 'required|array',
-            'articulos.*.descripcion' => 'required|string',
-            'articulos.*.cantidad' => 'required|integer|min:1',
-            'articulos.*.precio' => 'required|numeric|min:0',
-        ]);
-        // Iniciar una transacción
-        DB::beginTransaction();
+            $sdp = Sdp::findOrFail($id);
+            // Validaciones
+            $request->validate([
+                'numero_sdp' => 'required|unique:sdps,numero_sdp,' . $sdp->id,
+                'cliente_nit' => 'required|exists:clientes,nit',
+                'nombre' => 'nullable|string',
+                'vendedor_id' => 'required|exists:vendedores,id',
+                'fecha_despacho_comercial' => 'required|date',
+                'fecha_despacho_produccion' => 'required|date',
+                'observaciones' => 'nullable|string',
+                'orden_compra' => 'nullable|string',
+                'memoria_calculo' => 'nullable|string',
+                'requisitos_cliente' => 'nullable|string',
+                'estado' => 'required|in:abierto,cerrado',
+                'articulos' => 'required|array',
+                'articulos.*.descripcion' => 'required|string',
+                'articulos.*.cantidad' => 'required|integer|min:1',
+                'articulos.*.precio' => 'required|numeric|min:0',
+            ]);
+            // Iniciar una transacción
+            DB::beginTransaction();
 
-        // Encontrar el SDP existente
+            // Encontrar el SDP existente
 
-        // Actualizar los campos del SDP
-        $sdp->update([
-            'numero_sdp' => $request->numero_sdp,
-            'cliente_nit' => $request->cliente_nit,
-            'vendedor_id' => $request->vendedor_id,
-            'fecha_despacho_comercial' => $request->fecha_despacho_comercial,
-            'fecha_despacho_produccion' => $request->fecha_despacho_produccion,
-            'observaciones' => $request->observaciones,
-            'orden_compra' => $request->orden_compra,
-            'memoria_calculo' => $request->memoria_calculo,
-            'requisitos_cliente' => $request->requisitos_cliente,
-        ]);
+            // Actualizar los campos del SDP
+            $sdp->update([
+                'numero_sdp' => $request->numero_sdp,
+                'cliente_nit' => $request->cliente_nit,
+                'nombre' => $request->nombre,
+                'vendedor_id' => $request->vendedor_id,
+                'fecha_despacho_comercial' => $request->fecha_despacho_comercial,
+                'fecha_despacho_produccion' => $request->fecha_despacho_produccion,
+                'observaciones' => $request->observaciones,
+                'orden_compra' => $request->orden_compra,
+                'memoria_calculo' => $request->memoria_calculo,
+                'requisitos_cliente' => $request->requisitos_cliente,
+                'estado' => $request->estado,
+            ]);
 
-        // Obtener los artículos enviados en la solicitud
-        $articulos_enviados = $request->input('articulos');
+            // Obtener los artículos enviados en la solicitud
+            $articulos_enviados = $request->input('articulos');
 
-        // Actualizar la relación entre SDP y artículos, incluyendo la cantidad y el precio
-        $articulo_ids = [];
-        foreach ($articulos_enviados as $articuloData) {
-            // Buscar el artículo por su descripción
-            $articulo = Articulo::where('descripcion', $articuloData['descripcion'])->first();
+            // Actualizar la relación entre SDP y artículos, incluyendo la cantidad y el precio
+            $articulo_ids = [];
+            foreach ($articulos_enviados as $articuloData) {
+                // Buscar el artículo por su descripción
+                $articulo = Articulo::where('descripcion', $articuloData['descripcion'])->first();
 
-            if ($articulo) {
-                // Almacenar la relación con cantidad y precio en la tabla pivote
-                $articulo_ids[$articulo->id] = [
-                    'cantidad' => $articuloData['cantidad'],
-                    'precio' => $articuloData['precio'] // Precio específico de este artículo en el SDP
-                ];
+                if ($articulo) {
+                    // Almacenar la relación con cantidad y precio en la tabla pivote
+                    $articulo_ids[$articulo->id] = [
+                        'cantidad' => $articuloData['cantidad'],
+                        'precio' => $articuloData['precio'] // Precio específico de este artículo en el SDP
+                    ];
+                }
             }
+
+            // Sincronizar los artículos con el SDP, incluyendo la cantidad y el precio en la tabla pivote
+            $sdp->articulos()->sync($articulo_ids);
+
+            // Confirmar la transacción
+            DB::commit();
+
+            return redirect()->route('sdp.ver', $sdp->numero_sdp)->with('success', 'SDP actualizado exitosamente');
+            
+        } catch (\Throwable $e) {
+            // Revertir la transacción en caso de error
+            DB::rollBack();
+
+            Log::error('Error al actualizar SDP: ' . $e->getMessage(), ['stack' => $e->getTraceAsString()]);
+
+            return redirect()->back()->withErrors(['error' => 'Ocurrió un error al actualizar la solicitud. Por favor, inténtelo de nuevo.']);
         }
-
-        // Sincronizar los artículos con el SDP, incluyendo la cantidad y el precio en la tabla pivote
-        $sdp->articulos()->sync($articulo_ids);
-
-        // Confirmar la transacción
-        DB::commit();
-
-        return redirect()->route('sdp.ver', $sdp->numero_sdp)->with('success', 'SDP actualizado exitosamente');
-        
-    } catch (\Throwable $e) {
-        // Revertir la transacción en caso de error
-        DB::rollBack();
-
-        Log::error('Error al actualizar SDP: ' . $e->getMessage(), ['stack' => $e->getTraceAsString()]);
-
-        return redirect()->back()->withErrors(['error' => 'Ocurrió un error al actualizar la solicitud. Por favor, inténtelo de nuevo.']);
     }
-}
 
     public function destroy($id)
     {

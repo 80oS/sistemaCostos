@@ -21,7 +21,7 @@ class horasController extends Controller
 
     public function create()
     {
-        $operarios = Operativo::all();
+        $operarios = Operativo::orderBy('operario', 'asc')->get();
         // dd($operarios);
         return view('horas_extras.create', compact('operarios'));
     }

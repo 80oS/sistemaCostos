@@ -11,22 +11,22 @@
 @section('content')
 <div class="box">
     <div class="col-12 px-20 mb-4">
-        <a href="{{ route('trabajadores.index') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-3 rounded">volver</a>
+        <a href="{{ route('trabajadores.index') }}" class="btn btn-primary">volver</a>
     </div>
     <div class="flex flex-col items-end justify-end px-20 mb-4">
         <a href="{{ route('horas-extras.index') }}" id="exportToExcel" class="btnE btn btn-info">
             Bonos
         </a>
     </div>
-    <div class="flex items-end justify-end px-20 mb-4">
-        <button data-toggle="modal" data-target="#modalPurple" class="btn btn-primary">nuevo operario</button>
-    </div>
+    @if (session('success'))
+        <div id="success-message" class="alert alert-success" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+    @endif
     <div class="container">
-        @if (session('success'))
-            <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                <span class="block sm:inline">{{ session('success') }}</span>
-            </div>
-        @endif
+        <div class="mb-4">
+            <button data-toggle="modal" data-target="#modalBlue" class="btn btn-primary">nuevo operario</button>
+        </div>
         <div class="table_wrapper">
             <table class="">
                 <thead>
@@ -53,7 +53,7 @@
                             <td class="c-4">{{ $operario->trabajador->apellido }}</td>
                             <td class="c-5">{{ $operario->trabajador->sueldos->first()->sueldo ?? 'No tiene sueldo registrado' }}</td>
                             <td class="v">
-                                <a href="{{ route('operarios.edit', $operario->id) }}" class="btn btn-warning">Editar</a>
+                                <a href="{{ route('operarios.edit', $operario->id) }}" class="btn btn-info">Editar</a>
                             </td>
                             <td class="v">
                                 <form action="{{ route('operarios.destroy', $operario->id) }}" method="POST">
@@ -71,7 +71,7 @@
 </div>
 
 {{-- Themed --}}
-<x-adminlte-modal id="modalPurple" title="nuevo operario" theme="purple"
+<x-adminlte-modal id="modalBlue" title="nuevo operario" theme="blue"
     icon="fas fa-bolt" size='lg' disable-animations>
     <form action="{{ route('operarios.store') }}" method="POST">
         @csrf
@@ -81,7 +81,7 @@
             <option value="{{ $trabajador->id }}">{{ $trabajador->nombre }} {{ $trabajador->apellido }}</option>
             @endforeach
         </x-adminlte-select>
-        <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
+        <x-adminlte-button class="btn-flat" type="submit" label="Guardar" theme="primary" icon="fas fa-lg fa-save"/>
     </form>
 </x-adminlte-modal>
 @stop
@@ -266,6 +266,10 @@
             table .v {
                 color: #000000;
                 border: #000000 1px solid;
+            }
+
+            th{
+                text-transform: uppercase;
             }
         </style>
 @stop

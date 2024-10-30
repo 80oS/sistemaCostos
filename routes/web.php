@@ -47,12 +47,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('auth.login');
 });
-
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+    Route::get('/ofline', function () {
+        return view('vendor.laravelpwa.offline');
+    });
 
     Route::get('/gestion-humana', [TalentoHConroller::class, 'index'])->name('gestion-humana');
 
@@ -74,15 +77,14 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/tiempos_produccion/recalcular/{id}', [TiemposProduccionController::class, 'recalcular'])->name('tiempos_produccion.recalcular');
     Route::get('/sdp/{id}/articulos-seleccionados', [TiemposProduccionController::class, 'mostrarArticulosSeleccionados'])
         ->name('sdp.articulos-seleccionados');
+    Route::get('/printLista/{id}', [TiemposProduccionController::class, 'print'])->name('tiempos.print');
+    Route::patch('/sdps/{id}/abrir', [SdpController::class, 'abrir'])->name('sdps.abrir');
+    Route::patch('/sdps/{id}/cerrar', [SdpController::class, 'cerrar'])->name('sdps.cerrar');
 
     // operarios
     Route::get('grupos', [TiemposProduccionController::class, 'groupByOperario'])->name('tiempos.group');
     Route::get('tiempos-produccion/operario/{codigoOperario}', [TiemposProduccionController::class, 'index'])
         ->name('tiempos-produccion.operario');
-
-    // print
-
-
 
     // sueldo
     Route::resource('sueldo', SueldoController::class);
@@ -99,7 +101,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/nomina/{id}/desprendible', [NominaController::class, 'mostrarDesprendible'])->name('nomina.desprendible');
         // export
         Route::get('/nomina/export/{paquete}', [ExportController::class, 'export'])->name('nominas.export');
-
+    Route::get('paquteNomina/{id}/edit', [NominaController::class, 'editNomina'])->name('paqueteNomina.edit');
+    Route::put('paquteNomina/{id}/update', [NominaController::class, 'updateNomina'])->name('paquetaNomina.update');
+    Route::post('/nomina/{paquete}/add-worker', [NominaController::class, 'addWorker'])->name('nomina.addWorker');
     // horas extras
     Route::resource('horas-extras', horasController::class);
 
@@ -142,23 +146,27 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/municipios', [MunicipioController::class, 'store']);
 
 
-    // remiciones
+    // remiciones despacho
     Route::resource('remiciones', RemicionesController::class);
+
+
     Route::get('/remisiones/despacho', [RemicionesController::class, 'Despacho'])->name('remision.despacho');
     Route::get('/remisiones/despacho/create', [RemicionesController::class, 'createDespacho'])->name('remision.despacho.create');
-    Route::get('/remisiones/ingreso/create', [RemicionesController::class, 'createIngreso'])->name('remision.ingreso.create');
     Route::post('/remisiones/despacho/store', [RemicionesController::class, 'storeDespacho'])->name('remision.despacho.store');
+    Route::get('/remisiones/despacho/{id}/show', [RemicionesController::class, 'showDespacho'])->name('remision.despacho.show');
+    Route::get('/remisiones/despacho/{id}/edit', [RemicionesController::class, 'editDespacho'])->name('remision.despacho.edit');
+    Route::put('/remisiones/despacho/{id}/update', [RemicionesController::class, 'updateDespacho'])->name('remision.despacho.update');
+    Route::delete('/remisiones/despacho/{id}/destroy', [RemicionesController::class, 'destroyDespacho'])->name('remision.despacho.destroy');
+
+    // remisiones ingreso
+    Route::get('/remisiones/ingreso/create', [RemicionesController::class, 'createIngreso'])->name('remision.ingreso.create');
     Route::post('/remisiones/ingreso/store', [RemicionesController::class, 'storeIngreso'])->name('remision.ingreso.store');
     Route::get('/remisiones/ingreso', [RemicionesController::class, 'Ingreso'])->name('remision.ingreso');
     Route::get('/cliente/{cliente}/sdps', [RemicionesController::class, 'getSdpsByCliente']);
-    Route::get('/remisnones/despacho/{id}/show', [RemicionesController::class, 'showDespacho'])->name('remision.despacho.show');
-    Route::get('/remisnones/ingreso/{id}/show', [RemicionesController::class, 'showIngreso'])->name('remision.ingreso.show');
-    Route::get('/remisnones/ingreso/{id}/Edit', [RemicionesController::class, 'editIngreso'])->name('remision.despacho.edit');
-    Route::get('/remisnones/despacho/{id}/Edit', [RemicionesController::class, 'editDespacho'])->name('remision.ingreso.edit');
-    Route::put('/remisnones/despacho/{id}/update', [RemicionesController::class, 'updateDespacho'])->name('remision.despacho.update');
-    Route::put('/remisnones/ingreso/{id}/update', [RemicionesController::class, 'updateIngreso'])->name('remision.ingreso.update');
-    Route::delete('/remisnones/despacho/{id}/destroy', [RemicionesController::class, 'destroyDespacho'])->name('remision.despacho.destroy');
-    Route::delete('/remisnones/ingreso/{id}/destroy', [RemicionesController::class, 'destroyIngreso'])->name('remision.ingreso.destroy');
+    Route::get('/remisiones/ingreso/{id}/show', [RemicionesController::class, 'showIngreso'])->name('remision.ingreso.show');
+    Route::get('/remisiones/ingreso/{id}/edit', [RemicionesController::class, 'editIngreso'])->name('remision.ingreso.edit');
+    Route::put('/remisiones/ingreso/{id}/update', [RemicionesController::class, 'updateIngreso'])->name('remision.ingreso.update');
+    Route::delete('/remisiones/ingreso/{id}/destroy', [RemicionesController::class, 'destroyIngreso'])->name('remision.ingreso.destroy');
 
     // items 
     Route::resource('items', ItemController::class);

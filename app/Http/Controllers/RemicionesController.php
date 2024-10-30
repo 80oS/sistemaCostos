@@ -23,13 +23,8 @@ class RemicionesController extends Controller
     public function Despacho()
     {
         $remicionesDespacho = Remicion::with('items', 'cliente', 'sdp')->get();
+        
         return view('remiciones.despacho', compact('remicionesDespacho'));
-    }
-
-    public function Ingreso()
-    {
-        $remisionesIngreso = RemisionIngreso::with('proveedor')->get();
-        return view('remiciones.ingreso', compact('remisionesIngreso'));
     }
 
     public function getSdpsByCliente($clienteId)
@@ -47,16 +42,6 @@ class RemicionesController extends Controller
         $sdps = SDP::with('clientes', 'articulos')->get();
 
         return view('remiciones.createDespacho', compact('clientes', 'sdps'));
-    }
-
-    public function createIngreso(Request $request)
-    {
-        $proveedores = Proveedor::all();
-        $clientes = Cliente::has('SDP')->get();
-        $sdps = SDP::with('clientes')->get();
-        $items = Item::all();
-
-        return view('remiciones.createIngreso', compact('proveedores', 'items', 'sdps', 'clientes'));
     }
     
     public function storeDespacho(Request $request)
@@ -89,9 +74,11 @@ class RemicionesController extends Controller
         ]);
 
         foreach ($request->input('items') as $itemsData){
-            $item = Item::firstOrCreate(
-                ['descripcion' => $itemsData['descripcion']]
-            );
+            $item = Item::where('descripcion', $itemsData['descripcion'])->first();
+
+            if (!$item) {
+                $item = Item::create(['descripcion' => $itemsData['descripcion']]);
+            }
 
             $remiciones->items()->attach($item->id, [
                 'cantidad' => $itemsData['cantidad']
@@ -103,6 +90,108 @@ class RemicionesController extends Controller
         return redirect()->route('remision.despacho')->with('success', 'Remicion de despacho creada con éxito');
     }
 
+    public function showDespacho($id)
+    {
+        $remisionDespacho = Remicion::with('cliente')->find($id);
+
+        $items = $remisionDespacho->items;
+
+        return view('remiciones.showDespacho', compact('remisionDespacho', 'items'));
+    }
+
+    public function editDespacho($id)
+    {
+        $remisionDespacho = Remicion::findOrFail($id);
+
+        return view('remiciones.editDespacho', compact('remisionDespacho'));
+    }
+
+    public function updateDespacho(Request $request, $id)
+    {
+
+        try {
+            $remiciones = Remicion::findOrFail($id);
+
+            $request->validate([
+                'cliente_id' => 'required|string|exists:clientes,nit',
+                'fecha_despacho' => 'required|date',
+                'sdp_id' => 'required|integer|exists:sdps,numero_sdp',
+                'observaciones' => 'nullable|string',
+                'despacho' => 'nullable|string',
+                'departamento' => 'required|string',
+                'recibido' => 'nullable|string',
+                'items' => 'required|array',
+                'items.*.cantidad' => 'required|integer|min:1',
+                'items.*.descripcion' => 'required|string',
+            ]);
+
+            DB::beginTransaction();
+
+            $remiciones->update([
+                'cliente_id' => $request->cliente_id,
+                'fecha_despacho' => $request->fecha_despacho,
+                'sdp_id' => $request->sdp_id,
+                'observaciones' => $request->observaciones,
+                'despacho' => $request->despacho,
+                'departamento' => $request->departamento,
+                'recibido' => $request->recibido,
+            ]);
+
+            $items_esnviados = $request->input('items');
+
+            $items_ids = [];
+
+            foreach ($items_esnviados as $itemsData){
+                $item = Item::where('descripcion', $itemsData['descripcion'])->first();
+
+                if (!$item) {
+                    $item = Item::create([
+                        'descripcion' => $itemsData['descripcion']
+                    ]);
+                }
+
+                $items_ids[$item->id] = [
+                    'cantidad' => $itemsData['cantidad'],
+                ];
+            }
+
+            $remiciones->items()->syncWithoutDetaching($items_ids);
+
+            DB::commit();
+
+            return redirect()->route('remision.despacho')->with('success', 'Remision de despacho se ha actualizado con éxito');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error('Error al crear la remision de despacho: ' . $e->getMessage(), ['stack' => $e->getTraceAsString()]);
+
+            return redirect()->back()->withErrors('Hubo un error al actualizar la remisión de despacho.' . $e->getMessage());
+        }
+    }
+
+    public function destroyDespacho($id)
+    {
+        $remiciones = Remicion::findOrFail($id);
+        $remiciones->delete();
+
+        return redirect()->route('remision.despacho')->with('success', 'Remision de despacho se ha eliminado con éxito');
+    }
+
+    public function Ingreso()
+    {
+        $remisionesIngreso = RemisionIngreso::with('proveedor')->get();
+        return view('remiciones.ingreso', compact('remisionesIngreso'));
+    }
+
+    public function createIngreso(Request $request)
+    {
+        $proveedores = Proveedor::all();
+        $clientes = Cliente::has('SDP')->get();
+        $sdps = SDP::with('clientes')->get();
+        $items = Item::all();
+
+        return view('remiciones.createIngreso', compact('proveedores', 'items', 'sdps', 'clientes'));
+    }
+
     public function storeIngreso(Request $request)
     {
         $request->validate([
@@ -112,7 +201,7 @@ class RemicionesController extends Controller
             'fecha_ingreso' => 'required|date',
             'observaciones' => 'nullable|string',
             'despacho' => 'nullable|string',
-            'departamento' => 'required|string',
+            'departamento' => 'required|in:Administracion,Produccion',
             'recibido' => 'nullable|string',
             'items' => 'required|array',
             'items.*.cantidad' => 'required|numeric',
@@ -133,9 +222,11 @@ class RemicionesController extends Controller
         ]);
 
         foreach ($request->input('items') as $itemsData){
-            $item = Item::firstOrCreate(
-                ['descripcion' => $itemsData['descripcion']]
-            );
+            $item = Item::where('descripcion', $itemsData['descripcion'])->first();
+
+            if (!$item) {
+                $item = Item::create(['descripcion' => $itemsData['descripcion']]);
+            }
 
             $remisionesIngreso->items()->attach($item->id, [
                 'cantidad' => $itemsData['cantidad']
@@ -147,15 +238,6 @@ class RemicionesController extends Controller
         return redirect()->route('remision.ingreso')->with('success', 'remision de ingreso creada exitosamente');
     }
 
-    public function showDespacho($id)
-    {
-        $remisionDespacho = Remicion::with('cliente')->find($id);
-
-        $items = $remisionDespacho->items;
-
-        return view('remiciones.showDespacho', compact('remisionDespacho', 'items'));
-    }
-
     public function showIngreso($id)
     {
         $remisionIngreso = RemisionIngreso::with('proveedor')->find($id);
@@ -165,74 +247,79 @@ class RemicionesController extends Controller
         return view('remiciones.showIngreso', compact('remisionIngreso', 'items'));
     }
 
-    public function editDespacho($id)
+    public function editIngreso($id)
     {
-        $remisionDespacho = Remicion::findOrFail($id);
+        $remisionIngreso = RemisionIngreso::with('proveedor', 'cliente', 'items')->findOrFail($id);
 
-        return view('remiciones.editDespacho', compact('remisionDespacho'));
+        $items = $remisionIngreso->items;
+
+        return view('remiciones.editIngreso', compact('remisionIngreso', 'items'));
     }
 
-    public function updateDespacho(Request $request, $id)
+    public function updateIngreso(Request $request, $id)
     {
+        try{
 
-        $remiciones = Remicion::findOrFail($id);
+            Log::info('actualizar remision ingreso', $request->all());
 
-        $request->validate([
-            'cliente_id' => 'required|string|exists:clientes,nit',
-            'fecha_despacho' => 'required|date',
-            'sdp_id' => 'required|integer|exists:sdps,numero_sdp',
-            'observaciones' => 'nullable|string',
-            'despacho' => 'nullable|string',
-            'departamento' => 'required|string',
-            'recibido' => 'nullable|string',
-            'items' => 'required|array',
-            'items.*.cantidad' => 'required|numeric',
-            'items.*.descripcion' => 'required|string',
-        ]);
+            $remisionIngreso = RemisionIngreso::findOrFail($id);
 
-        DB::beginTransaction();
+            $request->validate([
+                'proveedor_id' => 'nullable|exists:proveedores,id',
+                'cliente_nit' => 'nullable|exists:clientes,nit',
+                'sdp_id' => 'required|exists:sdps,numero_sdp',
+                'fecha_ingreso' => 'required|date',
+                'observaciones' => 'nullable|string',
+                'despacho' => 'nullable|string',
+                'departamento' => 'required|in:Administracion,Produccion',
+                'recibido' => 'nullable|string',
+                'items' => 'required|array',
+                'items.*.cantidad' => 'required|numeric',
+                'items.*.descripcion' => 'required|exists:items,descripcion',
+            ]);
 
-        $remiciones->update([
-            'cliente_id' => $request->cliente_id,
-            'fecha_despacho' => $request->fecha_despacho,
-            'sdp_id' => $request->sdp_id,
-            'observaciones' => $request->observaciones,
-            'despacho' => $request->despacho,
-            'departamento' => $request->departamento,
-            'recibido' => $request->recibido,
-        ]);
+        
+            DB::beginTransaction();
 
-        $items_esnviados = $request->input('items');
+            $remisionIngreso->update([
+                'proveedor_id' => $request->proveedor_id,
+                'cliente_nit' => $request->cliente_nit,
+                'sdp_id' => $request->sdp_id,
+                'fecha_ingreso' => $request->fecha_ingreso,
+                'observaciones' => $request->observaciones,
+                'despacho' => $request->despacho,
+                'departamento' => $request->departamento,
+                'recibido' => $request->recibido,
+            ]);
 
-        $items_ids = [];
+            $items_esnviados = $request->input('items');
 
-        foreach ($items_esnviados as $itemsData){
-            $item = Item::where('descripcion', $itemsData['descripcion'])->first();
+            $items_ids = [];
 
-            if ($item){
+            foreach ($items_esnviados as $itemsData){
+                $item = Item::where('descripcion', $itemsData['descripcion'])->first();
+
+                if (!$item) {
+                    $item = Item::create([
+                        'descripcion' => $itemsData['descripcion']
+                    ]);
+                }
+
                 $items_ids[$item->id] = [
                     'cantidad' => $itemsData['cantidad'],
                 ];
             }
+
+            $remisionIngreso->items()->syncWithoutDetaching($items_ids);
+
+            DB::commit();
+
+            return redirect()->route('remision.ingreso')->with('success', 'remision de ingreso creada exitosamente');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error('Error al crear la remision de ingreso: ' . $e->getMessage(), ['stack' => $e->getTraceAsString()]);
+
+            return redirect()->back()->withErrors('Hubo un error al actualizar la remisión de ingreso.' . $e->getMessage());
         }
-
-        $remiciones->items()->sync($items_ids);
-
-        DB::commit();
-
-        return redirect()->route('remision.despacho')->with('success', 'Remision de despacho se ha actualizado con éxito');
-    }
-
-    public function editIngreso($id)
-    {
-
-    }
-
-    public function destroyDespacho($id)
-    {
-        $remiciones = Remicion::findOrFail($id);
-        $remiciones->delete();
-
-        return redirect()->route('remision.despacho')->with('success', 'Remision de despacho se ha eliminado con éxito');
     }
 }

@@ -16,7 +16,10 @@ return new class extends Migration
             $table->foreignId('materia_indirecta_id')->constrained('materia_prima_indirectas')->onDelete('cascade');
             $table->foreignId('costos_produccion_id')->constrained('costos_produccions')->onDelete('cascade');
             $table->integer('cantidad');
+            $table->unsignedBigInteger('articulo_id');
+            $table->string('articulo_descripcion');
             $table->timestamps();
+            $table->foreign('articulo_id')->references('id')->on('articulos')->onDelete('cascade');
         });
     }
 

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('trabajador_id');
             $table->enum('tipo_pago', array_column(TipoPago::cases(), 'value'));
             $table->float('auxilio_transporte');
-            $table->integer('horas_mes');
+            $table->decimal('bonificacion_auxilio', 20, 2)->default(0);
             $table->timestamps();
 
             $table->foreign('trabajador_id')->references('id')->on('trabajadors')->onDelete('cascade');

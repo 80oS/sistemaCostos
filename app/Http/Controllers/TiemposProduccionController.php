@@ -30,6 +30,76 @@ class TiemposProduccionController extends Controller
         return view('tiemposproduccion.lista', compact('tiempos_produccion'));
     }
 
+    public function print($id)
+    {
+        $tiempos_produccion = Tiempos_produccion::where('operativo_id', $id)
+            ->with('operativo', 'servicio', 'sdp', 'cif')
+            ->get()->groupBy(function ($item) {
+                return $item->sdp_id . '-' . $item->proseso_id;
+            })->map(function ($group){
+                $totalHoras = $group->sum(function($item) {
+                    return (strtotime($item->hora_fin) - strtotime($item->hora_inicio)) / 3600;
+                });
+                $horas = floor($totalHoras);
+                $minutos = ($totalHoras - $horas) * 60;
+                return [
+                    'items' => $group,
+                    'total_horas' => sprintf('%02d:%02d', $horas, round($minutos))
+                ];
+            });
+
+        $totalesPorOperario = DB::table('tiempos_produccions')
+            ->select(
+                'operativo_id',
+                DB::raw('SUM(TIMESTAMPDIFF(HOUR, hora_inicio, hora_fin)) as total_horas_general_operario')
+            )
+            ->where('operativo_id', $id) // Filtro por operario específico
+            ->groupBy('operativo_id')
+            ->get();
+    
+        $totalesPorServicio = DB::table('tiempos_produccions')
+            ->select(
+                'nombre_servicio',
+                DB::raw('SUM(TIMESTAMPDIFF(MINUTE, hora_inicio, hora_fin)) as total_horas_servicio')
+        )
+            ->where('operativo_id', $id) // Filtro por operario específico
+            ->groupBy('nombre_servicio')
+            ->get();
+        
+        foreach ($totalesPorServicio as $servicio) {
+            $horas = floor($servicio->total_horas_servicio / 60);
+            $minutos = $servicio->total_horas_servicio % 60;
+            $servicio->total_horas_servicio = sprintf('%02d:%02d', $horas, $minutos);
+        }
+
+        $totalesPorSdp = DB::table('tiempos_produccions')
+            ->select(
+                'sdp_id',
+                DB::raw('SUM(TIMESTAMPDIFF(MINUTE, hora_inicio, hora_fin)) as total_minutos_sdp')
+            )->where('operativo_id', $id)->groupBy('sdp_id')->get();
+        
+        $sdps = SDP::whereIn('numero_sdp', $totalesPorSdp->pluck('sdp_id'))->get()->keyBy('numero_sdp');
+        
+        $totalesPorSdp->transform(function ($item) use ($sdps) {
+            $horas = floor($item->total_minutos_sdp / 60);
+            $minutos = $item->total_minutos_sdp % 60;
+            $item->sdp_nombre = $sdps[$item->sdp_id]->nombre ?? 'Nombre no disponible';
+            $item->total_horas_formateado = sprintf('%02d:%02d', $horas, $minutos);
+            return $item;
+        });
+
+        $totalGeneralMinutos = DB::table('tiempos_produccions')
+            ->where('operativo_id', $id)
+            ->select(DB::raw('SUM(TIMESTAMPDIFF(MINUTE, hora_inicio, hora_fin)) as total_minutos_general'))
+            ->value('total_minutos_general');
+        
+            $horas = floor($totalGeneralMinutos / 60);
+            $minutos = $totalGeneralMinutos % 60;
+            $totalGeneral = sprintf('%02d:%02d', $horas, $minutos);
+
+        return view('tiemposproduccion.print', compact('tiempos_produccion', 'totalesPorServicio', 'totalGeneral', 'totalesPorOperario', 'totalesPorSdp'));
+    }
+
     public function groupByOperario()
     {
         $tiempos_produccion = Tiempos_produccion::with('operativo', 'servicio', 'sdp')

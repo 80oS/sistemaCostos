@@ -4,7 +4,7 @@
 
 @section('content_header')
 <h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
-    {{ __('Formulario del nuevo sdp') }}
+    {{ __('Formulario para editar la sdp') }}: {{ $sdp->numero_sdp }}
 </h2>
 @stop
 
@@ -32,8 +32,8 @@
             
                 <div class="form-group">
                     <label for="cliente_nit">Cliente / NIT</label>
-                    <input type="text" name="cliente_nombre" id="cliente_nombre" value="{{ old('cliente_nombre', $sdp->clientes->nombre) }}" class="form-control mb-4">
-                    <input type="text" name="cliente_nit" id="cliente_nit" class="form-control" value="{{ old('cliente_nit', $sdp->cliente_nit) }}" required> 
+                    <input type="text" name="cliente_nombre" id="cliente_nombre" value="{{ old('cliente_nombre', $sdp->clientes->nombre) }}" class="form-control mb-4" readonly>
+                    <input type="text" name="cliente_nit" id="cliente_nit" class="form-control" value="{{ old('cliente_nit', $sdp->cliente_nit) }}" required readonly> 
                 </div>
             
                 <div class="form-group">
@@ -48,23 +48,28 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" name="nombre" value="{{ $sdp->nombre ?? $sdp->clientes->nombre }}" class="form-control">
+                </div>
+
+                <div class="form-group">
                     <h1><b>Artículos</b></h1>
                     <div id="articulos-container">
                         @foreach($sdp->articulos as $articulo)
                             <div class="form-group articulo-item">
                                 <div class="mb-4">
                                     <label for="articulo_{{ $loop->index }}_descripcion">Descripción</label>
-                                    <input type="text" name="articulos[{{ $loop->index }}][descripcion]" id="articulo_{{ $loop->index }}_descripcion" class="form-control" value="{{ old('articulos.' . $loop->index . '.descripcion', $articulo->descripcion) }}" required>
+                                    <input type="text" name="articulos[{{ $loop->index }}][descripcion]" id="articulo_{{ $loop->index }}_descripcion" class="form-control" value="{{ old('articulos.' . $loop->index . '.descripcion', $articulo->descripcion) }}" required readonly>
                                 </div>
                                 
                                 <div class="mb-4">
                                     <label for="articulo_{{ $loop->index }}_material">Material</label>
-                                    <input type="text" name="articulos[{{ $loop->index }}][material]" id="articulo_{{ $loop->index }}_material" class="form-control" value="{{ old('articulos.' . $loop->index . '.material', $articulo->material) }}">
+                                    <input type="text" name="articulos[{{ $loop->index }}][material]" id="articulo_{{ $loop->index }}_material" class="form-control" value="{{ old('articulos.' . $loop->index . '.material', $articulo->material) }}" readonly>
                                 </div>
                                 
                                 <div class="mb-4">
                                     <label for="articulo_{{ $loop->index }}_plano">Plano</label>
-                                    <input type="text" name="articulos[{{ $loop->index }}][plano]" id="articulo_{{ $loop->index }}_plano" class="form-control" value="{{ old('articulos.' . $loop->index . '.plano', $articulo->plano) }}">
+                                    <input type="text" name="articulos[{{ $loop->index }}][plano]" id="articulo_{{ $loop->index }}_plano" class="form-control" value="{{ old('articulos.' . $loop->index . '.plano', $articulo->plano) }}" readonly>
                                 </div>
 
                                 <div class="mb-4">
@@ -83,10 +88,10 @@
                     </div> 
                 </div>
 
-                <button type="button" id="add-articulo" class="btn btn-success">Agregar Artículo</button>
+                <button type="button" id="add-articulo" class="btn btn-primary">Agregar Artículo</button>
             
                 <div class="form-group">
-                    <label for="fecha_despacho_comercial" class="block mb-2 text-sm font-medium text-gray-100">Fecha Despacho Comercial</label>
+                    <label for="fecha_despacho_comercial" class="block mb-2 text-sm font-medium text-gray-100">Fecha de facturacion</label>
                     <input type="date" name="fecha_despacho_comercial" id="fecha_despacho_comercial" value="{{ $sdp->fecha_despacho_comercial }}" class="form-control" required>
                 </div>
             
@@ -113,6 +118,19 @@
                 <div class="form-group">
                     <label for="requisitos_cliente" class="block mb-2 text-sm font-medium text-gray-100">Requisitos Cliente</label>
                     <input type="text" name="requisitos_cliente" id="requisitos_cliente" value="{{ $sdp->requisitos_cliente }}" class="form-control">
+                </div>
+
+                <div class="form-10">
+                    <label for="estado" >Estado</label>
+                    <select name="estado" id="estado" class="form-select" required >
+                    @foreach(['abierto','cerrado'] as $estado)    
+                        <option value="{{ $estado }}" 
+                            {{ $sdp->estado === $estado ? 'selected' : '' }}
+                        >
+                            {{ ucfirst($estado) }}
+                        </option>
+                    @endforeach
+                    </select>
                 </div>
             
                 <div class="buttons">
@@ -161,6 +179,12 @@
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
     <style>
         .modal-body, .modal-header {
             background: #b1b1b1 !important;
@@ -297,6 +321,17 @@
 
 @section('js')
     <script src="https://cdn.tailwindcss.com"></script>
+    <script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"
+        ></script>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+            integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+            crossorigin="anonymous"
+        ></script>
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -320,18 +355,18 @@
 
                 <div class="mb-4">
                     <label for="articulo_${articuloIndex}_descripcion">Descripción</label>
-                    <input type="text" name="articulos[${articuloIndex}][descripcion]" id="articulo_${articuloIndex}_descripcion" class="form-control" required>
+                    <input type="text" name="articulos[${articuloIndex}][descripcion]" id="articulo_${articuloIndex}_descripcion" class="form-control" required readonly>
                 </div>    
 
 
                 <div class="mb-4">
                     <label for="articulo_${articuloIndex}_material">Material</label>
-                    <input type="text" name="articulos[${articuloIndex}][material]" id="articulo_${articuloIndex}_material" class="form-control">
+                    <input type="text" name="articulos[${articuloIndex}][material]" id="articulo_${articuloIndex}_material" class="form-control" readonly>
                 </div>
 
                 <div class="mb-4">
                     <label for="articulo_${articuloIndex}_plano">Plano</label>
-                    <input type="text" name="articulos[${articuloIndex}][plano]" id="articulo_${articuloIndex}_plano" class="form-control">
+                    <input type="text" name="articulos[${articuloIndex}][plano]" id="articulo_${articuloIndex}_plano" class="form-control" readonly>
                 </div>
 
                 <div class="mb-4">
