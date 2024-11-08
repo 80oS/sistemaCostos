@@ -11,7 +11,7 @@
 @section('content')
     <div class="p-12">
         <div class="mb-4">
-            <a href="{{ route('materias_primas.index') }}" class="btn btn-warning">volver</a>
+            <a href="{{ route('materias_primas.index') }}" class="btn btn-primary">volver</a>
         </div>
         <div class="card">
             <div class="card-body">

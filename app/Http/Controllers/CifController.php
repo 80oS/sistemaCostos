@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 class CifController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('can:ver cif')->only('index');
+        $this->middleware('can:editar cif')->only('edit');
+        $this->middleware('can:ver historial cif')->only('historial');
+        $this->middleware('can:actualizar datos de cif')->only('update');
+    }
+
     public function index()
     {
         $cif = Cif::first();

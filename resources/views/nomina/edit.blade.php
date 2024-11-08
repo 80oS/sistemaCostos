@@ -15,6 +15,9 @@
             <span class="block sm:inline">{{ session('success') }}</span>
         </div>
     @endif
+    <div class="mb-4">
+        <a href="{{ route('nomina.index') }}" class="btn btn-primary">volver</a>
+    </div>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="dark:bg-gray-300 overflow-hidden shadow-xl sm:rounded-lg p-6">
             
@@ -36,14 +39,10 @@
                     <button type="submit" class="w-full inline-flex justify-center items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
                         actualizar
                     </button>
-                    <a href="{{ route('nomina.index') }}" class="btn btn-secondary">Cancelar</a>
                 </div>
             </form>
         </div>
     </div>
-</div>
-<div class="col-12 px-20">
-    <a href="{{ route('nomina.index') }}" class="btn btn-primary">volver</a>
 </div>
 @stop
 

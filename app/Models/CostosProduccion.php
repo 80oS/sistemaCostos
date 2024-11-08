@@ -62,6 +62,14 @@ class CostosProduccion extends Model
                     ->withTimestamps();
     }
 
+    public function sdpCostos()
+    {
+        return $this->belongsToMany(SDP::class, 'sdp_costos', 'sdp_id', 'costos_id', 'numero_sdp', 'id')
+                    ->withPivot('mano_obra_directa', 'valor_sdp', 'nomina', 'materias_primas_indirectas', 'materias_primas_directas',
+                                'costos_indirectos_fabrica', 'utilidad_bruta', 'margen_bruto')
+                    ->withTimestamps();
+    }
+
     public function calcularManoObraDirecta()
     {
         // Obtener el tiempo de producción asociado

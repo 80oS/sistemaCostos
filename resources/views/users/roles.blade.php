@@ -37,35 +37,27 @@
                     </thead>
                     <tbody>
                         @foreach ($roles as  $role)
-                        <tr class="bg-gray-50 text-gray-700">
-                            <td class="px-4 py-2 border">{{ $role->id }}</td>
-                            <td class="px-4 py-2 border">{{$role->name}}</td>
-                            <td class="px-4 py-2 border">
-                                @if($role->permissions->isEmpty())
-                                    <span>No tiene permisos asignados</span>
-                                @else
-                                    <ul>
-                                        @foreach($role->permissions as $permission)
-                                            <li>{{ $permission->name }}</li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-                            </td>
-                            <td class="px-4 py-2 border">
-                                <a href="{{route('roles.edit', $role->id)}}" class="btn btn-info">
-                                    <i class="fa-solid fa-pencil"></i>
-                                </a>
-                            </td>
-                            <td class="px-4 py-2 border">
-                                <form action="{{route('roles.destroy', $role->id)}}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('seguro que quieres eliminar este role')">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
+                            <tr class="bg-gray-50 text-gray-700">
+                                <td class="px-4 py-2 border">{{ $role->id }}</td>
+                                <td class="px-4 py-2 border">{{$role->name}}</td>
+                                <td class="px-4 py-2 border">
+                                    <a href="{{ route('permisos.role', $role->id) }}" class="btn btn-info">ver permisos</a>
+                                </td>
+                                <td class="px-4 py-2 border">
+                                    <a href="{{route('roles.edit', $role->id)}}" class="btn btn-info">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </a>
+                                </td>
+                                <td class="px-4 py-2 border">
+                                    <form action="{{route('roles.destroy', $role->id)}}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('seguro que quieres eliminar este role')">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>

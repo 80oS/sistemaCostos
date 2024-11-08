@@ -15,6 +15,17 @@ use Illuminate\Support\Facades\DB;
 
 class NominaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:paquetes nomina')->only('index');
+        $this->middleware('can:crear paquetes nominas')->only('crearPaquete');
+        $this->middleware('can:editar paquetes nomnias')->only('editNomina');
+        $this->middleware('can:eliminar paquetes nomina')->only('destroy');
+        $this->middleware('can:ver nominas')->only('show');
+        $this->middleware('can:editar nominas')->only('updateBulk');
+        $this->middleware('can:ver desprendible')->only('mostrarDesprendible');
+        $this->middleware('can:agregar trabajador nomina')->only('addWorker');
+    }
     public function index()
     {
         $paquetes = PaqueteNomina::orderBy('año', 'desc')->orderBy('mes', 'desc')->get();
@@ -420,8 +431,6 @@ class NominaController extends Controller
                         ]);
                     }
                 }
-
-
 
                 $nomina->dias->save();
                 $nomina->calcularNomina();

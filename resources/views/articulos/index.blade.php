@@ -70,6 +70,7 @@
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.bootstrap5.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/scroller/2.4.3/css/scroller.bootstrap5.css">
     <style>
         .container {
             padding: 10px;
@@ -113,7 +114,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.datatables.net/scroller/2.4.3/js/dataTables.scroller.js"></script>
+    <script src="https://cdn.datatables.net/scroller/2.4.3/js/scroller.bootstrap5.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
     <script>
         setTimeout(function() {
@@ -124,13 +127,13 @@
         }, 5000);
     </script>
     <script>
-        new DataTable('#articulos', {
-            paging: false,
-            scrollCollapse: true,
-            scrollX: true,
-            scrollY: '50vh',
+        $('#articulos').DataTable({
+            "paging": false,
+            "info": false,
+            "scrollCollapse": true,
+            "deferRender": true,
+            "scroller": true,
+            "scrollY": '50vh'
         });
     </script>
 @stop
-
-mysql -hautorack.proxy.rlwy.net -uroot -pjgHNyoyZxPEjDSAWbEotzZPNljXcpmgx --port 57198 --protocol=TCP railway

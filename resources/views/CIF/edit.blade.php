@@ -47,7 +47,7 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary">actualizar variables</button>
+                            <button type="submit" class="btn btn-primary" id="button">actualizar variables</button>
                         </div>
                     </form>
                 </div>
@@ -64,7 +64,7 @@
             max-width: 30rem;
             margin: 0 auto;
         }
-        button {
+        button#button {
             width: 300px;
         }
         input {

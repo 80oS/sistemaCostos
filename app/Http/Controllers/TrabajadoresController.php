@@ -17,6 +17,14 @@ class TrabajadoresController extends Controller
     public function __construct()
     {
         $this->middleware('can:Crear trabajador')->only('create');
+        $this->middleware('can:Editar trabajador')->only('edit');
+        $this->middleware('can:Desabilitar trabajador')->only('disable');
+        $this->middleware('can:abilitar trabajador')->only('enable');
+        $this->middleware('can:trabajador-butons')->only('butons');
+        $this->middleware('can:trabajadores activos')->only('activos');
+        $this->middleware('can:trabajadores inactivos')->only('inactivos');
+        $this->middleware('can:Ver trabajadores')->only('index');
+        $this->middleware('can:generar-lista-opciones')->only('generatePrintList');
     }
 
     public function index()
@@ -27,19 +35,6 @@ class TrabajadoresController extends Controller
         'celular',
         'Eps']; 
         return view('trabajadores.index', compact('trabajadores', 'campos'));
-    }
-
-    public function asignarCodigoAProduccion(Request $request)
-    {
-        $trabajador = Trabajador::findOrFail($request->trabajador_id);
-        
-        $operativoController = new OperativoController();
-        try {
-            $mensaje = $operativoController->asignarCodigoOperario($trabajador);
-            return response()->json(['mensaje' => $mensaje], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
-        }
     }
 
     public function activos() 
@@ -59,15 +54,6 @@ class TrabajadoresController extends Controller
     public function butons()
     {
         return view('trabajadores.butons');
-    }
-
-
-    public function showPrintOptions() 
-    {
-        $trabajadores = Trabajador::orderBy('nombre', 'asc')->get(); // Orden ascendente
-        $campos = ['nombre', 'apellido', 'cargo', 'telefono_fijo', 'correo', 'direccion',
-            'ciudad', 'celular', 'ARL', 'Eps']; 
-        return view('trabajadores.print_options', compact('trabajadores', 'campos'));
     }
 
     public function generatePrintList(Request $request)

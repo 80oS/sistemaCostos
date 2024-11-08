@@ -12,7 +12,15 @@ use App\Traits\codigoAlf;
 
 class ServicioController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware('can:gestion operacional')->only('mainS');
+        $this->middleware('can:ver servicios')->only('index');
+        $this->middleware('can:crear servicios')->only('create');
+        $this->middleware('can:editar servicios')->only('edit');
+        $this->middleware('can:eliminar servicios')->only('destroy');
+        $this->middleware('can:ver sdp servicios')->only('indexSdp');
+    }
     public function mainS()
     {
         $data = [
@@ -30,13 +38,13 @@ class ServicioController extends Controller
 
     public function indexSdp()
     {
-        $sdps = SDP::all(); // Obtener todas las SDPs
+        $sdps = SDP::where('estado', 'abierto')->get(); // Obtener todas las SDPs
         return view('servicios.indexSdp', compact('sdps')); 
     }
 
     public function create()
     {
-        $sdps = SDP::all();
+        $sdps = SDP::where('estado', 'abierto')->get();
         return view('servicios.create', compact('sdps'));
     }
 
@@ -45,18 +53,20 @@ class ServicioController extends Controller
         $validatedData = $request->validate([
             'nombre' => 'required|string|max:255',
             'valor_hora' => 'required|numeric|min:0',
+            'sdp_id' => 'required|array',
+            'sdp_id.*' => 'exists:sdps,numero_sdp'
         ]);
 
         $validatedData['codigo'] = Servicio::generateUniqueCode();
 
         $servicio = Servicio::create($validatedData);
 
-        $servicioSdp = $servicio->servicios->attach($servicio->id, [
-            'servicio_id' => $servicio->codigo,
-            'sdp_id' => $request->input('sdp_id'),
-            'valor_servicio' => $servicio->valor_hora
-        ]);
-
+        foreach ($request->input('sdp_id') as $sdpId) {
+            $servicio->sdps()->attach($sdpId, [
+                'valor_servicio' => $servicio->valor_hora,
+                'servicio_id'=> $servicio->codigo
+            ]);
+        }
 
         Log::info('Nuevo servicio creado: ' . $servicio->codigo);
 
@@ -66,31 +76,45 @@ class ServicioController extends Controller
 
     public function edit($id)
     {
-        $servicio = Servicio::findOrFail($id);
-        return view('servicios.edit', compact('servicio'));
+        $servicio = Servicio::with('sdps')->findOrFail($id);
+        $sdps = SDP::where('estado', 'abierto')->get();
+        $sdpSelect = $servicio->sdps->pluck('numero_sdp')->toArray();
+
+        return view('servicios.edit', compact('servicio', 'sdps', 'sdpSelect'));
     }
 
     public function update(Request $request, $id)
     {
         // Validación de datos
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'valor_hora' => 'required|numeric|min:0',
-        ]);
-
-        $servicio = Servicio::findOrFail($id);
-        $servicio->update($request->all());
-
-        $servicioSdp = $servicio->sdp()->attach($servicio->id, [
-            'servicio_id' => $servicio->codigo,
-            'sdp_id' => $request->input('sdp_id'),
-            'valor_servicio' => $servicio->valor_hora
-        ]);
-
-        return redirect()->route('servicios.index')
-                    ->with('success', 'Servicio actualizado con éxito');
-    }
+        try {
+            $request->validate([
+                'nombre' => 'required|string|max:255',
+                'valor_hora' => 'required|numeric|min:0',
+                'sdp_id' => 'required|array',
+                'sdp_id.*' => 'exists:sdps,numero_sdp'
+            ]);
     
+            $servicio = Servicio::findOrFail($id);
+            $servicio->update($request->all());
+    
+                $sdpData = [];
+            foreach ($request->input('sdp_id') as $sdpId) {
+                $sdpData[$sdpId] = [
+                    'valor_servicio' => $servicio->valor_hora,
+                    'servicio_id'=> $servicio->codigo
+                ];
+            }
+    
+            // Sincronizar las relaciones en lugar de usar attach
+            $servicio->sdps()->sync($sdpData);
+    
+            return redirect()->route('servicios.index')
+                        ->with('success', 'Servicio actualizado con éxito');
+        } catch (\Throwable $e) {
+            Log::error('Error al actualizar servicio: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error al actualizar servicio');
+        }
+    }
 
     public function destroy($id)
     {

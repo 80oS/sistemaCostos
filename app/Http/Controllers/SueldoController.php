@@ -11,9 +11,10 @@ use Illuminate\Http\Request;
 class SueldoController extends Controller
 {
 
-    public function index()
+    public function __construct()
     {
-
+        $this->middleware('can:crear sueldo')->only('create');
+        $this->middleware('can:editar sueldo')->only('edit');
     }
 
     public function create($trabajadorId)
@@ -41,11 +42,6 @@ class SueldoController extends Controller
         $sueldo->save();
     
         return redirect()->route('trabajadores.index')->with('success', 'Sueldo creado exitosamente');
-    }
-
-    public function show($id)
-    {
-        
     }
 
     public function edit($sueldoId)

@@ -74,12 +74,14 @@ class Nominas extends Model
             $sueldo_base_decimal = number_format($sueldo_base, 2, '.', '');
             $bonificacion_auxilio_decimal = number_format($bonificacion_auxilio_sueldo, 2, '.', '');
 
+            $porcentaleSalud = Configuracion::obtenerValor('salud') / 100;
+            $porcentalePension = Configuracion::obtenerValor('pension') / 100;
+
             $esAprendizSENA = $trabajador->cargo == 'APRENDIZ SENA';
 
-    
             // Cálculo de pension y salud
-            $pension = $esAprendizSENA ? 0 : bcmul($sueldo_base, '0.04', 2);
-            $salud = $esAprendizSENA ? 0 : bcmul($sueldo_base, '0.04', 2);
+            $pension = $esAprendizSENA ? 0 : bcmul($sueldo_base, $porcentaleSalud, 2);
+            $salud = $esAprendizSENA ? 0 : bcmul($sueldo_base, $porcentalePension, 2);
     
             // Cálculo de devengados
             $devengado_trabajados = bcmul(bcdiv($sueldo_base_decimal, '30', 2), $dias->dias_trabajados, 2);
@@ -117,7 +119,9 @@ class Nominas extends Model
             Log::info('Finalizado cálculo de nómina', [
                 'nomina_id' => $this->id,
                 'devengado_trabajados' => $devengado_trabajados,
-                'total_devengado' => $total_devengado
+                'total_devengado' => $total_devengado,
+                'pension' => $pension,
+                'salud' => $salud,
             ]);
         }
     }

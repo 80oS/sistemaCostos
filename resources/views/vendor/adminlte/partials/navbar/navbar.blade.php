@@ -14,9 +14,17 @@
             <i id="theme-icon" class="fas fa-moon"></i> <!-- Ícono de luna por defecto -->
         </a>
 
-        <button onclick="location.reload()" class="btn btn-info">
-            <i class="fas fa-sync-alt"></i>
-        </button>
+        <div class="">
+            {{-- <button type="button" class="btn btn-info">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <button type="button" class="btn btn-info">
+                <i class="fa-solid fa-arrow-right"></i>
+            </button> --}}
+            <button onclick="location.reload()" class="btn btn-info">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+        </div>
 
         {{-- Custom left links --}}
         @yield('content_top_nav_left')
@@ -46,6 +54,7 @@
     </ul>
 
 </nav>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         nav.main-header {
             color: #fff !important;

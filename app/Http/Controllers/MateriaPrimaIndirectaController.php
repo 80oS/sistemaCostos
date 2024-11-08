@@ -7,9 +7,13 @@ use Illuminate\Http\Request;
 
 class MateriaPrimaIndirectaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->middleware('can:ver materias primas indirectas')->only('indexIndirectas');
+        $this->middleware('can:crear materias primas indirectas')->only('create');
+        $this->middleware('can:editar materias primas indirectas')->only('edit');
+        $this->middleware('can:eliminar materias primas indirectas')->only('destroy');
+    }
     public function indexIndirectas()
     {
         $materiasPrimasIndirectas = MateriaPrimaIndirecta::all();

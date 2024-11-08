@@ -8,6 +8,12 @@ use Illuminate\Http\Request;
 class ItemController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('can:ver items')->only('index');
+        $this->middleware('can:editar items')->only('edit');
+    }
+
     public function index()
     {
         $items = Item::all();

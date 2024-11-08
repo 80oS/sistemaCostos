@@ -10,6 +10,10 @@ use Livewire\Attributes\Validate;
 
 class MateriaPrimasController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:ver secciones materias primas')->only('index');
+    }
     public function index()
     {
         $materiasPrimasDirectas = MateriaPrimaDirecta::all();

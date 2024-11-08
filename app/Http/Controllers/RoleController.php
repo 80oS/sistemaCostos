@@ -33,6 +33,12 @@ class RoleController extends Controller
         return view('users.rolepermisos', compact('role', 'permisos', 'rolePermisos'));
     }
 
+    public function show($id)
+    {
+        $role = Role::with('permissions')->findOrFail($id);
+        return view('permissions.show', compact('role'));
+    }
+
     public function update(Request $request, string $id)
     {
         $role = Role::findOrFail($id);
@@ -41,7 +47,7 @@ class RoleController extends Controller
         $permisos = Permission::whereIn('id', $permisosId)->pluck('name')->toArray();
 
         $role->syncPermissions($permisos);
-        return redirect()->route('roles.index')->with('success', 'El rol se ha asignado correctamente');
+        return redirect()->route('roles.index')->with('success', 'los permisos se han asignado correctamente al role');
     }
 
     public function destroy(string $id)

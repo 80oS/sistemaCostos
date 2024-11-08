@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 class servicioExternoController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('can:ver servicios externos')->only('index');
+        $this->middleware('can:crear servicios externos')->only('create');
+        $this->middleware('can:editar servicios externos')->only('edit');
+        $this->middleware('can:eliminar servicios externos')->only('destroy');
+    }
+
     public function index()
     {
         $serviciosExternos = Servicio_esterno::all();

@@ -13,6 +13,17 @@ use Illuminate\Validation\Rules\Enum;
 
 class ClienteController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:clientes-buttons')->only('buttons');
+        $this->middleware('can:clientes willian')->only('william');
+        $this->middleware('can:clientes ochoa')->only('ochoa');
+        $this->middleware('can:clientes fabian')->only('fabian');
+        $this->middleware('can:ver clientes')->only('index');
+        $this->middleware('can:crear clientes')->only('create');
+        $this->middleware('can:editar clientes')->only('edit');
+        $this->middleware('can:eliminar clientes')->only('destroy');
+    }
     public function index()
     {
         $clientes = Cliente::with(['departamentos', 'vendedores', 'municipios'])->get();

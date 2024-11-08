@@ -16,6 +16,14 @@ use function Laravel\Prompts\error;
 
 class SolicitudServicioExternoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:ver solicitudes servicios')->only('index');
+        $this->middleware('can:crear solicitudes servicios')->only('create');
+        $this->middleware('can:editar solicitudes servicios')->only('edit');
+        $this->middleware('can:eliminar solicitudes servicio')->only('destroy');
+        $this->middleware('can:ver formato solicitudes servicios')->only('show');
+    }
     public function index()
     {
         $solicitudesServicioExterno = SolicitudServicioExterno::with('itemSTE')->get();

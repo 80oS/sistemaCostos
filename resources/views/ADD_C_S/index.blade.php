@@ -14,13 +14,13 @@
                     <a class="nav-link link" href="{{ route('clientes-comerciales') }}">clientes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link link" href="{{ route('sdp.paquetes') }}">solicitud de produccion</a>
+                    <a class="nav-link link" href="{{ route('sdp.paquetes') }}">solicitud de producción</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link link" href="{{ route('remiciones.index') }}">remisiones</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link link" href="{{ route('vendedor.index') }}">vendedores</a>
+                    <a class="nav-link link" href="{{ route('vendedor.index') }}">comerciales</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link link" href="{{ route('articulos.index') }}">articulos de sdp</a>

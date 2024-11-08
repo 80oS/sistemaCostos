@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\DB;
 
 class ArticuloController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:ver articulos de sdp')->only('index');
+        $this->middleware('can:editar articulos de sdp')->only('edit');
+        $this->middleware('can:eliminar articulos de sdp')->only('destroy');
+    }
     public function index()
     {
         $articulos = Articulo::all();

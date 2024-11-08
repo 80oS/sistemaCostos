@@ -3,14 +3,14 @@
 @section('title', 'vendedores')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-800 leading-tight">
-    {{ __('Lista de vendedores') }}
+<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
+    {{ __('Lista de comerciales') }}
 </h2>
 @stop
 
 @section('content')
 <div class=" flex items-end justify-end mb-4 px-20">
-    <a href="{{ route('ADD_C_S') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">volver</a>
+    <a href="{{ route('ADD_C_S') }}" class="btn btn-primary">volver</a>
 </div>
 @if (session('success'))
     <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -30,8 +30,8 @@
                             <th class="px-4 py-2 border">#</th>
                             <th class="px-4 py-2 border">nombre</th>
                             <th class="px-4 py-2 border">correo</th>
+                            <th class="px-4 py-2 border">editar</th>
                             <th class="px-4 py-2 border">eliminar</th>
-                            <th class="px-4 py-2 border">actualizar</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,14 +43,14 @@
                             <td class="px-4 py-2 border">{{ $vendedor->nombre }}</td>
                             <td class="px-4 py-2 border">{{ $vendedor->correo }}</td>
                             <td class="px-4 py-2 border">
+                                <a href="{{ route('vendedor.edit', $vendedor->id) }}" class="text-yellow-700 hover:text-yellow-400">editar</a>
+                            </td>
+                            <td class="px-4 py-2 border">
                                 <form action="{{ route('vendedor.destroy', $vendedor->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-400">eliminar</button>
+                                    <button type="submit" class="text-red-600 hover:text-red-400" onclick="return confirm('seguro que desea eliminar este comercial')">eliminar</button>
                                 </form>
-                            </td>
-                            <td class="px-4 py-2 border">
-                                <a href="{{ route('vendedor.edit', $vendedor->id) }}" class="text-yellow-700 hover:text-yellow-400">editar</a>
                             </td>
                         </tr>
                         @endforeach
@@ -86,6 +86,10 @@
         table {
             width: 100% !important;
             height: 100px !important;
+        }
+
+        th {
+            text-transform: capitalize;
         }
     </style>
 @stop

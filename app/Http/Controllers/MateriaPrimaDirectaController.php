@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 
 class MateriaPrimaDirectaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:crear materias primas directas')->only('create');
+        $this->middleware('can:editar materias primas directas')->only('edit');
+        $this->middleware('can:eliminar materias primas directas')->only('destroy');
+        $this->middleware('can:ver materias primas directas')->only('indexDirectas');
+    }
     public function indexDirectas()
     {
         $materiasPrimasDirectas = MateriaPrimaDirecta::all();

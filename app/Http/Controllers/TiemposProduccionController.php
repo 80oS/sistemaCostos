@@ -20,6 +20,15 @@ use Illuminate\Support\Facades\Log;
 
 class TiemposProduccionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:ver tiempos de produccion')->only('groupByOperario');
+        $this->middleware('can:crear tiempos de produccion')->only('create');
+        $this->middleware('can:editar tiempos de produccion')->only('edit');
+        $this->middleware('can:eliminar tiempos de produccion')->only('destroy');
+        $this->middleware('can:listar tiempos del operario')->only('index');
+        $this->middleware('can:imprimir tiempos del operario')->only('print');
+    }
 
     public function index($codigoOperario)
     {
@@ -104,8 +113,10 @@ class TiemposProduccionController extends Controller
     {
         $tiempos_produccion = Tiempos_produccion::with('operativo', 'servicio', 'sdp')
             ->get()->groupBy('operativo_id');
+
+        $tiempos = Tiempos_produccion::with('operativo', 'servicio', 'sdp')->get();
     
-        return view('tiemposproduccion.index', compact('tiempos_produccion'));
+        return view('tiemposproduccion.index', compact('tiempos_produccion', 'tiempos'));
     }
 
     public function getArticulos($sdpId)
@@ -144,7 +155,7 @@ class TiemposProduccionController extends Controller
 
         // Obtener todos los servicios y SDPs
         $servicios = Servicio::all();
-        $sdps = SDP::with('clientes', 'articulos')->get();
+        $sdps = SDP::with('clientes', 'articulos')->where('estado', 'abierto')->get();
         
         // Obtener el ID de la SDP desde la sesión
         $operarioId = session('operario_id');
@@ -253,17 +264,6 @@ class TiemposProduccionController extends Controller
 
             Log::info('Costo de producción guardado', ['costo_produccion_id' => $costoProduccion->id]);
 
-            
-                // Si no existe, se crea el servicio
-                $costoProduccion->servicios()->attach($costoProduccion->id, [
-                    'servicio_id' => $tiempoProduccion->proseso_id,
-                    'tiempo_produccion_id' => $tiempoProduccion->id,
-                    'costos_produccion_id' => $costoProduccion->id,
-                    'sdp_id' => $tiempoProduccion->sdp_id,
-                    'valor_servicio' => $tiempoProduccion->valorSercicio(),
-                ]);
-            
-
             // Procesar los artículos, si existen
             if ($request->has('articulos')) {
                 Log::info('Procesando artículos asociados');
@@ -304,37 +304,6 @@ class TiemposProduccionController extends Controller
             return redirect()->back()->withErrors('Error al crear tiempo de producción. Por favor, intente de nuevo.');
         }
     }
-
-    public function recalcular($id)
-    {
-        try {
-            // Encontrar la instancia de Tiempos_produccion por su ID
-            $tiempoProduccion = Tiempos_produccion::findOrFail($id);
-
-            // Recalcular el tiempo_valor_total
-            $total_horas = $tiempoProduccion->Calcularvalor_total_horas();
-            $horas = $tiempoProduccion->Calculartotalhoras();
-
-            // Verificar si el cálculo fue exitoso
-            if (is_null($horas) && is_null($total_horas)) {
-                return redirect()->back()->with('error', 'Error al recalcular ambos valores totales.');
-            } elseif (is_null($horas)) {
-                return redirect()->back()->with('error', 'Error al recalcular horas.');
-            } elseif (is_null($total_horas)) {
-                return redirect()->back()->with('error', 'Error al recalcular valor_total_horas.');
-            }
-
-            // Devolver una respuesta de éxito
-            return redirect()->back()->with('success', 'Valores totales recalculados con éxito.');
-    } catch (\Exception $e) {
-        // Registrar el error
-        Log::error('Error al recalcular los valores totales: ' . $e->getMessage(), ['stack' => $e->getTraceAsString()]);
-        
-        // Devolver una respuesta de error
-        return redirect()->back()->with('error', 'Error al recalcular los valores totales.');
-    }
-    }
-
 
     public function edit(string $id)
     {
@@ -407,15 +376,6 @@ class TiemposProduccionController extends Controller
             $costoProduccion->save();
     
             Log::info('Costo de producción actualizado', ['costo_produccion_id' => $costoProduccion->id]);
-    
-            
-                $costoProduccion->servicios()->attach($costoProduccion->id, [
-                    'servicio_id' => $tiempoProduccion->proseso_id,
-                    'tiempo_produccion_id' => $tiempoProduccion->id,
-                    'costos_produccion_id' => $costoProduccion->id,
-                    'sdp_id' => $tiempoProduccion->sdp_id,
-                    'valor_servicio' => $tiempoProduccion->valorSercicio(),
-                ]);
             
     
             // Procesar los artículos asociados, si existen

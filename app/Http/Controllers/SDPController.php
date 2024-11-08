@@ -15,7 +15,16 @@ use Exception;
 
 class SDPController extends Controller
 {
-
+    public function __construct()
+    {
+        $this->middleware('can:ver sdp')->only('indexPaquetes');
+        $this->middleware('can:crear sdp')->only('create');
+        $this->middleware('can:editar sdp')->only('edit');
+        $this->middleware('can:eliminar sdp')->only('destroy');
+        $this->middleware('can:abrir sdp')->only('abrir');
+        $this->middleware('can:cerrar sdp')->only('cerrar');
+        $this->middleware('can:ver sdp formato')->only('ver');
+    }
     public function indexPaquetes()
     {
         $sdps = SDP::with('clientes')->get();
@@ -56,7 +65,7 @@ class SDPController extends Controller
             $sdp->estado = 'abierto';
             $sdp->save();
 
-            return redirect()->route('sdp.index')->with('success', 'El SDP ha sido abierto correctamente.');
+            return redirect()->route('sdp.paquetes')->with('success', 'El SDP ha sido abierto correctamente.');
         }
 
         return redirect()->back()->withErrors('El SDP ya está abierto.');
@@ -70,7 +79,7 @@ class SDPController extends Controller
             $sdp->estado = 'cerrado';
             $sdp->save();
 
-            return redirect()->route('sdp.index')->with('success', 'El SDP ha sido cerrado correctamente.');
+            return redirect()->route('sdp.paquetes')->with('success', 'El SDP ha sido cerrado correctamente.');
         }
 
         return redirect()->back()->withErrors('El SDP ya está cerrado.');
@@ -117,7 +126,6 @@ class SDPController extends Controller
                 'orden_compra' => 'nullable|string',
                 'memoria_calculo' => 'nullable|string',
                 'requisitos_cliente' => 'nullable|string',
-                'estado' => 'required|in:abierto,cerrado',
                 'articulos' => 'required|array',
                 'articulos.*.descripcion' => 'required|string',
                 'articulos.*.cantidad' => 'required|integer|min:1',
@@ -179,14 +187,6 @@ class SDPController extends Controller
         }
     }
 
-
-
-
-    public function show(string $id)
-    {
-        
-    }
-
     public function edit(string $id)
     {
         $sdp = SDP::with('clientes', 'articulos', 'vendedores')->findOrFail($id);
@@ -213,7 +213,6 @@ class SDPController extends Controller
                 'orden_compra' => 'nullable|string',
                 'memoria_calculo' => 'nullable|string',
                 'requisitos_cliente' => 'nullable|string',
-                'estado' => 'required|in:abierto,cerrado',
                 'articulos' => 'required|array',
                 'articulos.*.descripcion' => 'required|string',
                 'articulos.*.cantidad' => 'required|integer|min:1',
@@ -236,7 +235,6 @@ class SDPController extends Controller
                 'orden_compra' => $request->orden_compra,
                 'memoria_calculo' => $request->memoria_calculo,
                 'requisitos_cliente' => $request->requisitos_cliente,
-                'estado' => $request->estado,
             ]);
 
             // Obtener los artículos enviados en la solicitud

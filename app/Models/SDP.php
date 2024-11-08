@@ -66,18 +66,26 @@ class SDP extends Model
 
     public function serviciosCostos()
     {
-        return $this->hasMany(ServicioCostos::class, 'sdp_id', 'numero_sdp'); // Asegúrate de que 'numero_sdp' es la clave primaria de SDP
+        return $this->hasMany(ServicioCostos::class, 'sdp_id', 'numero_sdp');
     }
 
     public function servicios()
     {
         return $this->belongsToMany(Servicio::class, 'servicio_s_d_p', 'sdp_id', 'servicio_id', 'numero_sdp', 'codigo')
-                    ->withPivot('valor_servicio', 'id')
+                    ->withPivot('valor_servicio')
                     ->withTimestamps();
     }
 
     public function remisionIngreso()
     {
         return $this->hasMany(RemisionIngreso::class, 'sdp_id', 'numero_sdp');
+    }
+
+    public function costos()
+    {
+        return $this->belongsToMany(CostosProduccion::class, 'sdp_costos', 'sdp_id', 'costos_id', 'numero_sdp', 'id')
+                    ->withPivot('mano_obra_directa', 'valor_sdp', 'nomina', 'materias_primas_indirectas', 'materias_primas_directas',
+                                'costos_indirectos_fabrica', 'utilidad_bruta', 'margen_bruto')
+                    ->withTimestamps();
     }
 }

@@ -12,9 +12,16 @@ use Illuminate\Support\Facades\Log;
 class CargarMateriaPrimaController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('can:cargar materias primas sdp')->only('create');
+        $this->middleware('can:ver materias primas cargadas')->only('verMateriasPrimas');
+        $this->middleware('can:lista cargar materia sdp')->only('lista');
+    }
+
     public function lista()
     {
-        $sdps = SDP::whereHas('costosProduccion')->get();
+        $sdps = SDP::where('estado', 'abierto')->get();
 
         return view('materias_primas.lista', compact('sdps'));
     }
@@ -45,7 +52,7 @@ class CargarMateriaPrimaController extends Controller
         ]);
 
         // Buscar la SDP por su número
-        $sdp = Sdp::where('numero_sdp', $numero_sdp)->firstOrFail();
+        $sdp = Sdp::where('numero_sdp', $numero_sdp)->where('estado', 'abierto')->firstOrFail();
 
         // Obtener el costo de producción relacionado con la SDP
         $costoProduccion = $sdp->costosProduccion()->first();

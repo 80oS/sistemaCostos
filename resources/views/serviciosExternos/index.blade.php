@@ -11,7 +11,7 @@
 @section('content')
     <div class="p-12">
         <div class="flex items-end justify-end p-10">
-            <a href="{{ route('AdministraciónInventario') }}" class="bg-yellow-600 hover:bg-yellow-400 px-3 py-2 rounded">volver</a>
+            <a href="{{ route('materias_primas.index') }}" class="btn btn-primary">volver</a>
         </div>
         @if (session('success'))
             <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">

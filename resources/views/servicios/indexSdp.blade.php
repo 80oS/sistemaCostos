@@ -11,7 +11,7 @@
     <a href="{{ route('servicios.index') }}" class="btn btn-primary">volver</a>
 </div>
 @if (session('success'))
-    <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+    <div id="success-message" class="alert alert-success" role="alert">
         <span class="block sm:inline">{{ session('success') }}</span>
     </div>
 @endif
@@ -24,7 +24,7 @@
                         <th>SDP ID</th>
                         <th>Cliente</th>
                         <th>Fecha</th>
-                        <th>Acciones</th>
+                        <th>Actualizar servicios</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,7 +34,7 @@
                             <td>{{ $sdp->clientes->nombre }}</td>
                             <td>{{ $sdp->fecha }}</td>
                             <td>
-                                <a href="{{ route('serviciosCostos.indexServicios', $sdp->numero_sdp) }}" class="btn btn-info">Ver Servicios</a>
+                                <a href="{{ route('serviciosCostos.show', ['sdp' => $sdp->numero_sdp]) }}" class="btn btn-info">Ver Servicios</a>
                             </td>
                         </tr>
                     @endforeach
@@ -50,6 +50,7 @@
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.bootstrap5.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/scroller/2.4.3/css/scroller.bootstrap5.css">
     <style>
         .container {
             padding: 10px;
@@ -80,14 +81,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.js"></script>
+<script src="https://cdn.datatables.net/scroller/2.4.3/js/dataTables.scroller.js"></script>
+<script src="https://cdn.datatables.net/scroller/2.4.3/js/scroller.bootstrap5.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
 <script>
     new DataTable('#costos', {
-        paging: false,
-        scrollCollapse: true,
-        scrollX: true,
-        scrollY: '50vh',
+        "paging": false,
+        "info": false,
+        "scrollCollapse": true,
+        "deferRender": true,
+        "scroller": true,
+        "scrollY": '50vh'
     });
 </script>
 <script>

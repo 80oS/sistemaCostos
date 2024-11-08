@@ -325,6 +325,10 @@
             font-family: 'Arial', sans-serif;
         }
 
+        .modal-content{
+            background: #8a8a8a;
+        }
+
         table {
             border: #1b9ef5 1px solid;
             border-collapse: collapse;

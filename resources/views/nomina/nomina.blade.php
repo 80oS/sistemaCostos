@@ -10,10 +10,10 @@
 
 @section('content')
 <div class="containe">
-    <a href="{{ route('nomina.show', ['paquete' => $nomina->paqueteNomina->id]) }}" id="volver" class="bg-yellow-700 hover:bg-yellow-400 px-3 py-2 text-white rounded">volver</a>
+    <a href="{{ route('nomina.show', ['paquete' => $nomina->paqueteNomina->id]) }}" id="volver" class="btn btn-primary">volver</a>
 </div>
 <div class="flex items-end justify-end mb-4">
-    <button  id="savedesprendibleBtn" onclick="window.print()"  class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+    <button  id="savedesprendibleBtn" onclick="window.print()"  class="btn btn-info">
         Imprimir desprendible
     </button>
 </div>
@@ -114,7 +114,7 @@
                                     <td class="text-right">{{ number_format($nomina->pension, 2, ',', '.') }}</td>
                                 </tr>
                                 <tr>
-                                    <td>consumo celular</td>
+                                    <td>Libranza salarial</td>
                                     <td class="text-right">0</td>
                                     <td class="text-right">{{ number_format($nomina->celular, 2, ',', '.') }}</td>
                                 </tr>
@@ -124,7 +124,7 @@
                                     <td class="text-right">{{ number_format($nomina->anticipo, 2, ',', '.') }}</td>
                                 </tr>
                                 <tr>
-                                    <td>licencia no renumerada</td>
+                                    <td>licencia/sanción</td>
                                     <td class="text-right">{{ $nomina->dias->dias_no_remunerados }}</td>
                                     <td class="text-right">{{ number_format($nomina->suspencion, 2, ',', '.') }}</td>
                                 </tr>
@@ -146,16 +146,20 @@
                     <div class="">
                         <div class="">
                             <label for="" class="form-label">Pago en efectivo</label>
-                            <input type="checkbox" name="" id="">
+                            <input type="checkbox">
                         </div>
                         <div class="">
                             <label for="" class="form-label">Pago por transaccion</label>
-                            <input type="checkbox" name="" id="">
+                            <input type="checkbox">
+                        </div>
+                        <div class="">
+                            <label for="" class="form-label">Pago por cheque</label>
+                            <input type="checkbox">
                         </div>
                     </div>
     
                     <div class="mt-8 pt-8 flex flex-col items-center justify-center">
-                        <input type="text" class="border-b bg-white text-black">
+                        <input type="text" class="firma">
                         <p class="text-center">FIRMA Y C.C. DEL BENEFICIARIO</p>
                     </div>
                 </div>
@@ -256,17 +260,17 @@
                                     <td class="text-right">{{ number_format($nomina->pension, 2, ',', '.') }}</td>
                                 </tr>
                                 <tr>
-                                    <td>consumo celular</td>
+                                    <td>Libranza salarial</td>
                                     <td class="text-right">0</td>
                                     <td class="text-right">{{ number_format($nomina->celular, 2, ',', '.') }}</td>
                                 </tr>
                                 <tr>
-                                    <td>aticipo/prestamo</td>
+                                    <td>Aticipo/prestamo</td>
                                     <td class="text-right">0</td>
                                     <td class="text-right">{{ number_format($nomina->anticipo, 2, ',', '.') }}</td>
                                 </tr>
                                 <tr>
-                                    <td>licencia no renumerada/Liquidación</td>
+                                    <td>licencia/sanción</td>
                                     <td class="text-right">{{ $nomina->dias->dias_no_remunerados }}</td>
                                     <td class="text-right">{{ number_format($nomina->suspencion, 2, ',', '.') }}</td>
                                 </tr>
@@ -293,6 +297,10 @@
                         <div class="">
                             <label for="" class="form-label">Pago por transaccion</label>
                             <input type="checkbox" name="" id="">
+                        </div>
+                        <div class="">
+                            <label for="" class="form-label">Pago por cheque</label>
+                            <input type="checkbox">
                         </div>
                     </div>
                 </div>
@@ -324,6 +332,11 @@
         h2 {
             font-size: 18px;
             text-transform: uppercase;
+        }
+
+        input.firma{
+            border: none;
+            border-bottom: 1px solid #000 !important; 
         }
 
         @media print {

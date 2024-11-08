@@ -7,6 +7,7 @@ use App\Http\Controllers\CargarMateriaPrimaController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CifController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\Costos_produccionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExportController;
@@ -51,30 +52,32 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
 
+    // home
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-    Route::get('/ofline', function () {
+    // offline
+    Route::get('/offline', function() {
         return view('vendor.laravelpwa.offline');
     });
 
+    // gestion humana
     Route::get('/gestion-humana', [TalentoHConroller::class, 'index'])->name('gestion-humana');
 
+    // trabajadores
     Route::resource('trabajadores', TrabajadoresController::class);
     Route::get('/butons', [TrabajadoresController::class, 'butons'])->name('trabajador.butons');
     Route::get('/activos', [TrabajadoresController::class, 'activos'])->name('trabajadores.activos');
     Route::get('/inactivos', [TrabajadoresController::class, 'inactivos'])->name('trabajadores.inactivos');
     Route::post('/trabajadores/{id}/disable', [TrabajadoresController::class, 'disable'])->name('trabajadores.disable');
     Route::post('/trabajadores/{id}/enable', [TrabajadoresController::class, 'enable'])->name('trabajadores.enable');
-
-    Route::get('/print-options', [TrabajadoresController::class, 'showPrintOptions'])->name('show.print.options');
     Route::post('/generate-print-list', [TrabajadoresController::class, 'generatePrintList'])->name('generate.print.list');
+    
+    // operarios
     Route::resource('/operarios', OperativoController::class);
-
     Route::get('/listar-operativos', [OperativoController::class, 'listarOperativos'])->name('listar.operarios');
 
     // Tiempos de Producción
     Route::resource('tiempos-produccion', TiemposProduccionController::class);
-    Route::put('/tiempos_produccion/recalcular/{id}', [TiemposProduccionController::class, 'recalcular'])->name('tiempos_produccion.recalcular');
     Route::get('/sdp/{id}/articulos-seleccionados', [TiemposProduccionController::class, 'mostrarArticulosSeleccionados'])
         ->name('sdp.articulos-seleccionados');
     Route::get('/printLista/{id}', [TiemposProduccionController::class, 'print'])->name('tiempos.print');
@@ -107,6 +110,9 @@ Route::middleware(['auth'])->group(function () {
     // horas extras
     Route::resource('horas-extras', horasController::class);
 
+    // configuraciones
+    Route::resource('configuraciones', ConfiguracionController::class);
+
 
     // Administracion de clientes y servicios
     Route::get('/ADD_Clientes_servicios', [ADD_Clientes_servicios_Controller::class, 'index'])->name('ADD_C_S');
@@ -119,6 +125,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/api/getArticulos/{sdpId}', [TiemposProduccionController::class, 'getArticulos']);
     Route::post('/tiemposproduccion/select-sdp', [TiemposProduccionController::class, 'selectSdp'])
         ->name('tiemposproduccion.selectSdp');
+    Route::patch('/sdps/{id}/abrir', [SdpController::class, 'abrir'])->name('sdps.abrir');
+    Route::patch('/sdps/{id}/cerrar', [SdpController::class, 'cerrar'])->name('sdps.cerrar');
 
 
     // Artículos
@@ -179,16 +187,14 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('item-ste', ItemSTEController::class);
     Route::get('api/buscar-item-ste', [ItemSTEController::class, 'searchIem']);
 
-
     // servicios
     route::get('/servicio', [ServicioController::class, 'mainS'])->name('servicio');
     Route::resource('servicios', ServicioController::class);
     Route::get('/servicios-sdps', [ ServicioController::class, 'indexSdp'])->name('servicio.index');
 
     // servicios costos
-    Route::get('/sdp/{numero_sdp}/servicios', [ServicioSdpController::class, 'indexServicios'])->name('serviciosCostos.indexServicios');
-    Route::get('/serviciosdp/{id}/show', [ServicioSdpController::class, 'show'])->name('serviciosCostos.show');
-    Route::put('/sdps/{id}/update', [ServicioSdpController::class, 'actualizarPrecioServicio'])->name('servicioCosto.actualizar');
+    Route::get('/sdps/{sdp}/servicios', [ServicioSdpController::class, 'show'])->name('serviciosCostos.show');
+    Route::put('/sdps/{sdp}/servicios/{servicio}', [ServicioSdpController::class, 'actualizarPrecioServicio'])->name('sdp_servicios.actualizar');
 
     // almacen
     Route::get('/almacen', [AlmacenController::class, 'index'])->name('almacen');
@@ -239,13 +245,11 @@ Route::middleware(['auth'])->group(function () {
     route::resource('productos', ProductosController::class);
 
     // CIF
-
     Route::get('cif', [CifController::class, 'index'])->name('cif.index');
     Route::get('cif/{id}/edit', [CifController::class, 'edit'])->name('cif.edit');
     Route::put('cif/{id}/update', [CifController::class, 'update'])->name('cif.update');
 
     // costos de produccion
-
     Route::get('/costos_produccion', [Costos_produccionController::class, 'index'])->name('costos_produccion.index');
     Route::get('/costos_produccion/{id}', [Costos_produccionController::class, 'show'])->name('costos_produccion.show');
     Route::post('/recalcular-mano-obra-directa', [Costos_produccionController::class, 'recalcularManoObraDirecta'])
@@ -259,21 +263,15 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/permisos', PermissionController::class);
     Route::get('permissions/{permission}/edit', [PermissionController::class, 'edit'])->name('permissions.edit');
     Route::put('permissions/{permission}/update', [PermissionController::class, 'update'])->name('permissions.update');
-
+    Route::get('/permisos-role/{id}', [RoleController::class, 'show'])->name('permisos.role');
     // usuarios
     Route::resource('/users', UsersController::class);
 
     // Administración de Inventario
-
     Route::get('AdministraciónInventario', [AdministraciónInventarioController::class, 'index'])->name('AdministraciónInventario');
 
     // servocios Externos 
-
     Route::resource('serviciosExternos', servicioExternoController::class);
-
-    Route::get('/offline', function() {
-        return view('vendor.laravelpwa.offline');
-    });
 });
 
 

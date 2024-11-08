@@ -3,15 +3,15 @@
 @section('title', 'crear servicio')
 
 @section('content_header')
-    <h2 class="font-semibold text-xl text-gray-300 leading-tight">
+    <h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
         {{ __('Formulario del nuevo servicio') }}
     </h2>
 @stop
 
 @section('content')
-<div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-gray-400 overflow-hidden shadow-xl sm:rounded-lg p-6">
+<div class="container">
+    <div class="card">
+        <div class="card-body">
             <form action="{{ route('servicios.store') }}" method="POST" class="max-w-sm mx-auto space-y-4">
                 @csrf
 
@@ -26,11 +26,10 @@
                 </div>
 
                 <div>
-                    <label for="" class="form-label">sdp</label>
-                    <select name="sdp_id" id="" class="form-control">
-                        <option selected disabled>seleccionar</option>
+                    <label for="sdp_id" class="form-label">SDP</label>
+                    <select name="sdp_id[]" id="sdp_id" class="form-select" multiple>
                         @foreach ($sdps as $sdp)
-                        <option value="{{$sdp->numero_sdp}}">{{$sdp->numero_sdp}}</option>
+                            <option value="{{ $sdp->numero_sdp }}">{{ $sdp->numero_sdp }}-{{ $sdp->nombre }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -48,34 +47,18 @@
 @section('css')
     {{-- Add here extra stylesheets --}}
     {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
-    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
     <style>
-        .content, .content-header {
-            background-color: #ffff !important;
-            color: #000 !important;
-        }
-
-        .content {
-            height: 87vh;
-        }
-
-        input {
-            background-color: #fff !important;
-            color: #000 !important;
-        }
-
-        label {
-            color: #000 !important;
-        }
-
-        .card, .card-body {
-            color: #000 !important;
-        }
-
-        h2 {
-            color: #000 !important;
-            font-size: 18px;
-            text-transform: uppercase;
+        .card-body{
+            background: #8a8a8a;
         }
     </style>
 @stop
@@ -83,4 +66,23 @@
 @section('js')
     <script src="https://cdn.tailwindcss.com"></script>
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"
+    ></script>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"
+    ></script>
+    <script>
+        $( '#sdp_id' ).select2( {
+            theme: 'bootstrap-5'
+        } );
+    </script>
 @stop

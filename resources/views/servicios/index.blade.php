@@ -19,18 +19,18 @@
     <div class="tg max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-gray-400 overflow-hidden shadow-xl sm:rounded-lg p-6 tg">
             @if (session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <div class="alert alert-success" id="success-message" role="alert">
                     <span class="block sm:inline">{{ session('success') }}</span>
                 </div>
             @endif
             
             <div class="mb-4">
-                <a href="{{route('servicios.create')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Crear</a>
+                <a href="{{route('servicios.create')}}" class="btn btn-primary">Crear</a>
             </div>
             <div class="table-wraper">
-                <table class="min-w-full bg-white border border-gray-200">
+                <table class="table table-bordered table-striper">
                     <thead class="tg">
-                        <tr class="bg-gray-50 text-gray-700">
+                        <tr class="bg-white">
                             <th class="px-4 py-2 border">#</th>
                             <th class="px-4 py-2 border">codigo</th>
                             <th class="px-4 py-2 border">nombre</th>
@@ -41,19 +41,19 @@
                     </thead>
                     <tbody>
                         @foreach ($servicios as $index => $servicio)
-                        <tr class="text-gray-700">
+                        <tr class="bg-white">
                             <td class="border px-4 py-2">{{ $index + 1}}</td>
                             <td class="border px-4 py-2">{{ $servicio->codigo }}</td>
                             <td class="border px-4 py-2">{{ $servicio->nombre }}</td>
                             <td class="border px-4 py-2">{{ number_format($servicio->valor_hora, 2, '.', ',') }}</td>
                             <td class="border px-4 py-2">
-                                <a href="{{route('servicios.edit', $servicio->id)}}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded">Editar</a>
+                                <a href="{{route('servicios.edit', $servicio->id)}}" class="btn btn-info">Editar</a>
                             </td>
                             <td class="border px-4 py-2">
                                 <form action="{{route('servicios.destroy', $servicio->id)}}" method="POST" style="display: inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded" onclick="return confirm('¿Estás seguro de que deseas eliminar este servicio?');">Eliminar</button>
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este servicio?');">Eliminar</button>
                                 </form>
                             </td>
                         </tr>
@@ -103,6 +103,14 @@
 @section('js')
     <script src="https://cdn.tailwindcss.com"></script>
     <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+    <script>
+        setTimeout(function() {
+            var successMessage = document.getElementById('success-message');
+            if (successMessage) {
+                successMessage.style.display = 'none';
+            }
+        }, 5000);
+    </script>
 @stop
 
 

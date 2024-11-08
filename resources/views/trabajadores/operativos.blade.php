@@ -38,7 +38,6 @@
                         <th class=" c-3">Nombre</th>
                         <th class=" c-4">Apellido</th>
                         <th class=" c-5">Sueldo Base</th>
-                        <th class=" v">Editar</th>
                         <th class=" v">Eliminar</th>
                     </tr>
                 </thead>
@@ -52,9 +51,6 @@
                             <td class="c-3">{{ $operario->operario }}</td>
                             <td class="c-4">{{ $operario->trabajador->apellido }}</td>
                             <td class="c-5">{{ $operario->trabajador->sueldos->first()->sueldo ?? 'No tiene sueldo registrado' }}</td>
-                            <td class="v">
-                                <a href="{{ route('operarios.edit', $operario->id) }}" class="btn btn-info">Editar</a>
-                            </td>
                             <td class="v">
                                 <form action="{{ route('operarios.destroy', $operario->id) }}" method="POST">
                                     @csrf

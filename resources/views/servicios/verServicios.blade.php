@@ -3,7 +3,7 @@
 @section('title', 'servicios')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-800 leading-tight">
+<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
     {{ __('actualizar servicios para la sdp') }} {{ $sdp->numero_sdp }}
 </h2>
 @stop
@@ -14,35 +14,42 @@
         <a href="{{ route('servicio.index') }}" class="btn btn-info mb-4">volver</a>
     </div>
     @if (session('success'))
-        <div id="success-message" class="success-message" role="alert">
+        <div id="success-message" class="alert alert-success success-message" role="alert">
             <span class="block sm:inline">{{ session('success') }}</span>
         </div>
     @endif
     <div class="card">
-        <div class="card-body">
-            <table id="servicios" class="table table-striped">
-                <thead class="">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Servicio</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($sdp->servicios as $servicio)
                     <tr>
-                        <th>codigo</th>
-                        <th>servicio</th>
-                        <th>valor actual</th>
-                        <th>editar</th>
+                        <td>{{ $servicio->codigo }}</td>
+                        <td>{{ $servicio->nombre }}</td>
+                        <td>{{ $servicio->pivot->valor_servicio }}</td>
+                        <td>
+                            <form action="{{ route('sdp_servicios.actualizar', ['sdp' => $sdp->numero_sdp, 'servicio' => $servicio->codigo ]) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <input type="number" name="valor_servicio" value="{{ $servicio->pivot->valor_servicio }}" step="0.01" class="input">
+                                <button type="submit" class="btn btn-primary">Actualizar Precio</button>
+                            </form>
+                        </td>
                     </tr>
-                </thead>
-                <tbody class="">
-                    @foreach($sdp->servicios as $serviciosCosto)
-                        <tr>
-                            <td>{{  $serviciosCosto->pivot->servicio_id }}</td>
-                            <td>{{  $serviciosCosto->nombre }}</td>
-                            <td>{{ number_format($serviciosCosto->pivot->valor_servicio, 2, ',', '.') }}</td>
-                            <td>
-                                <a href="{{ route('serviciosCostos.show', $serviciosCosto->pivot->id) }}" class="btn btn-primary">Actualizar</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                @empty
+                    <tr>
+                        <td colspan="4" class="text-center">SDP sin servicios asignados.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 </div>            
 @stop
@@ -61,6 +68,28 @@
         .card-body {
             max-height: 400px;
             overflow-y: auto;
+        }
+
+        h2 {
+            color: #262626;
+            text-transform: uppercase;
+        }
+
+        input.input {
+            width: 300px;
+            padding: 2px;
+            border-radius: 5px;
+            transition: all 1s;
+            border: #ebebeb solid 1px !important;
+        }
+
+        input.input:hover {
+            background-color: #fbefca;
+        }
+
+        input.input:active {
+            border: #ebebeb solid 1px !important;
+            box-shadow: 1px 1px 1px #3caddd !important;
         }
     </style>
 @stop

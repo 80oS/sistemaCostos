@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 class VendedorController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('can:ver comerciales')->only('index');
+        $this->middleware('can:crear comerciales')->only('create');
+        $this->middleware('can:editar comerciales')->only('edit');
+        $this->middleware('can:eliminar comerciales')->only('destroy');
+    }
+
     public function index()
     {
         $vendedores = Vendedor::all();

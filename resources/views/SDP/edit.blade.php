@@ -119,19 +119,6 @@
                     <label for="requisitos_cliente" class="block mb-2 text-sm font-medium text-gray-100">Requisitos Cliente</label>
                     <input type="text" name="requisitos_cliente" id="requisitos_cliente" value="{{ $sdp->requisitos_cliente }}" class="form-control">
                 </div>
-
-                <div class="form-10">
-                    <label for="estado" >Estado</label>
-                    <select name="estado" id="estado" class="form-select" required >
-                    @foreach(['abierto','cerrado'] as $estado)    
-                        <option value="{{ $estado }}" 
-                            {{ $sdp->estado === $estado ? 'selected' : '' }}
-                        >
-                            {{ ucfirst($estado) }}
-                        </option>
-                    @endforeach
-                    </select>
-                </div>
             
                 <div class="buttons">
                     <button type="submit"  class="btn btn-primary">

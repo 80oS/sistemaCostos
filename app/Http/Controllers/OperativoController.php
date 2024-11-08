@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\Log;
 
 class OperativoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:ver operarios')->only('listarOperativos');
+        $this->middleware('can:crear operarios')->only('store');
+        $this->middleware('can:eliminar operarios')->only('destroy');
+    }
     private function generateUniqueCode()
     {
         $ultimoOperativo = Operativo::latest('codigo')->first();
@@ -65,20 +71,6 @@ class OperativoController extends Controller
         $trabajadores = Trabajador::orderBy('nombre')->get();
 
         return view('trabajadores.operativos', compact('operativos', 'trabajadores'));
-    }
-
-    public function edit(string $id)
-    {
-        $operario = Operativo::findOrFail($id);
-        return view('trabajadores.operativos.edit', compact('operario'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $operarios = Operativo::findOrFail($id);
-        $operarios->update($request->all());
-
-        return redirect()->route('listar.operarios')->with('success', 'Operativo actualizado correctamente');
     }
 
     public function destroy(string $id)

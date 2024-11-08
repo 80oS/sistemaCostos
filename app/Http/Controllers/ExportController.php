@@ -10,6 +10,10 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ExportController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:exportar nominas')->only('export');
+    }
     public function export(PaqueteNomina $paquete)
     {
         $meses = [

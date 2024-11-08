@@ -3,8 +3,8 @@
 @section('title', 'crear vendedor')
 
 @section('content_header')
-<h2 class="font-semibold text-xl text-gray-800 leading-tight">
-    {{ __('Formulario del nuevo vendedor') }}
+<h2 class="font-semibold text-xl text-gray-800 leading-tight uppercase">
+    {{ __('Formulario del nuevo comercial') }}
 </h2>
 @stop
 

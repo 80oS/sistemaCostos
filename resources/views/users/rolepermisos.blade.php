@@ -16,15 +16,18 @@
                     <form action="{{ route('roles.update', $role->id) }}" method="POST" class="max-w-sm mx-auto space-y-4">
                         @csrf
                         @method('PUT')
-                        <select name="permissions[]" class="form-select" id="multiple-select-field" data-placeholder="seleccione los permisos..." multiple>
-                            @foreach ($permisos as $permiso)
-                                <option value="{{ $permiso->id }}" {{ in_array($permiso->id, $rolePermisos) ? 'selected':''}}>
-                                    {{ $permiso->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <div class="select2-content">
+                            <select name="permissions[]" class="form-select" id="multiple-select-field" data-placeholder="seleccione los permisos..." multiple>
+                                @foreach ($permisos as $permiso)
+                                    <option value="{{ $permiso->id }}" {{ in_array($permiso->id, $rolePermisos) ? 'selected':''}}>
+                                        {{ $permiso->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-success">Guardar</button>
+                            <a href="{{ route('roles.index') }}" class="btn btn-secondary">Cancelar</a>
                         </div>
                     </form>
                 </div>
@@ -40,11 +43,25 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     <style>
-        .card {
+        .card, .card-body {
             width: 50rem;
-            height: 300px;
+            background: #8a8a8a;
         }
-        
+        .content {
+            height: 100vh !important;
+            max-height: 300vh !important;
+            background: #fff !important;
+        }
+
+        body {
+            height: 90vh !important;
+            background: #fff !important;
+        }
+
+        .select2-content{
+            max-height: 300px !important;
+            overflow-y: auto;
+        }
     </style>
 @stop
 

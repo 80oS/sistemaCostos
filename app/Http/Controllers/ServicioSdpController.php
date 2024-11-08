@@ -4,41 +4,31 @@ namespace App\Http\Controllers;
 
 
 use App\Models\SDP;
+use App\Models\Servicio;
 use App\Models\servicioSDP;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class ServicioSdpController extends Controller
 {
-    public function indexServicios($numero_sdp)
+    public function __construct()
     {
-            // Buscar la SDP por su número
-            $sdp = SDP::with('servicios')->where('numero_sdp', $numero_sdp)->firstOrFail();
-
+        $this->middleware('can:ver servicios sdp')->only('show');
+        $this->middleware('can:editar servicios sdp')->only('actualizarPrecioServicio');
+    }
+    public function show($numero_sdp)
+    {
+        $sdp = Sdp::where('numero_sdp', $numero_sdp)->with('servicios')->firstOrFail();
         return view('servicios.verServicios', compact('sdp'));
     }
 
-    public function show($id)
+    public function actualizarPrecioServicio(Request $request, Sdp $sdp, $servicioId)
     {
-        $servicioCosto = servicioSDP::with('servicio')->findOrFail($id);
+        $precio = $request->input('valor_servicio');
 
-        dd($servicioCosto);
+        // Actualizar el precio en la tabla intermedia
+        $sdp->servicios()->updateExistingPivot($servicioId, ['valor_servicio' => $precio]);
 
-        return view('servicios.editServicio', compact('servicioCosto'));
-    }
-
-    public function actualizarPrecioServicio(Request $request, $id)
-    {
-        // Validar el formulario
-        $request->validate([
-            'valor_servicio' => 'required|numeric|min:0',
-        ]);
-
-        $servicioCosto = servicioSDP::findOrFail($id);
-
-        $servicioCosto->valor_servicio = $request->input('valor_servicio');
-        $servicioCosto->save();
-
-        return redirect()->route('servicio.index')->with('success', 'Precio del servicio actualizado correctamente');
+        return redirect()->back()->with('success', 'Precio actualizado correctamente');
     }
 }

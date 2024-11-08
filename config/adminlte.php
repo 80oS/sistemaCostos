@@ -306,7 +306,7 @@ return [
             'icon' => 'fas fa-fw fa-city',
         ],
         [
-            'text' => ' Gestión Operacional',
+            'text' => 'Gestión Operacional',
             'route' => 'servicio',
             'icon' => 'fas fa-w fa-wrench',
             

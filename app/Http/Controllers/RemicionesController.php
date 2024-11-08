@@ -15,6 +15,23 @@ use Illuminate\Support\Facades\Log;
 class RemicionesController extends Controller
 {
 
+    public function __construct()
+    {
+        // remisiones despacho
+        $this->middleware('can:ver remisiones despacho')->only('Despacho');
+        $this->middleware('can:crear remisiones despacho')->only('createDespacho');
+        $this->middleware('can:editar remisiones despacho')->only('editDespacho');
+        $this->middleware('can:eliminar remisiones despacho')->only('destroyDespacho');
+        $this->middleware('can:ver formato remisiones despacho')->only('showDespacho');
+
+        // remisiones ingreso
+        $this->middleware('can:ver remisiones ingreso')->only('Ingreso');
+        $this->middleware('can:crear remisiones ingreso')->only('createIngreso');
+        $this->middleware('can:editar remisiones ingreso')->only('editIngreso');
+        $this->middleware('can:eliminar remisiones ingreso')->only('destroyIngreso');
+        $this->middleware('can:ver formato remision ingreso')->only('showIngreso');
+    }
+
     public function index()
     {
         return view('remiciones.index');
@@ -321,5 +338,13 @@ class RemicionesController extends Controller
 
             return redirect()->back()->withErrors('Hubo un error al actualizar la remisión de ingreso.' . $e->getMessage());
         }
+    }
+
+    public function destroyIngreso($id)
+    {
+        $remisionIngreso = RemisionIngreso::findOrFail($id);
+        $remisionIngreso->delete();
+
+        return redirect()->route('remision.ingreso')->with('success', 'remision de ingreso correctamente eliminada');
     }
 }

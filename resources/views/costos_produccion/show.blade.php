@@ -245,34 +245,23 @@
                             <thead>
                                 <tr>
                                     <th>Operario</th>
-                                    <th>Servicio</th>
                                     <th>Horas Trabajadas</th>
-                                    <th>Valor del Servicio</th>
-                                    <th>servicio por horas</th>
-                                    <th>MOI</th>
                                     <th>Articulo</th>
-                                    <th>numero de item</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($operariosConTiempos as $operario)
                                     <tr>
                                         <td>{{ $operario['nombre'] }}</td>
-                                        <td>{{ $operario['servicio_nombre'] }}</td>
                                         <td>{{ $operario['total_horas'] }}</td>
-                                        <td>{{ number_format($operario['valor_servicio'], 2, ',', '.') }}</td>
-                                        <td>{{ number_format($operario['servicio_horas'], 2, ',', '.') }}</td>
-                                        <td>{{ number_format($operario['mano_obra_servicio'], 2, ',', '.') }}</td>
                                         <td>{{ $operario['articulo'] }}</td>
-                                        <td>
-                                            {{ $operario['index_articulo'] }}
-                                        </td>
+                                        
                                     </tr>
                                 @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="7">total de mano de obra</td>
+                                    <td colspan="">total de mano de obra</td>
                                     <td>{{ number_format($totalManoObraServicio, 2, ',', '.') }}</td>
                                 </tr>
                             </tfoot>
@@ -354,8 +343,8 @@
                                     <tr>
                                         <td>{{ $operario['nombre'] }}</td>
                                         <td>{{ $operario['sueldo'] }}</td>
-                                        <td>{{ $operario['horas'] }}</td>
-                                        <td>{{ $NMH }}</td>
+                                        
+                                        
                                         <td>{{ number_format($operario['mano_obra_directa'], 2, ',', '.') }}</td>
                                     </tr>
                                 @endforeach

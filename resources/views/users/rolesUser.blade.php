@@ -47,7 +47,15 @@
             width: 50rem;
             height: 300px;
         }
-        
+        .content {
+            height: 200vh !important;
+            background: #fff !important;
+        }
+
+        body {
+            height: 200vh !important;
+            background: #fff !important;
+        }
     </style>
 @stop
 
